@@ -1,0 +1,49 @@
+{
+  "name": "tcb-admin-node",
+  "version": "1.0.8",
+  "description": "tencent cloud base admin sdk for node.js",
+  "main": "index.js",
+  "scripts": {
+    "tsc": "tsc -p tsconfig.json",
+    "tsc:w": "tsc -p tsconfig.json -w",
+    "tstest": "mocha --require espower-typescript/guess test/**/*.test.ts",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TencentCloudBase/tcb-admin-node/blob/master/docs/api.md"
+  },
+  "keywords": [
+    "tcb-admin"
+  ],
+  "author": "jimmyzhang",
+  "license": "ISC",
+  "dependencies": {
+    "request": "^2.87.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^23.1.4",
+    "@types/mocha": "^5.2.4",
+    "espower-typescript": "^8.1.4",
+    "jest": "^23.3.0",
+    "mocha": "^5.2.0",
+    "power-assert": "^1.5.0",
+    "typescript": "^2.3.4",
+    "ts-jest": "^23.0.0",
+    "tslib": "^1.7.1"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
+  }
+}

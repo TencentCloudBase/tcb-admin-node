@@ -1,0 +1,7 @@
+*.log
+node_modules
+.idea
+.history
+.DS_Store
+build
+test/config.js
