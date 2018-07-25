@@ -28,4 +28,4 @@ import * as admin from "tcb-admin-node";
 
 ## 文档
 
-- [接口文档](./docs/api.md)
+- [接口文档](https://github.com/TencentCloudBase/tcb-admin-node/blob/master/docs/api.md)
