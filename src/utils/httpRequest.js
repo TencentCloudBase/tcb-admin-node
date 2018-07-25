@@ -31,6 +31,7 @@ module.exports = function (args) {
 
   // console.log(params);
   var opts = {
+    // url: 'http://localhost:8002/admin',
     url: "http://tcb-admin.tencentcloudapi.com/admin",
     method: args.method || "get",
     timeout: args.timeout || 50000,
@@ -40,6 +41,12 @@ module.exports = function (args) {
 
   if (params.action === "storage.uploadFile") {
     opts.formData = params;
+    opts.formData.file = {
+      value: params.file,
+      options: {
+        filename: params.path
+      }
+    }
   } else if (args.method == "post") {
     opts.body = params;
     opts.json = true;

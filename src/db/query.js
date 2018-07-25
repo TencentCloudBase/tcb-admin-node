@@ -130,6 +130,7 @@ class Query {
                     let tmp = command.concatKeys({ [key]: query[key] });
                     if (tmp.value instanceof command_1.Command) {
                         tmp.value = tmp.value.parse(tmp.keys);
+                        tmp.value = tmp.value[tmp.keys];
                     }
                     queryParam = Object.assign({}, queryParam, { [tmp.keys]: tmp.value });
                 }

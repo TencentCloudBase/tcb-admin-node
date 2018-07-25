@@ -1,4 +1,4 @@
-# TCB Admin Node.js SDK
+# Tencent Cloud Base(TCB) Admin Node.js SDK
 
 ## 目录
 * [介绍](#介绍)

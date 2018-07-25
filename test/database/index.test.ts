@@ -4,7 +4,7 @@ import * as app from "../../index";
 import * as Config from "../config";
 import { process } from "ts-jest/dist/preprocessor";
 
-describe("test/index.test.ts", () => {
+describe("test/index.test.ts", async () => {
   const config = {
     secretId: Config.secretId,
     secretKey: Config.secretKey,
@@ -37,7 +37,7 @@ describe("test/index.test.ts", () => {
     });
   };
 
-  it("DB - use default db", () => {
+  it("DB - use default db", async () => {
     assert(db.config.dbname === defaultDbName);
   });
 

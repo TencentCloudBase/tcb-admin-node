@@ -89,7 +89,7 @@ class Command {
             if (typeof obj[key] === "object" &&
                 obj[key] instanceof Command === false) {
                 let tmp = this.concatKeys(obj[key]);
-                keys = key + ":" + tmp.keys;
+                keys = key + "." + tmp.keys;
                 value = tmp.value;
             }
             else {
