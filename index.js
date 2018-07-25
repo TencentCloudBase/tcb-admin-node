@@ -11,6 +11,15 @@ Tcb.prototype.init = function ({
   mpAppId,
   proxy
 }) {
+  if (!secretId || !secretKey) {
+    secretId = process.env.TENCENTCLOUD_SECRETID
+    secretKey = process.env.TENCENTCLOUD_SECRETKEY
+  }
+
+  if (!secretId || !secretKey) {
+    throw Error('missing required secretId or secretKey of tencent cloud account')
+  }
+
   this.config = {
     secretId,
     secretKey,

@@ -3,7 +3,6 @@
  *
  */
 export class Command {
-
   public logicParam: object = {};
   private placeholder = "{{{AAA}}}";
 
@@ -135,7 +134,7 @@ export class Command {
         obj[key] instanceof Command === false
       ) {
         let tmp = this.concatKeys(obj[key]);
-        keys = key + ":" + tmp.keys;
+        keys = key + "." + tmp.keys;
         value = tmp.value;
         // console.log(keys);
       } else {

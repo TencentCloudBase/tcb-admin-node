@@ -1,4 +1,4 @@
-// const cloudApiRequest = require("../utils/cloudApiRequest");
+const request = require('request')
 const httpRequest = require("../utils/httpRequest");
 
 /*
@@ -32,7 +32,7 @@ function uploadFile({
  * 删除文件
  * @param {Array.<string>} fileList 文件id数组
  */
-function deleteFile({
+async function deleteFile({
   fileList
 }) {
   if (!fileList || !Array.isArray(fileList)) {
@@ -72,10 +72,9 @@ function deleteFile({
  * 获取文件下载链接
  * @param {Array.<Object>} fileList
  */
-function getTempFileURL({
+async function getTempFileURL({
   fileList
 }) {
-  // console.log(fileList);
   if (!fileList || !Array.isArray(fileList)) {
     return {
       code: "INVALID_PARAM",
@@ -120,10 +119,43 @@ function getTempFileURL({
   });
 }
 
-function downloadFile({
-  fileId
-}) {}
+async function downloadFile({
+  fileID
+}) {
+  let tmpUrl
+  try {
+    let tmpUrlRes = await this.getTempFileURL({
+      fileList: [{
+        fileID,
+        maxAge: 600
+      }]
+    })
+    console.log(tmpUrlRes)
+
+    if (tmpUrlRes.code || typeof tmpUrlRes.data != 'object' || !Array.isArray(tmpUrlRes.data.download_list) || !tmpUrlRes.data.download_list[0].download_url) {
+      return;
+    }
+
+    tmpUrl = tmpUrlRes.data.download_list[0].download_url
+  } catch (e) {
+    return;
+  }
+
+  return new Promise(function (resolve, reject) {
+    request({
+      url: tmpUrl
+    }, function (err, response, body) {
+      console.log(err, typeof body);
+      if (err === null && response.statusCode == 200) {
+        return resolve(body);
+      } else {
+        return reject(new Error(err));
+      }
+    });
+  });
+}
 
 exports.uploadFile = uploadFile;
 exports.deleteFile = deleteFile;
 exports.getTempFileURL = getTempFileURL;
+// exports.downloadFile = downloadFile;
