@@ -21,7 +21,7 @@ function callFunction({
     }));
   }
 
-  let params = Object.assign(this.commParam, {
+  let params = Object.assign({}, this.commParam, {
     action: "functions.invokeFunction",
     function_name: name,
     request_data: data

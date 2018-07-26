@@ -10,7 +10,7 @@ function uploadFile({
   cloudPath,
   fileContent
 }) {
-  let params = Object.assign(this.commParam, {
+  let params = Object.assign({}, this.commParam, {
     action: "storage.uploadFile",
     path: cloudPath,
     file: fileContent
@@ -51,7 +51,7 @@ async function deleteFile({
     }
   }
 
-  let params = Object.assign(this.commParam, {
+  let params = Object.assign({}, this.commParam, {
     action: "storage.batchDeleteFile",
     fileid_list: fileList
   });
@@ -101,7 +101,7 @@ async function getTempFileURL({
     });
   }
 
-  let params = Object.assign(this.commParam, {
+  let params = Object.assign({}, this.commParam, {
     action: "storage.batchGetDownloadUrl",
     file_list
   });

@@ -17,7 +17,7 @@ describe("storage.downLoadFile: 下载文件", () => {
     "下载文件",
     async () => {
       let result = await tcb.downloadFile({
-        fileID: 'test-admin (2).jpeg'
+        fileID: 'test-admin.txt'
       });
       console.log(JSON.stringify(result));
     },
