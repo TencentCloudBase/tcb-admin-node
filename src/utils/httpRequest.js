@@ -32,7 +32,7 @@ module.exports = function (args) {
   // console.log(params);
   var opts = {
     // url: 'http://localhost:8002/admin',
-    url: "http://tcb-admin.tencentcloudapi.com/admin",
+    url: "https://tcb-admin.tencentcloudapi.com/admin",
     method: args.method || "get",
     timeout: args.timeout || 50000,
     headers: authObj.Headers,
