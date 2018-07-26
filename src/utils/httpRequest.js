@@ -71,7 +71,7 @@ module.exports = function (args) {
       if (err === null && response.statusCode == 200) {
         let res
         try {
-          res = typeof res === 'string' ? JSON.parse(res) : res
+          res = typeof body === 'string' ? JSON.parse(body) : body
         } catch (e) {
           res = body
         }
