@@ -17,14 +17,12 @@ function uploadFile({
   });
 
   return httpRequest({
-    secretId: this.config.secretId,
-    secretKey: this.config.secretKey,
+    config: this.config,
     params,
     method: "post",
     headers: {
       // "content-type": "multipart/form-data"
-    },
-    proxy: this.config.proxy
+    }
   });
 }
 
@@ -57,14 +55,12 @@ async function deleteFile({
   });
 
   return httpRequest({
-    secretId: this.config.secretId,
-    secretKey: this.config.secretKey,
+    config: this.config,
     params,
     method: "post",
     headers: {
       "content-type": "application/json"
-    },
-    proxy: this.config.proxy
+    }
   });
 }
 
@@ -108,14 +104,12 @@ async function getTempFileURL({
   // console.log(params);
 
   return httpRequest({
-    secretId: this.config.secretId,
-    secretKey: this.config.secretKey,
+    config: this.config,
     params,
     method: "post",
     headers: {
       "content-type": "application/json"
-    },
-    proxy: this.config.proxy
+    }
   });
 }
 

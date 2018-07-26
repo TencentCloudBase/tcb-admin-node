@@ -7,22 +7,21 @@ function Tcb() {}
 Tcb.prototype.init = function ({
   secretId,
   secretKey,
+  sessionToken,
   envName,
   mpAppId,
   proxy
 }) {
-  if (!secretId || !secretKey) {
-    secretId = process.env.TENCENTCLOUD_SECRETID
-    secretKey = process.env.TENCENTCLOUD_SECRETKEY
-  }
-
-  if (!secretId || !secretKey) {
-    throw Error('missing required secretId or secretKey of tencent cloud account')
-  }
-
   this.config = {
-    secretId,
-    secretKey,
+    get secretId() {
+      return secretId ? secretId : process.env.TENCENTCLOUD_SECRETID
+    },
+    get secretKey() {
+      return secretKey ? secretKey : process.env.TENCENTCLOUD_SECRETKEY
+    },
+    get sessionToken() {
+      return sessionToken ? sessionToken : process.env.TENCENTCLOUD_SESSIONTOKEN
+    },
     envName,
     mpAppId,
     proxy

@@ -16,20 +16,6 @@ export class Request {
   private db: Db;
 
   /**
-   * 加密ID
-   *
-   * @internal
-   */
-  private secretId: string;
-
-  /**
-   * 加密凭据
-   *
-   * @internal
-   */
-  private secretKey: string;
-
-  /**
    * 公共参数
    *
    * @internal
@@ -44,8 +30,6 @@ export class Request {
    */
   constructor(db: Db) {
     this.db = db;
-    this.secretId = this.db.config.secretId;
-    this.secretKey = this.db.config.secretKey;
     this.commParam = {
       appid: db.config.mpAppId,
       envName: db.config.envName,
@@ -66,14 +50,12 @@ export class Request {
     });
     // console.log(this.db.config);
     return requestHandler({
-      secretId: this.secretId,
-      secretKey: this.secretKey,
+      config: this.db.config,
       params,
       method: "post",
       headers: {
         "content-type": "application/json"
-      },
-      proxy: this.db.config.proxy
+      }
     });
   }
 }

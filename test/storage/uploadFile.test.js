@@ -25,6 +25,15 @@ describe("storage.uploadFile: 上传文件", () => {
         fileContent
       });
       console.log(result);
+
+      result = await tcb.getTempFileURL({
+        fileList: [{
+          fileID: result.data.fileid,
+          maxAge: 60
+        }]
+      });
+      console.log(JSON.stringify(result));
+
       assert(result, "上传文件失败");
     },
     10000

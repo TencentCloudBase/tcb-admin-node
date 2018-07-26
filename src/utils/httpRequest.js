@@ -2,7 +2,8 @@ var request = require("request");
 var auth = require("./auth.js");
 
 module.exports = function (args) {
-  var params = args.params,
+  var config = args.config,
+    params = args.params,
     method = args.method || "get";
   // console.log(args);
   let file = null;
@@ -11,9 +12,13 @@ module.exports = function (args) {
     delete params["file"];
   }
 
+  if (!config.secretId || !config.secretKey) {
+    throw Error('missing secretId or secretKey of tencent cloud')
+  }
+
   const authObj = {
-    SecretId: args.secretId,
-    SecretKey: args.secretKey,
+    SecretId: config.secretId,
+    SecretKey: config.secretKey,
     Method: method,
     pathname: "/admin",
     Query: params,
@@ -28,6 +33,7 @@ module.exports = function (args) {
 
   params.authorization = authorization;
   file && (params.file = file);
+  config.sessionToken && (params.sessionToken = config.sessionToken);
 
   // console.log(params);
   var opts = {
@@ -36,7 +42,7 @@ module.exports = function (args) {
     method: args.method || "get",
     timeout: args.timeout || 50000,
     headers: authObj.Headers,
-    proxy: args.proxy
+    proxy: config.proxy
   };
 
   if (params.action === "storage.uploadFile") {
@@ -63,7 +69,13 @@ module.exports = function (args) {
     request(opts, function (err, response, body) {
       // console.log(err, body);
       if (err === null && response.statusCode == 200) {
-        return resolve(body);
+        let res
+        try {
+          res = typeof res === 'string' ? JSON.parse(res) : res
+        } catch (e) {
+          res = body
+        }
+        return resolve(res);
       } else {
         return reject(new Error(err));
       }
