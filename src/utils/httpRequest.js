@@ -1,11 +1,23 @@
 var request = require("request");
 var auth = require("./auth.js");
 
-module.exports = function (args) {
+module.exports = function(args) {
   var config = args.config,
     params = args.params,
     method = args.method || "get";
-  // console.log(args);
+
+  params = Object.assign({}, params, {
+    envName: config.envName,
+    timestamp: new Date().valueOf(),
+    eventId: ""
+  });
+
+  for (let key in params) {
+    if (params[key] === undefined) {
+      delete params[key];
+    }
+  }
+
   let file = null;
   if (params.action === "storage.uploadFile") {
     file = params["file"];
@@ -13,7 +25,7 @@ module.exports = function (args) {
   }
 
   if (!config.secretId || !config.secretKey) {
-    throw Error('missing secretId or secretKey of tencent cloud')
+    throw Error("missing secretId or secretKey of tencent cloud");
   }
 
   const authObj = {
@@ -22,7 +34,8 @@ module.exports = function (args) {
     Method: method,
     pathname: "/admin",
     Query: params,
-    Headers: Object.assign({
+    Headers: Object.assign(
+      {
         "user-agent": "tcb-admin-sdk"
       },
       args.headers || {}
@@ -52,7 +65,7 @@ module.exports = function (args) {
       options: {
         filename: params.path
       }
-    }
+    };
   } else if (args.method == "post") {
     opts.body = params;
     opts.json = true;
@@ -65,15 +78,15 @@ module.exports = function (args) {
   }
 
   // console.log(opts);
-  return new Promise(function (resolve, reject) {
-    request(opts, function (err, response, body) {
+  return new Promise(function(resolve, reject) {
+    request(opts, function(err, response, body) {
       // console.log(err, body);
       if (err === null && response.statusCode == 200) {
-        let res
+        let res;
         try {
-          res = typeof body === 'string' ? JSON.parse(body) : body
+          res = typeof body === "string" ? JSON.parse(body) : body;
         } catch (e) {
-          res = body
+          res = body;
         }
         return resolve(res);
       } else {
