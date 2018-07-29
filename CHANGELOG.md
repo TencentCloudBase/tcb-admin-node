@@ -4,7 +4,7 @@
 - [changed] mpAppId不再需要传入
 - [changed] 修复了数据库排序的bug
 - [changed] 增加了数据库的count方法
-- [changed] 修正了文档，修改了文件存储和云函数的返回结果。请参考文档
+- [changed] 修正了文档，修改了文件存储和云函数的返回结果。请参考文档
 
 # v1.0.9
 
