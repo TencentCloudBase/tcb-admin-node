@@ -149,13 +149,12 @@ collection.doc().set({
 
 ### 查询文档
 
-支持 `where()`、`limit()`、`skip()`、`orderBy()`、`get()`、`update()`、`field()` 等操作。
+支持 `where()`、`limit()`、`skip()`、`orderBy()`、`get()`、`update()`、`field()`、`count()` 等操作。
 
 只有当调用`get()` `update()`时才会真正发送请求。
 
 #### collection.where()
 参数
-
 
 设置过滤条件
 where 可接收对象作为参数，表示筛选出拥有和传入对象相同的 key-value 的文档。比如筛选出所有类型为计算机的、内存为 8g 的商品：
@@ -179,6 +178,30 @@ db.collection('goods').where({
   }
 })
 ```
+
+#### collection.count()
+参数
+
+设置过滤条件
+where 可接收对象作为参数，表示筛选出拥有和传入对象相同的 key-value 的文档。比如筛选出所有类型为计算机的、内存为 8g 的商品：
+
+```js
+db.collection('goods').where({
+  category: 'computer',
+  type: {
+    memory: 8,
+  }
+}).count()
+```
+
+响应参数
+
+| 字段 | 类型 | 必填 | 说明
+| --- | --- | --- | ---
+| code | String | 否 | 状态码，操作成功则不返回
+| message | String | 否 | 错误描述
+| total | Integer | 否 | 计数结果
+| requestId | String | 否 | 请求序列号，用于错误排查
 
 #### 查询指令 eq
 
