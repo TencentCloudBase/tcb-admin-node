@@ -1,38 +1,44 @@
 const storage = require("./src/storage");
 const database = require("./src/db").Db;
 const functions = require("./src/functions");
-const ai = require("./src/ai");
 
-function Tcb() {}
+function Tcb() {
+  this.config = {
+    get secretId() {
+      return this._secretId ? this._secretId : process.env.TENCENTCLOUD_SECRETID
+    },
+    set secretId(id) {
+      this._secretId = id
+    },
+    get secretKey() {
+      return this._secretKey ? this._secretKey : process.env.TENCENTCLOUD_SECRETKEY
+    },
+    set secretKey(key) {
+      this._secretKey = key
+    },
+    get sessionToken() {
+      return this._sessionToken ? this._sessionToken : process.env.TENCENTCLOUD_SESSIONTOKEN
+    },
+    set sessionToken(token) {
+      this._sessionToken = token
+    },
+    envName: undefined,
+    proxy: undefined
+  };
+}
+
 Tcb.prototype.init = function ({
   secretId,
   secretKey,
   sessionToken,
-  envName,
-  mpAppId,
+  env,
   proxy
 }) {
-  this.config = {
-    get secretId() {
-      return secretId ? secretId : process.env.TENCENTCLOUD_SECRETID
-    },
-    get secretKey() {
-      return secretKey ? secretKey : process.env.TENCENTCLOUD_SECRETKEY
-    },
-    get sessionToken() {
-      return sessionToken ? sessionToken : process.env.TENCENTCLOUD_SESSIONTOKEN
-    },
-    envName,
-    mpAppId,
-    proxy
-  };
-  // console.log(this.config)
-  this.commParam = {
-    appid: this.config.mpAppId,
-    envName: this.config.envName,
-    timestamp: new Date().valueOf(),
-    eventId: ""
-  };
+  secretId && (this.config.secretId = secretId)
+  secretKey && (this.config.secretKey = secretKey)
+  sessionToken && (this.config.sessionToken = sessionToken)
+  env && (this.config.envName = env)
+  proxy && (this.config.proxy = proxy)
 };
 
 Tcb.prototype.database = function () {
