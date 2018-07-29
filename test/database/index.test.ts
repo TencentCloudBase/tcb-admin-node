@@ -18,7 +18,7 @@ describe("test/index.test.ts", async () => {
   const _ = db.command;
 
   const defaultDbName = "default";
-  const collName = "dev-test";
+  const collName = "coll-1";
   const collection = db.collection(collName);
   const nameList = ["f", "b", "e", "d", "a", "c"];
 
@@ -45,21 +45,34 @@ describe("test/index.test.ts", async () => {
     assert(collection.name === collName);
   });
 
-  clean();
+  it("Collection - query count", async () => {
+    const res = await collection
+      .where({
+        like_key: "1111"
+      })
+      .count();
+    console.log(res);
+  });
+  return;
+  // clean();
 
   it("Collection - should be empty", async () => {
-    const res = await collection.get();
-    // console.log(res);
+    const res = await collection.orderBy("time", "desc").get();
+    console.log(JSON.stringify(res));
     assert(Array.isArray(res.data));
     assert(res.data.length === 0);
   });
+  return;
 
   it("Document - doc().set()", async () => {
     const res = await collection.doc().set({
-      name: "mz"
+      name: "mz",
+      url:
+        "https://b86.photo.store.qq.com/psb?/V11mueXx0BWCDF/GKMTZTUHLU6yqgDwcVZxkv1jtYpGj1C5qnocertN90U!/a/dFYAAAAAAAAA"
     });
     assert(!!res.upsertedId);
   });
+  return;
 
   it("Collection - add()", async () => {
     const point = new db.Geo.Point(21, -23);

@@ -5,16 +5,9 @@ const assert = require("assert");
 const config = require("../config.js");
 
 describe("storage.uploadFile: 上传文件", () => {
-  tcb.init(
-    Object.assign({
-        envName: config.envName,
-        mpAppId: config.appId
-      },
-      config
-    )
-  );
+  tcb.init(config);
 
-  let fileContent = fs.createReadStream(`${__dirname}/cos.jpeg`)
+  let fileContent = fs.createReadStream(`${__dirname}/cos.jpeg`);
   // let fileContent = Buffer.from('aaaaa')
 
   it(
@@ -25,16 +18,19 @@ describe("storage.uploadFile: 上传文件", () => {
         fileContent
       });
       console.log(result);
+      assert(result.fileID, "上传文件失败");
 
       result = await tcb.getTempFileURL({
-        fileList: [{
-          fileID: result.data.fileid,
-          maxAge: 60
-        }]
+        fileList: [
+          {
+            fileID: result.fileID,
+            maxAge: 60
+          }
+        ]
       });
       console.log(JSON.stringify(result));
 
-      assert(result, "上传文件失败");
+      assert(result.fileList[0].tempFileURL, "上传文件失败");
     },
     10000
   );
