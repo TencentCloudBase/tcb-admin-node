@@ -16,13 +16,6 @@ export class Request {
   private db: Db;
 
   /**
-   * 公共参数
-   *
-   * @internal
-   */
-  private commParam: Object;
-
-  /**
    * 初始化
    *
    * @internal
@@ -30,12 +23,6 @@ export class Request {
    */
   constructor(db: Db) {
     this.db = db;
-    this.commParam = {
-      appid: db.config.mpAppId,
-      envName: db.config.envName,
-      timestamp: new Date().valueOf(),
-      eventId: ""
-    };
   }
 
   /**
@@ -45,7 +32,7 @@ export class Request {
    * @param data  - 参数
    */
   send(api?: string, data?: Object): Promise<any> {
-    const params = Object.assign({}, data, this.commParam, {
+    const params = Object.assign({}, data, {
       action: `database.${api}`
     });
     // console.log(this.db.config);

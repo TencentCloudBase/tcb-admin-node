@@ -9,7 +9,6 @@ import { Command } from "./command";
 interface DbConfig {
   secretId: string;
   secretKey: string;
-  mpAppId: string;
   envName?: string;
   /**
    * @internal
@@ -45,7 +44,6 @@ export class Db {
     secretId: "",
     secretKey: "",
     envName: "",
-    mpAppId: "",
     dbname: "default",
     proxy: ""
   };
