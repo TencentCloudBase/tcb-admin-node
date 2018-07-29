@@ -1,4 +1,4 @@
-const request = require('request')
+const request = require("request");
 const httpRequest = require("../utils/httpRequest");
 
 /*
@@ -6,15 +6,12 @@ const httpRequest = require("../utils/httpRequest");
  * @param {string} cloudPath 上传后的文件路径
  * @param {fs.ReadStream} fileContent  上传文件的二进制流
  */
-function uploadFile({
-  cloudPath,
-  fileContent
-}) {
-  let params = Object.assign({}, this.commParam, {
+function uploadFile({ cloudPath, fileContent }) {
+  let params = {
     action: "storage.uploadFile",
     path: cloudPath,
     file: fileContent
-  });
+  };
 
   return httpRequest({
     config: this.config,
@@ -23,6 +20,15 @@ function uploadFile({
     headers: {
       // "content-type": "multipart/form-data"
     }
+  }).then(res => {
+    if (res.code) {
+      return res;
+    } else {
+      return {
+        fileID: res.data.fileID,
+        requestId: res.requestId
+      };
+    }
   });
 }
 
@@ -30,9 +36,7 @@ function uploadFile({
  * 删除文件
  * @param {Array.<string>} fileList 文件id数组
  */
-async function deleteFile({
-  fileList
-}) {
+async function deleteFile({ fileList }) {
   if (!fileList || !Array.isArray(fileList)) {
     return {
       code: "INVALID_PARAM",
@@ -49,10 +53,10 @@ async function deleteFile({
     }
   }
 
-  let params = Object.assign({}, this.commParam, {
+  let params = {
     action: "storage.batchDeleteFile",
     fileid_list: fileList
-  });
+  };
 
   return httpRequest({
     config: this.config,
@@ -61,6 +65,15 @@ async function deleteFile({
     headers: {
       "content-type": "application/json"
     }
+  }).then(res => {
+    if (res.code) {
+      return res;
+    } else {
+      return {
+        fileList: res.data.delete_list,
+        requestId: res.requestId
+      };
+    }
   });
 }
 
@@ -68,9 +81,7 @@ async function deleteFile({
  * 获取文件下载链接
  * @param {Array.<Object>} fileList
  */
-async function getTempFileURL({
-  fileList
-}) {
+async function getTempFileURL({ fileList }) {
   if (!fileList || !Array.isArray(fileList)) {
     return {
       code: "INVALID_PARAM",
@@ -97,10 +108,10 @@ async function getTempFileURL({
     });
   }
 
-  let params = Object.assign({}, this.commParam, {
+  let params = {
     action: "storage.batchGetDownloadUrl",
     file_list
-  });
+  };
   // console.log(params);
 
   return httpRequest({
@@ -110,42 +121,60 @@ async function getTempFileURL({
     headers: {
       "content-type": "application/json"
     }
+  }).then(res => {
+    // console.log(res);
+    if (res.code) {
+      return res;
+    } else {
+      return {
+        fileList: res.data.download_list,
+        requestId: res.requestId
+      };
+    }
   });
 }
 
-async function downloadFile({
-  fileID
-}) {
-  let tmpUrl
+async function downloadFile({ fileID }) {
+  let tmpUrl;
   try {
     let tmpUrlRes = await this.getTempFileURL({
-      fileList: [{
-        fileID,
-        maxAge: 600
-      }]
-    })
-    console.log(tmpUrlRes)
+      fileList: [
+        {
+          fileID,
+          maxAge: 600
+        }
+      ]
+    });
+    console.log(tmpUrlRes);
 
-    if (tmpUrlRes.code || typeof tmpUrlRes.data != 'object' || !Array.isArray(tmpUrlRes.data.download_list) || !tmpUrlRes.data.download_list[0].download_url) {
+    if (
+      tmpUrlRes.code ||
+      typeof tmpUrlRes.data != "object" ||
+      !Array.isArray(tmpUrlRes.data.download_list) ||
+      !tmpUrlRes.data.download_list[0].download_url
+    ) {
       return;
     }
 
-    tmpUrl = tmpUrlRes.data.download_list[0].download_url
+    tmpUrl = tmpUrlRes.data.download_list[0].download_url;
   } catch (e) {
     return;
   }
 
-  return new Promise(function (resolve, reject) {
-    request({
-      url: tmpUrl
-    }, function (err, response, body) {
-      console.log(err, typeof body);
-      if (err === null && response.statusCode == 200) {
-        return resolve(body);
-      } else {
-        return reject(new Error(err));
+  return new Promise(function(resolve, reject) {
+    request(
+      {
+        url: tmpUrl
+      },
+      function(err, response, body) {
+        console.log(err, typeof body);
+        if (err === null && response.statusCode == 200) {
+          return resolve(body);
+        } else {
+          return reject(new Error(err));
+        }
       }
-    });
+    );
   });
 }
 

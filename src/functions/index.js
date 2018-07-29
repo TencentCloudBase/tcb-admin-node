@@ -6,26 +6,25 @@ const httpRequest = require("../utils/httpRequest");
  * @param {Object} functionParam 函数参数
  * @return {Promise}
  */
-function callFunction({
-  name,
-  data
-}) {
+function callFunction({ name, data }) {
   try {
     data = data ? JSON.stringify(data) : "";
   } catch (e) {
     return Promise.reject(e);
   }
   if (!name) {
-    return Promise.reject(new Error({
-      message: "函数名不能为空"
-    }));
+    return Promise.reject(
+      new Error({
+        message: "函数名不能为空"
+      })
+    );
   }
 
-  let params = Object.assign({}, this.commParam, {
+  let params = {
     action: "functions.invokeFunction",
     function_name: name,
     request_data: data
-  });
+  };
 
   return httpRequest({
     config: this.config,
@@ -33,6 +32,16 @@ function callFunction({
     method: "post",
     headers: {
       "content-type": "application/json"
+    }
+  }).then(res => {
+    console.log(res);
+    if (res.code) {
+      return res;
+    } else {
+      return {
+        result: res.data.response_data,
+        requestId: res.requestId
+      };
     }
   });
 }
