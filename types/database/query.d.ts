@@ -8,6 +8,7 @@ interface getRes {
 }
 export declare class Query {
     get(): Promise<getRes>;
+    count(): Promise<any>;
     where(query: object): Query;
     orderBy(fieldPath: string, directionStr: OrderByDirection): Query;
     limit(limit: number): Query;

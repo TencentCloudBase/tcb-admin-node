@@ -4,7 +4,6 @@ import { Command } from "./command";
 interface DbConfig {
     secretId: string;
     secretKey: string;
-    mpAppId: string;
     envName?: string;
     proxy?: string;
 }

@@ -11,16 +11,18 @@
 | secretId | String | 否 | 腾讯云API密钥对，在云函数内执行可不填。[前往获取](https://console.cloud.tencent.com/cam/capi)
 | SecretKey | String | 否 |  同上
 | envName | String | 是 | TCB环境ID
-| mpAppId | String | 是 | 小程序 APPID
 
 ```javascript
 // 初始化示例
 const app = require('tcb-admin-node');
+
+//初始化资源
+//这一步非必需。云函数下不需要secretId和secretKey。
+//env如果不指定将使用默认环境
 app.init({
   secretId: 'xxxxx',
   secretKey: 'xxxx', 
-  envName: 'xxx', 
-  mpAppId: 'xxx', 
+  env: 'xxx'
 });
 ```
 
@@ -161,7 +163,7 @@ where 可接收对象作为参数，表示筛选出拥有和传入对象相同�
 ```js
 db.collection('goods').where({
   category: 'computer',
-  properties: {
+  type: {
     memory: 8,
   }
 })
@@ -172,7 +174,7 @@ db.collection('goods').where({
 const _ = db.command // 取指令
 db.collection('goods').where({
   category: 'computer',
-  properties: {
+  type: {
     memory: _.gt(8), // 表示大于 8
   }
 })
@@ -231,7 +233,7 @@ db.collection('articles').where({
 const _ = db.command
 db.collection('goods').where({
   category: 'computer',
-  properties: {
+  type: {
     brand: _.neq('X')
   },
 })
@@ -273,7 +275,7 @@ db.collection('goods').where({
 const _ = db.command
 db.collection('goods').where({
   category: 'computer',
-  properties: {
+  type: {
     memory: _.in([8, 16])
   }
 })
@@ -290,7 +292,7 @@ db.collection('goods').where({
 const _ = db.command
 db.collection('goods').where({
   category: 'computer',
-  properties: {
+  type: {
     memory: _.gt(4).and(_.lt(32))
   }
 })
@@ -301,7 +303,7 @@ db.collection('goods').where({
 const _ = db.command
 db.collection('goods').where({
   category: 'computer',
-  properties: {
+  type: {
     memory: _.and(_.gt(4), _.lt(32))
   }
 })
@@ -316,7 +318,7 @@ db.collection('goods').where({
 const _ = db.command
 db.collection('goods').where({
   category: 'computer',
-  properties: {
+  type: {
     price: _.lt(4000).or(_.gt(6000).and(_.lt(8000)))
   }
 })
@@ -327,7 +329,7 @@ db.collection('goods').where({
 const _ = db.command
 db.collection('goods').where({
   category: 'computer',
-  properties: {
+  type: {
     price: _.or(_.lt(4000), _.and(_.gt(6000), _.lt(8000)))
   }
 })
@@ -339,12 +341,12 @@ db.collection('goods').where({
 const _ = db.command
 db.collection('goods').where(_.or(
   {
-    properties: {
+    type: {
       memory: _.gt(8)
     }
   },
   {
-    properties: {
+    type: {
       cpu: 3.2
     }
   }
@@ -564,6 +566,14 @@ fileList
 | fileList | \<Array>.Object | 否 | 存储下载链接的数组
 | requestId | String | 否 | 请求序列号，用于错误排查
 
+fileList
+
+| 字段 | 类型 | 必填 | 说明
+| --- | --- | --- | --- |
+| code | String | 否 | 删除结果，成功为SUCCESS
+| fildID | String | 是 | 文件ID
+| tempFileURL | String | 是 | 文件访问链接
+
 示例代码
 
 ```javascript
@@ -596,8 +606,8 @@ fileList
 
 | 字段 | 类型 | 必填 | 说明
 | --- | --- | --- | --- |
-| fildID | String | 是 | 文件ID
 | code | String | 否 | 删除结果，成功为SUCCESS
+| fildID | String | 是 | 文件ID
 
 示例代码
 
