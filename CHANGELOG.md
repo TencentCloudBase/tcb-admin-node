@@ -1,3 +1,11 @@
+# v1.0.16
+
+- [changed] 对象初始化实例后，不需要再做init操作，这样会使用默认环境。如果需要指定环境或者指定代理，则还是通过init方法操作。跟小程序SDK保持参数命名一致，envName改为env
+- [changed] mpAppId不再需要传入
+- [changed] 修复了数据库排序的bug
+- [changed] 增加了数据库的count方法
+- [changed] 修正了文档，修改了文件存储和云函数的返回结果。请参考文档
+
 # v1.0.9
 
 - [changed] 云函数内使用不需要填写secretId和secretKey，云函数重新部署后生效
