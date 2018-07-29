@@ -4,15 +4,9 @@ const requestHandler = require("../utils/httpRequest");
 class Request {
     constructor(db) {
         this.db = db;
-        this.commParam = {
-            appid: db.config.mpAppId,
-            envName: db.config.envName,
-            timestamp: new Date().valueOf(),
-            eventId: ""
-        };
     }
     send(api, data) {
-        const params = Object.assign({}, data, this.commParam, {
+        const params = Object.assign({}, data, {
             action: `database.${api}`
         });
         return requestHandler({

@@ -9,7 +9,6 @@ class Db {
             secretId: "",
             secretKey: "",
             envName: "",
-            mpAppId: "",
             dbname: "default",
             proxy: ""
         };

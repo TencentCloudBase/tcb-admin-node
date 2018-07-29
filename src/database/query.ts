@@ -111,7 +111,7 @@ export class Query {
     let newOder = [];
     if (this._fieldOrders) {
       this._fieldOrders.forEach(order => {
-        newOder.push(JSON.stringify(order));
+        newOder.push(order);
       });
     }
     interface Param {
@@ -157,6 +157,35 @@ export class Query {
             total: res.TotalCount,
             limit: res.Limit,
             offset: res.Offset
+          });
+        }
+      });
+    });
+  }
+
+  /**
+   * 获取总数
+   */
+  count() {
+    interface Param {
+      collectionName: string;
+      query?: Object;
+    }
+    let param: Param = {
+      collectionName: this._coll
+    };
+    if (this._fieldFilters) {
+      param.query = this._fieldFilters;
+    }
+    return new Promise<any>(resolve => {
+      this._request.send("countDocument", param).then(res => {
+        console.log(res);
+        if (res.code) {
+          resolve(res);
+        } else {
+          resolve({
+            requestId: res.requestId,
+            total: res.data.total
           });
         }
       });
