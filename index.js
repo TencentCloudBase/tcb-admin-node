@@ -5,43 +5,69 @@ const functions = require("./src/functions");
 function Tcb() {
   this.config = {
     get secretId() {
-      return this._secretId ? this._secretId : process.env.TENCENTCLOUD_SECRETID
+      return this._secretId
+        ? this._secretId
+        : process.env.TENCENTCLOUD_SECRETID;
     },
     set secretId(id) {
-      this._secretId = id
+      this._secretId = id;
     },
     get secretKey() {
-      return this._secretKey ? this._secretKey : process.env.TENCENTCLOUD_SECRETKEY
+      return this._secretKey
+        ? this._secretKey
+        : process.env.TENCENTCLOUD_SECRETKEY;
     },
     set secretKey(key) {
-      this._secretKey = key
+      this._secretKey = key;
     },
     get sessionToken() {
-      return this._sessionToken ? this._sessionToken : process.env.TENCENTCLOUD_SESSIONTOKEN
+      if (this._sessionToken === undefined) {
+        //默认临时密钥
+        return process.env.TENCENTCLOUD_SESSIONTOKEN;
+      } else if (this._sessionToken === false) {
+        //固定秘钥
+        return undefined;
+      } else {
+        //传入的临时密钥
+        return this._sessionToken;
+      }
     },
     set sessionToken(token) {
-      this._sessionToken = token
+      this._sessionToken = token;
     },
     envName: undefined,
     proxy: undefined
   };
 }
 
-Tcb.prototype.init = function ({
+Tcb.prototype.init = function({
   secretId,
   secretKey,
   sessionToken,
   env,
   proxy
 }) {
-  secretId && (this.config.secretId = secretId)
-  secretKey && (this.config.secretKey = secretKey)
-  sessionToken && (this.config.sessionToken = sessionToken)
-  env && (this.config.envName = env)
-  proxy && (this.config.proxy = proxy)
+  if ((secretId && !secretKey) || (!secretId && secretKey)) {
+    throw Error("secretId and secretKey must be a pair");
+  }
+
+  if (secretId) {
+    this.config.secretId = secretId;
+  }
+
+  if (secretKey) {
+    this.config.secretKey = secretKey;
+  }
+
+  if (secretId && secretKey) {
+    this.config.sessionToken = sessionToken ? sessionToken : false;
+  }
+
+  env && (this.config.envName = env);
+  proxy && (this.config.proxy = proxy);
 };
 
-Tcb.prototype.database = function () {
+Tcb.prototype.database = function() {
   return new database(this.config);
 };
 
@@ -54,7 +80,7 @@ function each(obj, fn) {
 }
 
 function extend(target, source) {
-  each(source, function (val, key) {
+  each(source, function(val, key) {
     target[key] = source[key];
   });
   return target;
