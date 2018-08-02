@@ -68,7 +68,7 @@ Tcb.prototype.init = function({
 };
 
 Tcb.prototype.database = function() {
-  return new database(this.config);
+  return new database(this);
 };
 
 function each(obj, fn) {
@@ -88,6 +88,5 @@ function extend(target, source) {
 
 extend(Tcb.prototype, functions);
 extend(Tcb.prototype, storage);
-// extend(Tcb.prototype, ai);
 
 module.exports = new Tcb();
