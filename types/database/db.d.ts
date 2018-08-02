@@ -1,20 +1,16 @@
 import { Point } from "./geo/point";
 import { CollectionReference } from "./collection";
 import { Command } from "./command";
-interface DbConfig {
-    secretId: string;
-    secretKey: string;
-    envName?: string;
-    proxy?: string;
-}
+import { ServerDate } from "./serverDate";
 interface GeoTeyp {
     Point: typeof Point;
 }
 export declare class Db {
-    readonly config: DbConfig;
     Geo: GeoTeyp;
     command: Command;
-    constructor(config: DbConfig);
+    config: any;
+    constructor(config?: any);
+    serverDate(offset?: number): ServerDate;
     collection(collName: string): CollectionReference;
 }
 export {};

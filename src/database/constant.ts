@@ -26,7 +26,9 @@ const FieldType = {
   Boolean: "Boolean",
   Null: "Null",
   GeoPoint: "GeoPoint",
-  Timestamp: "Date"
+  Timestamp: "Date",
+  Command: "Command",
+  ServerDate: "ServerDate"
 };
 
 /**
@@ -72,6 +74,20 @@ const OperatorMap = {
   [Opeartor.gte]: "$gte"
 };
 
+const UpdateOperatorList = [
+  "$set",
+  "$inc",
+  "$mul",
+  "$unset",
+  "$push",
+  "$pop",
+  "$unshift",
+  "$shift",
+  "$currentDate",
+  "$each",
+  "$position"
+];
+
 export {
   ErrorCode,
   FieldType,
@@ -80,5 +96,6 @@ export {
   Opeartor,
   OperatorMap,
   OrderByDirection,
-  OrderDirectionList
+  OrderDirectionList,
+  UpdateOperatorList
 };

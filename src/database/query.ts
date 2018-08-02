@@ -179,7 +179,7 @@ export class Query {
     }
     return new Promise<any>(resolve => {
       this._request.send("countDocument", param).then(res => {
-        console.log(res);
+        // console.log(res);
         if (res.code) {
           resolve(res);
         } else {
@@ -284,7 +284,8 @@ export class Query {
       multi: true,
       merge: true,
       upsert: false,
-      data: this.convertParams(data)
+      data: Util.encodeDocumentDataForReq(data, true)
+      // data: this.convertParams(data)
     };
 
     return new Promise<any>(resolve => {
@@ -307,31 +308,52 @@ export class Query {
    *
    * @param projection
    */
-  field(projection: Object): Promise<any> {
+  field(projection: Object): Query {
+    for (let k in projection) {
+      if (projection[k]) {
+        projection[k] = 1;
+      } else {
+        projection[k] = 0;
+      }
+    }
+
     let option = Object.assign({}, this._queryOptions);
     option.projection = projection;
-    this._queryOptions = option;
-    return this.get();
+
+    return new Query(
+      this._db,
+      this._coll,
+      this._fieldFilters,
+      this._fieldOrders,
+      option
+    );
   }
 
   convertParams(query: object) {
+    // console.log(query);
     let queryParam = {};
     if (query instanceof Command) {
       queryParam = query.parse();
     } else {
       for (let key in query) {
         if (query[key] instanceof Command) {
-          queryParam = Object.assign({}, queryParam, query[key].parse(key));
+          queryParam = Object.assign(
+            {},
+            queryParam,
+            query[key].parse(key)
+          );
         } else if (typeof query[key] === "object") {
           let command = new Command();
           let tmp = command.concatKeys({ [key]: query[key] });
-
+          // console.log(tmp)
+          let value
           if (tmp.value instanceof Command) {
-            tmp.value = tmp.value.parse(tmp.keys);
-            tmp.value = tmp.value[tmp.keys];
+            value = tmp.value.parse(tmp.keys);
+          } else {
+            value = { [tmp.keys]: tmp.value }
           }
-          // console.log(tmp);
-          queryParam = Object.assign({}, queryParam, { [tmp.keys]: tmp.value });
+
+          queryParam = Object.assign({}, queryParam, value);
         } else {
           queryParam = Object.assign({}, queryParam, { [key]: query[key] });
         }

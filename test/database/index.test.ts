@@ -8,7 +8,7 @@ describe("test/index.test.ts", async () => {
   const config = {
     secretId: Config.secretId,
     secretKey: Config.secretKey,
-    envName: Mock.envName,
+    env: Mock.env,
     mpAppId: Mock.appId,
     proxy: Config.proxy
   };
@@ -21,6 +21,44 @@ describe("test/index.test.ts", async () => {
   const collName = "coll-1";
   const collection = db.collection(collName);
   const nameList = ["f", "b", "e", "d", "a", "c"];
+
+  it("Document - doc().update()", async () => {
+    //   // var a = { a: { b: _.and(_.gt(1), _.lt(32)) } };
+    //   // var a = { a: 1, b: _.lte(2) }
+    //   // var a = { a: _.and(_.gt(2), _.lte(25)) }
+    //   // var a = { a: 1, b: _.or([_.gt(4), _.lt(32)]) }
+    //   // console.log(await collection.where(a).get());
+    //   // return;
+
+    console.log(await collection.add({
+      a: { b: { d: 1 } },
+      b: { geo: new db.Geo.Point(21, -23) },
+      c: db.serverDate()
+    }))
+    return;
+
+    console.log(await collection.where({
+      a: { b: { d: 1 } }
+    }).field({ c: true }).get())
+    return;
+
+    // console.log(await collection.where({
+    //   a: { b: { d: 1 } }
+    // }).update({
+    //   c: db.serverDate(),
+    //   d: _.inc(2)
+    // }))
+    // return;
+
+    const result = await collection
+      .doc("W2AQg-YZMMWl9VUz")
+      .set({
+        a: { b: 2 },
+        c: (2)
+      });
+    console.log(result);
+  });
+  // return;
 
   const clean = () => {
     it("Document - doc().remove() - clean all documents", async () => {
@@ -38,7 +76,7 @@ describe("test/index.test.ts", async () => {
   };
 
   it("DB - use default db", async () => {
-    assert(db.config.dbname === defaultDbName);
+    // assert(db.config.dbname === defaultDbName);
   });
 
   it("Collection - the collection name", () => {
@@ -51,18 +89,16 @@ describe("test/index.test.ts", async () => {
         like_key: "1111"
       })
       .count();
-    console.log(res);
+    // console.log(res);
   });
-  return;
-  // clean();
+  clean();
 
   it("Collection - should be empty", async () => {
-    const res = await collection.orderBy("time", "desc").get();
-    console.log(JSON.stringify(res));
+    const res = await collection.get();
+    // console.log(JSON.stringify(res));
     assert(Array.isArray(res.data));
     assert(res.data.length === 0);
   });
-  return;
 
   it("Document - doc().set()", async () => {
     const res = await collection.doc().set({
@@ -72,7 +108,6 @@ describe("test/index.test.ts", async () => {
     });
     assert(!!res.upsertedId);
   });
-  return;
 
   it("Collection - add()", async () => {
     const point = new db.Geo.Point(21, -23);
@@ -155,7 +190,7 @@ describe("test/index.test.ts", async () => {
   });
 
   it("Collection - field", async () => {
-    const res = await collection.field({ age: 1 });
+    const res = await collection.field({ age: 1 }).get();
     let hasNameField = false;
     res.data.forEach(document => {
       if (document.name) {

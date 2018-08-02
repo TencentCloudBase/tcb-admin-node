@@ -13,6 +13,11 @@ export declare class Command {
     mul(target: number): Command;
     remove(): Command;
     inc(target: number): Command;
+    set(target: any): Command;
+    push(target: any): Command;
+    pop(): Command;
+    unshift(target: any): Command;
+    shift(): Command;
     private baseOperate;
     and(...targets: any[]): Command;
     or(...targets: any[]): Command;

@@ -40,7 +40,7 @@ function Tcb() {
   };
 }
 
-Tcb.prototype.init = function({
+Tcb.prototype.init = function ({
   secretId,
   secretKey,
   sessionToken,
@@ -67,7 +67,7 @@ Tcb.prototype.init = function({
   proxy && (this.config.proxy = proxy);
 };
 
-Tcb.prototype.database = function() {
+Tcb.prototype.database = function () {
   return new database(this);
 };
 
@@ -80,7 +80,7 @@ function each(obj, fn) {
 }
 
 function extend(target, source) {
-  each(source, function(val, key) {
+  each(source, function (val, key) {
     target[key] = source[key];
   });
   return target;

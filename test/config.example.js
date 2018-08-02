@@ -1,7 +1,7 @@
 module.exports = {
   secretId: "xxx",
   secretKey: "xxxx",
-  envName: "xxx",
+  env: "xxx",
   appId: "xxx",
   proxy: ""
 };

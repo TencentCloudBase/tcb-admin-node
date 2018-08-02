@@ -10,7 +10,7 @@ class Request {
             action: `database.${api}`
         });
         return requestHandler({
-            config: this.db.config,
+            config: this.db.config.config,
             params,
             method: "post",
             headers: {

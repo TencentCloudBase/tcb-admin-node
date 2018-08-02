@@ -69,7 +69,6 @@ class Query {
         }
         return new Promise(resolve => {
             this._request.send("countDocument", param).then(res => {
-                console.log(res);
                 if (res.code) {
                     resolve(res);
                 }
@@ -114,7 +113,7 @@ class Query {
             multi: true,
             merge: true,
             upsert: false,
-            data: this.convertParams(data)
+            data: util_1.Util.encodeDocumentDataForReq(data, true)
         };
         return new Promise(resolve => {
             this._request.send("updateDocument", param).then(res => {
@@ -132,10 +131,17 @@ class Query {
         });
     }
     field(projection) {
+        for (let k in projection) {
+            if (projection[k]) {
+                projection[k] = 1;
+            }
+            else {
+                projection[k] = 0;
+            }
+        }
         let option = Object.assign({}, this._queryOptions);
         option.projection = projection;
-        this._queryOptions = option;
-        return this.get();
+        return new Query(this._db, this._coll, this._fieldFilters, this._fieldOrders, option);
     }
     convertParams(query) {
         let queryParam = {};
@@ -150,11 +156,14 @@ class Query {
                 else if (typeof query[key] === "object") {
                     let command = new command_1.Command();
                     let tmp = command.concatKeys({ [key]: query[key] });
+                    let value;
                     if (tmp.value instanceof command_1.Command) {
-                        tmp.value = tmp.value.parse(tmp.keys);
-                        tmp.value = tmp.value[tmp.keys];
+                        value = tmp.value.parse(tmp.keys);
                     }
-                    queryParam = Object.assign({}, queryParam, { [tmp.keys]: tmp.value });
+                    else {
+                        value = { [tmp.keys]: tmp.value };
+                    }
+                    queryParam = Object.assign({}, queryParam, value);
                 }
                 else {
                     queryParam = Object.assign({}, queryParam, { [key]: query[key] });

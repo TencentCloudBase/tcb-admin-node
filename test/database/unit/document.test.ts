@@ -10,7 +10,7 @@ describe("test/unit/document.test.ts", () => {
   const db = new Db({
     secretId: Config.secretId,
     secretKey: Config.secretKey,
-    envName: Mock.envName,
+    env: Mock.env,
     mpAppId: Mock.appId
   });
 

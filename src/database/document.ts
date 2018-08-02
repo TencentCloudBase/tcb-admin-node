@@ -1,6 +1,7 @@
 import { Request } from "./request";
 import { Db } from "./db";
 import { Util } from "./util";
+import { Command } from "./command";
 
 /**
  * 文档模块
@@ -8,7 +9,6 @@ import { Util } from "./util";
  * @author haroldhu
  */
 export class DocumentReference {
-
   /**
    * 数据库引用
    *
@@ -29,6 +29,11 @@ export class DocumentReference {
   readonly id: string;
 
   /**
+   *
+   */
+  readonly projection: Object;
+
+  /**
    * Request 实例
    *
    * @internal
@@ -44,11 +49,12 @@ export class DocumentReference {
    * @param coll  - 集合名称
    * @param docID - 文档ID
    */
-  constructor(db: Db, coll: string, docID: string) {
+  constructor(db: Db, coll: string, docID: string, projection = {}) {
     this._db = db;
     this._coll = coll;
     this.id = docID;
     this.request = new Request(this._db);
+    this.projection = projection;
   }
 
   /**
@@ -60,11 +66,11 @@ export class DocumentReference {
   create(data): Promise<any> {
     let params = {
       collectionName: this._coll,
-      data: this.processData(data),
-    }
+      data: this.processData(data, false)
+    };
 
     if (this.id) {
-      params['_id'] = this.id;
+      params["_id"] = this.id;
     }
 
     return new Promise<any>(resolve => {
@@ -89,16 +95,41 @@ export class DocumentReference {
    * @param data - 文档数据
    */
   set(data: Object): Promise<any> {
+    let hasOperator = false;
+    const checkMixed = (objs) => {
+      // console.log(objs)
+      if (typeof objs === 'object') {
+        for (let key in objs) {
+          if (objs[key] instanceof Command) {
+            hasOperator = true
+          } else if (typeof objs[key] === 'object') {
+            checkMixed(objs[key])
+          }
+        }
+      }
+
+    }
+    checkMixed(data)
+    // console.log('hasOperator', hasOperator)
+
+    if (hasOperator) {  //不能包含操作符
+      return Promise.resolve({
+        code: 'DATABASE_REQUEST_FAILED',
+        message: 'update operator complicit'
+      })
+    }
+
+    const merge = false; //data不能带有操作符
     let param = {
       collectionName: this._coll,
-      data: this.processData(data),
+      data: this.processData(data, merge),
       multi: false,
-      merge: false,
-      upsert: true,
+      merge,
+      upsert: true
     };
 
     if (this.id) {
-      param['query'] = { _id: this.id };
+      param["query"] = { _id: this.id };
     }
 
     return new Promise<any>(resolve => {
@@ -123,13 +154,14 @@ export class DocumentReference {
    */
   update(data: Object) {
     const query = { _id: this.id };
+    const merge = true; //把所有更新数据转为带操作符的
     const param = {
       collectionName: this._coll,
-      data: this.processData(data),
+      data: this.processData(data, merge),
       query: query,
       multi: false,
-      merge: false,
-      upsert: false,
+      merge,
+      upsert: false
     };
     return new Promise<any>(resolve => {
       this.request.send("updateDocument", param).then(res => {
@@ -171,14 +203,56 @@ export class DocumentReference {
   }
 
   /**
+   * 返回选中的文档（_id）
+   */
+  get(): Promise<any> {
+    const query = { _id: this.id };
+    const param = {
+      collectionName: this._coll,
+      query: query,
+      multi: false,
+      projection: this.projection
+    };
+    return new Promise<any>(resolve => {
+      this.request.send("queryDocument", param).then(res => {
+        if (res.code) {
+          resolve(res);
+        } else {
+          const documents = Util.formatResDocumentData(res.data.list);
+          resolve({
+            data: documents,
+            requestId: res.requestId,
+            total: res.TotalCount,
+            limit: res.Limit,
+            offset: res.Offset
+          });
+        }
+      });
+    });
+  }
+
+  /**
+   *
+   */
+  field(projection: Object): DocumentReference {
+    for (let k in projection) {
+      if (projection[k]) {
+        projection[k] = 1;
+      } else {
+        projection[k] = 0;
+      }
+    }
+    return new DocumentReference(this._db, this._coll, this.id, projection);
+  }
+
+  /**
    * 新增和更新文档时预处理文档数据
    *
    * @param data
    * @internal
    */
-  private processData(data) {
-    const params = Util.encodeDocumentDataForReq(data);
+  private processData(data, merge) {
+    const params = Util.encodeDocumentDataForReq(data, merge);
     return params;
   }
-
 }
