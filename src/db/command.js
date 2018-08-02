@@ -44,15 +44,46 @@ class Command {
     inc(target) {
         return new Command({ $inc: { [this.placeholder]: target } });
     }
+    set(target) {
+        return new Command({ $set: { [this.placeholder]: target } });
+    }
+    push(target) {
+        let value = target;
+        if (Array.isArray(target)) {
+            value = { $each: target };
+        }
+        return new Command({ $push: { [this.placeholder]: value } });
+    }
+    pop() {
+        return new Command({ $pop: { [this.placeholder]: 1 } });
+    }
+    unshift(target) {
+        let value = { $each: [target], $position: 0 };
+        if (Array.isArray(target)) {
+            value = { $each: target, $position: 0 };
+        }
+        return new Command({
+            $push: { [this.placeholder]: value }
+        });
+    }
+    shift() {
+        return new Command({ $pop: { [this.placeholder]: -1 } });
+    }
     baseOperate(operator, target) {
         return {
             [this.placeholder]: { [operator]: target }
         };
     }
     and(...targets) {
+        if (targets.length === 1 && Array.isArray(targets[0])) {
+            targets = targets[0];
+        }
         return new Command(this.connectOperate("$and", targets));
     }
     or(...targets) {
+        if (targets.length === 1 && Array.isArray(targets[0])) {
+            targets = targets[0];
+        }
         return new Command(this.connectOperate("$or", targets));
     }
     connectOperate(operator, targets) {
@@ -69,7 +100,6 @@ class Command {
             }
             else {
                 const tmp = this.concatKeys(target);
-                console.log(tmp);
                 logicParams.push({
                     [tmp.keys]: tmp.value instanceof Command ? tmp.value.logicParam : tmp.value
                 });

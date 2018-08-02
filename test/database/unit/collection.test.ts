@@ -9,7 +9,7 @@ describe("test/unit/collection.test.ts", () => {
   const db = new Db({
     secretId: Config.secretId,
     secretKey: Config.secretKey,
-    envName: Mock.envName,
+    env: Mock.env,
     mpAppId: Mock.appId
   });
   const collection = db.collection(collName);

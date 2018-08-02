@@ -14,6 +14,8 @@ declare const FieldType: {
     Null: string;
     GeoPoint: string;
     Timestamp: string;
+    Command: string;
+    ServerDate: string;
 };
 declare type OrderByDirection = "desc" | "asc";
 declare const OrderDirectionList: string[];
@@ -33,4 +35,5 @@ declare const OperatorMap: {
     [Opeartor.gt]: string;
     [Opeartor.gte]: string;
 };
-export { ErrorCode, FieldType, WhereFilterOp, WhereFilterOpList, Opeartor, OperatorMap, OrderByDirection, OrderDirectionList };
+declare const UpdateOperatorList: string[];
+export { ErrorCode, FieldType, WhereFilterOp, WhereFilterOpList, Opeartor, OperatorMap, OrderByDirection, OrderDirectionList, UpdateOperatorList };

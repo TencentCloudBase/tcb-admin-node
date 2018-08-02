@@ -2,6 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const constant_1 = require("./constant");
 const point_1 = require("./geo/point");
+const command_1 = require("./command");
+const deepAssign = require("deep-assign");
+const serverDate_1 = require("./serverDate");
 class Util {
 }
 Util.encodeGeoPoint = (point) => {
@@ -13,6 +16,9 @@ Util.encodeGeoPoint = (point) => {
         coordinates: [point.latitude, point.longitude]
     };
 };
+Util.encodeServerDate = (serverDate) => {
+    return { $date: { offset: serverDate.offset } };
+};
 Util.encodeTimestamp = (stamp) => {
     if (!(stamp instanceof Date)) {
         throw new Error("encodeTimestamp: must be Date type");
@@ -21,7 +27,7 @@ Util.encodeTimestamp = (stamp) => {
         $timestamp: Math.floor(stamp.getTime() / 1000)
     };
 };
-Util.encodeDocumentDataForReq = document => {
+Util.encodeDocumentDataForReq = (document, merge = false) => {
     const keys = Object.keys(document);
     let params = {};
     if (Array.isArray(document)) {
@@ -33,23 +39,39 @@ Util.encodeDocumentDataForReq = document => {
         let realValue;
         switch (type) {
             case constant_1.FieldType.GeoPoint:
-                realValue = Util.encodeGeoPoint(item);
+                realValue = { [key]: Util.encodeGeoPoint(item).coordinates };
                 break;
             case constant_1.FieldType.Timestamp:
-                realValue = Util.encodeTimestamp(item);
+                realValue = { [key]: Util.encodeTimestamp(item) };
+                break;
+            case constant_1.FieldType.ServerDate:
+                realValue = { [key]: Util.encodeServerDate(item) };
                 break;
             case constant_1.FieldType.Object:
             case constant_1.FieldType.Array:
-                realValue = Util.encodeDocumentDataForReq(item);
+                realValue = { [key]: Util.encodeDocumentDataForReq(item) };
+                break;
+            case constant_1.FieldType.Command:
+                let command = new command_1.Command();
+                let tmp = command.concatKeys({ [key]: item });
+                if (tmp.value instanceof command_1.Command) {
+                    realValue = tmp.value.parse(tmp.keys);
+                }
+                else {
+                    realValue = { [tmp.keys]: tmp.value };
+                }
                 break;
             default:
-                realValue = item;
+                realValue = { [key]: item };
+        }
+        if (constant_1.UpdateOperatorList.indexOf(Object.keys(realValue)[0]) === -1 && merge === true) {
+            realValue = { $set: realValue };
         }
         if (Array.isArray(params)) {
             params.push(realValue);
         }
         else {
-            params[key] = realValue;
+            params = deepAssign({}, params, realValue);
         }
     });
     return params;
@@ -100,6 +122,12 @@ Util.whichType = (obj) => {
         }
         else if (obj instanceof Date) {
             return constant_1.FieldType.Timestamp;
+        }
+        else if (obj instanceof command_1.Command) {
+            return constant_1.FieldType.Command;
+        }
+        else if (obj instanceof serverDate_1.ServerDate) {
+            return constant_1.FieldType.ServerDate;
         }
         if (obj.$timestamp) {
             type = constant_1.FieldType.Timestamp;

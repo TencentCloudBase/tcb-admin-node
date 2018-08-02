@@ -8,9 +8,9 @@
 
 | 字段 | 类型 | 必填 | 说明
 | --- | --- | --- | --- |
-| secretId | String | 否 | 腾讯云API密钥对，在云函数内执行可不填。[前往获取](https://console.cloud.tencent.com/cam/capi)
+| secretId | String | 否 | 腾讯云API固定密钥对，在云函数内执行可不填。[前往获取](https://console.cloud.tencent.com/cam/capi)
 | SecretKey | String | 否 |  同上
-| envName | String | 是 | TCB环境ID
+| env | String | 否 | TCB环境ID，不填使用默认环境
 
 ```javascript
 // 初始化示例
@@ -100,6 +100,10 @@ const collection = db.collection('user');
 |          | remove | 删除字段 |
 |          | inc   | 加一个数值，原子自增 |
 |          | mul   | 乘一个数值，原子自乘 |
+|          | push  | 数组类型字段追加尾元素，支持数组
+|          | pop   | 数组类型字段删除尾元素，支持数组
+|          | shift | 数组类型字段删除头元素，支持数组
+|          | unshift | 数组类型字段追加头元素，支持数组
 
 
 #### 特殊数据类型
@@ -115,7 +119,22 @@ const collection = db.collection('user');
 ```js
 new db.Geo.Point(longitude, latitude)
 ```
+##### 服务端时间
 
+**ServerDate**
+
+
+```js
+//服务端当前时间
+new db.serverDate()
+```
+
+```js
+//服务端当前时间加1S
+new db.serverDate({
+  offset: 1000
+})
+```
 
 
 ## API文档
@@ -152,6 +171,7 @@ collection.doc().set({
 支持 `where()`、`limit()`、`skip()`、`orderBy()`、`get()`、`update()`、`field()`、`count()` 等操作。
 
 只有当调用`get()` `update()`时才会真正发送请求。
+注：默认取前100条数据，最大取前100条数据。
 
 #### collection.where()
 参数
@@ -425,13 +445,14 @@ collection.orderBy("name", "asc").get();
 
 | 参数 | 类型 | 必填 | 说明
 | --- | --- | --- | --- |
-| data | Object | 是 | 要返回的字段
+| - | Object | 是 | 要过滤的字段，不返回传false，返回传true
 
 使用示例
 
 ```js
-collection.field({ 'age': 1 })
+collection.field({ 'age': true })
 ```
+备注：只能指定要返回的字段或者不要返回的字段。即{'a': true, 'b': false}是一种错误的参数格式
 
 ### 删除文档
 

@@ -14,7 +14,7 @@ export declare class Query {
     limit(limit: number): Query;
     skip(offset: number): Query;
     update(data: Object): Promise<any>;
-    field(projection: Object): Promise<any>;
+    field(projection: Object): Query;
     convertParams(query: object): {};
 }
 export {};

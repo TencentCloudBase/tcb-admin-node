@@ -1,6 +1,6 @@
 {
   "name": "tcb-admin-node",
-  "version": "1.0.17",
+  "version": "1.0.18",
   "description": "tencent cloud base admin sdk for node.js",
   "main": "index.js",
   "scripts": {
@@ -19,6 +19,7 @@
   "author": "jimmyzhang",
   "license": "ISC",
   "dependencies": {
+    "deep-assign": "^2.0.0",
     "request": "^2.87.0"
   },
   "devDependencies": {
@@ -36,6 +37,8 @@
     "transform": {
       "^.+\\.tsx?$": "ts-jest"
     },
+    "verbose": true,
+    "testURL": "http://localhost/",
     "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
     "moduleFileExtensions": [
       "ts",

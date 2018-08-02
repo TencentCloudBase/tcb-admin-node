@@ -17,7 +17,9 @@ const FieldType = {
     Boolean: "Boolean",
     Null: "Null",
     GeoPoint: "GeoPoint",
-    Timestamp: "Date"
+    Timestamp: "Date",
+    Command: "Command",
+    ServerDate: "ServerDate"
 };
 exports.FieldType = FieldType;
 const OrderDirectionList = ["desc", "asc"];
@@ -41,3 +43,17 @@ const OperatorMap = {
     [Opeartor.gte]: "$gte"
 };
 exports.OperatorMap = OperatorMap;
+const UpdateOperatorList = [
+    "$set",
+    "$inc",
+    "$mul",
+    "$unset",
+    "$push",
+    "$pop",
+    "$unshift",
+    "$shift",
+    "$currentDate",
+    "$each",
+    "$position"
+];
+exports.UpdateOperatorList = UpdateOperatorList;

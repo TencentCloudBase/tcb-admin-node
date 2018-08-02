@@ -14,7 +14,8 @@ describe("storage.uploadFile: 上传文件", () => {
     "上传文件",
     async () => {
       let result = await tcb.uploadFile({
-        cloudPath: "test-admin.jpeg",
+        // cloudPath: "test-admin.jpeg",
+        cloudPath: "测试.jpeg",
         fileContent
       });
       console.log(result);

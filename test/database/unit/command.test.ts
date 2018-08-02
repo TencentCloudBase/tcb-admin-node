@@ -6,9 +6,7 @@ describe("test/unit/collection.test.ts", async () => {
   const collName = "coll-1";
   const db = new Db({
     secretId: Config.secretId,
-    secretKey: Config.secretKey,
-    envName: Mock.envName,
-    mpAppId: Mock.appId
+    secretKey: Config.secretKey
   });
   const collection = db.collection(collName);
   const command = db.command;
@@ -17,7 +15,8 @@ describe("test/unit/collection.test.ts", async () => {
   //   _.gt(4);
   //   _.gt(32);
   //   _.lte(100);
-  //   var a = _.and(_.gt(4), _.lt(32));
+  var a = _.and(_.gt(4), _.lt(32));
+  collection.where(a).get();
   //   var a = _.or(_.lt(4000), _.and(_.gt(6000), _.lt(8000)));
   //   _.gt(4).and(_.lt(32));
   //   console.log(JSON.stringify(_.logicParam));

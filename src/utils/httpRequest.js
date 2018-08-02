@@ -1,13 +1,13 @@
 var request = require("request");
 var auth = require("./auth.js");
 
-module.exports = function(args) {
+module.exports = function (args) {
   var config = args.config,
     params = args.params,
     method = args.method || "get";
 
   params = Object.assign({}, params, {
-    envName: config.envName,
+    env: config.env,
     timestamp: new Date().valueOf(),
     eventId: ""
   });
@@ -77,9 +77,9 @@ module.exports = function(args) {
     opts.proxy = args.proxy;
   }
 
-  // console.log(opts);
-  return new Promise(function(resolve, reject) {
-    request(opts, function(err, response, body) {
+  // console.log(JSON.stringify(opts));
+  return new Promise(function (resolve, reject) {
+    request(opts, function (err, response, body) {
       // console.log(err, body);
       if (err === null && response.statusCode == 200) {
         let res;

@@ -1,6 +1,6 @@
 import * as Config from '../../config'
 
-export const envName = Config.envName;
+export const env = Config.env;
 export const appId = Config.appId;
 
 /**

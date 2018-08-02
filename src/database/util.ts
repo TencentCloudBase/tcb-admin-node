@@ -1,5 +1,8 @@
-import { FieldType } from "./constant";
+import { FieldType, UpdateOperatorList } from "./constant";
 import { Point } from "./geo/point";
+import { Command } from "./command";
+import * as deepAssign from "deep-assign";
+import { ServerDate } from "./serverDate";
 
 interface DocumentModel {
   _id: string;
@@ -19,7 +22,6 @@ interface GeoPointRes {
  * @author haroldhu
  */
 export class Util {
-
   /**
    * 编码为后端格式的地理位置数据
    *
@@ -34,6 +36,10 @@ export class Util {
       coordinates: [point.latitude, point.longitude]
     };
   };
+
+  private static encodeServerDate = (serverDate: ServerDate): object => {
+    return { $date: { offset: serverDate.offset } }
+  }
 
   /**
    * 编码为后端格式的日期数据
@@ -56,7 +62,7 @@ export class Util {
    *
    * @param document - 前端文档数据
    */
-  public static encodeDocumentDataForReq = document => {
+  public static encodeDocumentDataForReq = (document, merge = false) => {
     const keys = Object.keys(document);
     let params = {};
 
@@ -64,32 +70,51 @@ export class Util {
     if (Array.isArray(document)) {
       params = [];
     }
-
+    // console.log(document);
     keys.forEach(key => {
       const item = document[key];
       const type = Util.whichType(item);
       let realValue;
       switch (type) {
         case FieldType.GeoPoint:
-          realValue = Util.encodeGeoPoint(item);
+          realValue = { [key]: Util.encodeGeoPoint(item).coordinates };
           break;
         case FieldType.Timestamp:
-          realValue = Util.encodeTimestamp(item);
+          realValue = { [key]: Util.encodeTimestamp(item) };
+          break;
+        case FieldType.ServerDate:
+          realValue = { [key]: Util.encodeServerDate(item) };
           break;
         case FieldType.Object:
         case FieldType.Array:
-          realValue = Util.encodeDocumentDataForReq(item);
+          realValue = { [key]: Util.encodeDocumentDataForReq(item) };
+          break;
+        case FieldType.Command:
+          let command = new Command();
+          let tmp = command.concatKeys({ [key]: item });
+
+          if (tmp.value instanceof Command) {
+            realValue = tmp.value.parse(tmp.keys);
+          } else {
+            realValue = { [tmp.keys]: tmp.value }
+          }
           break;
         default:
-          realValue = item;
+          realValue = { [key]: item };
       }
+
+      if (UpdateOperatorList.indexOf(Object.keys(realValue)[0]) === -1 && merge === true) {
+        realValue = { $set: realValue }
+      }
+
       if (Array.isArray(params)) {
         params.push(realValue);
       } else {
-        params[key] = realValue;
+        // params[key] = realValue;
+        params = deepAssign({}, params, realValue);
       }
     });
-
+    // console.log(params)
     return params;
   };
 
@@ -124,6 +149,7 @@ export class Util {
     keys.forEach(key => {
       const item = document[key];
       const type = Util.whichType(item);
+      // console.log(type)
       let realValue;
       switch (type) {
         case FieldType.GeoPoint:
@@ -136,8 +162,10 @@ export class Util {
         case FieldType.Array:
           realValue = Util.formatField(item);
           break;
+
         default:
           realValue = item;
+
       }
 
       if (Array.isArray(protoField)) {
@@ -145,6 +173,7 @@ export class Util {
       } else {
         protoField[key] = realValue;
       }
+      // console.log(protoField)
     });
     return protoField;
   };
@@ -156,12 +185,18 @@ export class Util {
    */
   public static whichType = (obj: any): String => {
     let type = Object.prototype.toString.call(obj).slice(8, -1);
+
     if (type === FieldType.Object) {
       if (obj instanceof Point) {
         return FieldType.GeoPoint;
       } else if (obj instanceof Date) {
         return FieldType.Timestamp;
+      } else if (obj instanceof Command) {
+        return FieldType.Command;
+      } else if (obj instanceof ServerDate) {
+        return FieldType.ServerDate
       }
+
       if (obj.$timestamp) {
         type = FieldType.Timestamp;
       } else if (Array.isArray(obj.coordinates) && obj.type === "Point") {
@@ -184,5 +219,4 @@ export class Util {
     }
     return autoId;
   };
-
 }

@@ -35,9 +35,9 @@ export class Request {
     const params = Object.assign({}, data, {
       action: `database.${api}`
     });
-    // console.log(this.db.config);
+    // console.log(this.db.config.config);
     return requestHandler({
-      config: this.db.config,
+      config: this.db.config.config,
       params,
       method: "post",
       headers: {
