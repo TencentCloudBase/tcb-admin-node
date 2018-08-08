@@ -1,4 +1,5 @@
 const request = require("request");
+const fs = require('fs');
 const httpRequest = require("../utils/httpRequest");
 
 /*
@@ -134,8 +135,9 @@ async function getTempFileURL({ fileList }) {
   });
 }
 
-async function downloadFile({ fileID }) {
-  let tmpUrl;
+async function downloadFile({ fileID, tempFilePath }) {
+  let tmpUrl,
+    self = this;
   try {
     let tmpUrlRes = await this.getTempFileURL({
       fileList: [
@@ -148,37 +150,47 @@ async function downloadFile({ fileID }) {
     console.log(tmpUrlRes);
 
     if (
-      tmpUrlRes.code ||
-      typeof tmpUrlRes.data != "object" ||
-      !Array.isArray(tmpUrlRes.data.download_list) ||
-      !tmpUrlRes.data.download_list[0].download_url
+      tmpUrlRes.code
     ) {
-      return;
+      return tmpUrlRes;
     }
 
-    tmpUrl = tmpUrlRes.data.download_list[0].download_url;
+    tmpUrl = tmpUrlRes.fileList[0].tempFileURL;
   } catch (e) {
-    return;
+    throw e
   }
 
-  return new Promise(function(resolve, reject) {
-    request(
-      {
-        url: tmpUrl
-      },
-      function(err, response, body) {
-        console.log(err, typeof body);
-        if (err === null && response.statusCode == 200) {
-          return resolve(body);
+  let req = request({
+    url: tmpUrl,
+    encoding: null,
+    proxy: self.config.proxy
+  });
+
+  return new Promise((resolve, reject) => {
+    let fileContent = Buffer.alloc(0)
+    req.on('response', function (response) {
+      if (response && +response.statusCode === 200) {
+        if (tempFilePath) {
+          response.pipe(fs.createWriteStream(tempFilePath));
         } else {
-          return reject(new Error(err));
+          response.on('data', (data) => {
+            fileContent = Buffer.concat([fileContent, data])
+          })
         }
+        response.on('end', () => {
+          resolve({
+            fileContent: tempFilePath ? undefined : fileContent,
+            message: '文件下载完成'
+          })
+        })
+      } else {
+        reject(response)
       }
-    );
+    });
   });
 }
 
 exports.uploadFile = uploadFile;
 exports.deleteFile = deleteFile;
 exports.getTempFileURL = getTempFileURL;
-// exports.downloadFile = downloadFile;
+exports.downloadFile = downloadFile;
