@@ -23,6 +23,9 @@ describe("test/index.test.ts", async () => {
   const nameList = ["f", "b", "e", "d", "a", "c"];
 
   it("Document - doc().update()", async () => {
+    console.log(await db.collection('ccc').create())
+    return;
+
     //   // var a = { a: { b: _.and(_.gt(1), _.lt(32)) } };
     //   // var a = { a: 1, b: _.lte(2) }
     //   // var a = { a: _.and(_.gt(2), _.lte(25)) }
@@ -58,7 +61,7 @@ describe("test/index.test.ts", async () => {
       });
     console.log(result);
   });
-  // return;
+  return;
 
   const clean = () => {
     it("Document - doc().remove() - clean all documents", async () => {

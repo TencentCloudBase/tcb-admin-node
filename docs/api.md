@@ -1,7 +1,3 @@
-# 接口文档
-
-[TOC]
-
 ## 应用初始化
 
 参数
@@ -17,7 +13,7 @@
 const app = require('tcb-admin-node');
 
 //初始化资源
-//这一步非必需。云函数下不需要secretId和secretKey。
+//云函数下不需要secretId和secretKey。
 //env如果不指定将使用默认环境
 app.init({
   secretId: 'xxxxx',
@@ -48,6 +44,7 @@ const collection = db.collection('user');
 | 类型 | 接口 | 说明 |
 | -- | -- | -- |
 | 写   | add    | 新增记录（触发请求） |
+| 计数  | count | 获取复合条件的记录条数 |
 | 读   | get    | 获取集合中的记录，如果有使用 where 语句定义查询条件，则会返回匹配结果集 (触发请求) |
 | 引用   | doc    | 获取对该集合中指定 id 的记录的引用 |
 | 查询条件   | where    | 通过指定条件筛选出匹配的记录，可搭配查询指令（eq, gt, in, ...）使用 |
@@ -136,15 +133,17 @@ new db.serverDate({
 })
 ```
 
+### 新增集合
+该方法没有参数，如果集合已存在，则报错
 
-## API文档
+collection.create()
+
 
 ### 新增文档
 
-#### collection.add(data)
+方法1： collection.add(data)
 
-add 参数
-
+示例：
 | 参数 | 类型 | 必填 | 说明
 | --- | --- | --- | --- |
 | data | Object | 是 | {_id: '10001', 'name': 'Ben'} _id 非必填
@@ -155,7 +154,7 @@ collection.add({
 });
 ```
 
-#### collection.doc().set(data)
+方法2： collection.doc().set(data)
 
 也可通过 `set` 方法新增一个文档，需先取得文档引用再调用 `set` 方法。
 如果文档不存在，`set` 方法会创建一个新文档。
@@ -173,7 +172,8 @@ collection.doc().set({
 只有当调用`get()` `update()`时才会真正发送请求。
 注：默认取前100条数据，最大取前100条数据。
 
-#### collection.where()
+#### 添加查询条件
+collection.where()
 参数
 
 设置过滤条件
@@ -199,12 +199,10 @@ db.collection('goods').where({
 })
 ```
 
-#### collection.count()
+#### 获取查询数量
+collection.count()
+
 参数
-
-设置过滤条件
-where 可接收对象作为参数，表示筛选出拥有和传入对象相同的 key-value 的文档。比如筛选出所有类型为计算机的、内存为 8g 的商品：
-
 ```js
 db.collection('goods').where({
   category: 'computer',
@@ -223,7 +221,73 @@ db.collection('goods').where({
 | total | Integer | 否 | 计数结果
 | requestId | String | 否 | 请求序列号，用于错误排查
 
-#### 查询指令 eq
+
+
+#### 设置记录数量
+collection.limit()
+
+参数说明
+
+| 参数 | 类型 | 必填 | 说明
+| --- | --- | --- | --- |
+| value | Integer | 是 | 限制展示的数值
+
+使用示例
+
+```js
+collection.limit(1).get();
+```
+
+#### 设置起始位置
+collection.skip()
+
+参数说明
+
+| 参数 | 类型 | 必填 | 说明
+| --- | --- | --- | --- |
+| value | Integer | 是 | 跳过展示的数据
+
+使用示例
+
+```js
+collection.skip(4).get();
+```
+
+#### 对结果排序
+collection.orderBy()
+
+参数说明
+
+| 参数 | 类型 | 必填 | 说明
+| --- | --- | --- | --- |
+| field | String | 是 | 排序的字段
+| orderType | String | 是 | 排序的顺序，升序(asc) 或 降序(desc)
+
+使用示例
+
+```js
+collection.orderBy("name", "asc").get();
+```
+
+#### 指定返回字段
+
+collection.field()
+
+参数说明
+
+| 参数 | 类型 | 必填 | 说明
+| --- | --- | --- | --- |
+| - | Object | 是 | 要过滤的字段，不返回传false，返回传true
+
+使用示例
+
+```js
+collection.field({ 'age': true })
+```
+备注：只能指定要返回的字段或者不要返回的字段。即{'a': true, 'b': false}是一种错误的参数格式
+
+#### 查询指令 
+##### eq
 
 表示字段等于某个值。`eq` 指令接受一个字面量 (literal)，可以是 `number`, `boolean`, `string`, `object`, `array`。
 
@@ -266,7 +330,7 @@ db.collection('articles').where({
 })
 ```
 
-#### 查询指令 neq
+##### neq
 
 字段不等于。`neq` 指令接受一个字面量 (literal)，可以是 `number`, `boolean`, `string`, `object`, `array`。
 
@@ -282,7 +346,7 @@ db.collection('goods').where({
 })
 ```
 
-#### 查询指令 gt
+##### gt
 
 字段大于指定值。
 
@@ -296,19 +360,19 @@ db.collection('goods').where({
 })
 ```
 
-#### 查询指令 gte
+##### gte
 
 字段大于或等于指定值。
 
-#### 查询指令 lt
+##### lt
 
 字段小于指定值。
 
-#### 查询指令 lte
+##### lte
 
 字段小于或等于指定值。
 
-#### 查询指令 in
+##### in
 
 字段值在给定的数组中。
 
@@ -324,7 +388,7 @@ db.collection('goods').where({
 })
 ```
 
-#### 查询指令 and
+##### and
 
 表示需同时满足指定的两个或以上的条件。
 
@@ -352,7 +416,7 @@ db.collection('goods').where({
 })
 ```
 
-#### 查询指令 or
+##### or
 
 表示需满足所有指定条件中的至少一个。如筛选出价格小于 4000 或在 6000-8000 之间的计算机：
 
@@ -396,64 +460,6 @@ db.collection('goods').where(_.or(
 ))
 ```
 
-#### collection.limit()
-
-参数说明
-
-| 参数 | 类型 | 必填 | 说明
-| --- | --- | --- | --- |
-| value | Integer | 是 | 限制展示的数值
-
-使用示例
-
-```js
-collection.limit(1).get();
-```
-
-#### collection.skip()
-
-参数说明
-
-| 参数 | 类型 | 必填 | 说明
-| --- | --- | --- | --- |
-| value | Integer | 是 | 跳过展示的数据
-
-使用示例
-
-```js
-collection.skip(4).get();
-```
-
-#### collection.orderBy()
-
-参数说明
-
-| 参数 | 类型 | 必填 | 说明
-| --- | --- | --- | --- |
-| field | String | 是 | 排序的字段
-| orderType | String | 是 | 排序的顺序，升序(asc) 或 降序(desc)
-
-使用示例
-
-```js
-collection.orderBy("name", "asc").get();
-```
-
-#### collection.field()
-
-参数说明
-
-| 参数 | 类型 | 必填 | 说明
-| --- | --- | --- | --- |
-| - | Object | 是 | 要过滤的字段，不返回传false，返回传true
-
-使用示例
-
-```js
-collection.field({ 'age': true })
-```
-备注：只能指定要返回的字段或者不要返回的字段。即{'a': true, 'b': false}是一种错误的参数格式
-
 ### 删除文档
 
 ```js
@@ -470,11 +476,11 @@ collection.get()
   });
 ```
 
-### 更新文档：
+### 更新文档
 
-#### collection.doc().update()
+#### 更新指定文档
 
-更新指定文档
+collection.doc().update()
 
 ```js
 collection.doc('doc-id').update({
@@ -482,9 +488,8 @@ collection.doc('doc-id').update({
 });
 ```
 
-#### collection.doc().set()
-
-更新文档，如果不存在则创建文档。
+#### 更新文档，如果不存在则创建
+collection.doc().set()
 
 ```js
 collection.doc('doc-id').set({
@@ -492,9 +497,8 @@ collection.doc('doc-id').set({
 });
 ```
 
-#### collection.update()
-
-批量更新文档
+#### 批量更新文档
+collection.update()
 
 ```js
 collection.where({name: _.eq('hey')}).update({
@@ -502,7 +506,9 @@ collection.where({name: _.eq('hey')}).update({
 });
 ```
 
-#### 更新指令 set
+#### 更新指令 
+
+##### set
 
 更新指令。用于设定字段等于指定值。这种方法相比传入纯 JS 对象的好处是能够指定字段等于一个对象：
 
@@ -518,7 +524,7 @@ db.collection('photo').doc('doc-id').update({
 })
 ```
 
-#### 更新指令 inc
+##### inc
 
 更新指令。用于指示字段自增某个值，这是个原子操作，使用这个操作指令而不是先读数据、再加、再写回的好处是：
 
@@ -540,12 +546,12 @@ db.collection('user').where({
 })
 ```
 
-#### 更新指令 mul
+##### mul
 
 更新指令。用于指示字段自乘某个值。
 
 
-#### 更新指令 remove
+##### remove
 
 更新指令。用于表示删除某个字段。如某人删除了自己一条商品评价中的评分：
 
@@ -555,6 +561,31 @@ db.collection('comments').doc('comment-id').update({
   rating: _.remove()
 })
 ```
+
+##### push
+向数组尾部追加元素，支持传入单个元素或数组
+
+```js
+const _ = db.command
+db.collection('comments').doc('comment-id').update({
+  // users: _.push('aaa')
+  users: _.push(['aaa', 'bbb'])
+})
+```
+
+##### pop
+删除数组尾部元素
+```js
+const _ = db.command
+db.collection('comments').doc('comment-id').update({
+  users: _.pop()
+})
+```
+
+##### shift
+删除数组头部元素。使用同
+##### unshift
+向数组头部添加元素，支持传入单个元素或数组
 
 ## 文件存储
 
@@ -629,7 +660,8 @@ let result = await app.getTempFileURL({
 });
 ```
 
-### 删除文件: app.deletfile(Object)
+### 删除文件
+ app.deletfile(Object)
 
 请求参数
 
@@ -660,6 +692,34 @@ let result = await app.deleteFile({
     fileList: [
         "HHOeahVQ0fRTDsums4GVgMCsF6CE3wb7kmIkZbX+yilTJE4NPSQQW5EYks"
     ]
+});
+```
+
+### 下载文件
+app.downloadFile(Object)
+
+请求参数
+
+| 字段 | 类型 | 必填 | 说明
+| --- | --- | --- | --- |
+| fileID | String | 是 | 要下载的文件的id
+| tempFilePath | String | 否 | 下载的文件要存储的位置
+
+响应参数
+
+| 字段 | 类型 | 必填 | 说明
+| --- | --- | --- | --- |
+| code | String | 否 | 状态码，操作成功则不返回
+| message | String | 否 | 错误描述
+| fileContent | Buffer | 否 | 下载的文件的内容。如果传入tempFilePath则不返回该字段
+| requestId | String | 否 | 请求序列号，用于错误排查
+
+示例代码
+
+```javascript
+let result = await tcb.downloadFile({
+    fileID: "cloud://aa-99j9f/my-photo.png",
+    // tempFilePath: '/tmp/test/storage/my-photo.png'
 });
 ```
 
