@@ -86,18 +86,19 @@ export class Util {
           realValue = { [key]: Util.encodeServerDate(item) };
           break;
         case FieldType.Object:
-        case FieldType.Array:
-          realValue = { [key]: Util.encodeDocumentDataForReq(item) };
-          break;
+        // case FieldType.Array:
+        // realValue = { [key]: Util.encodeDocumentDataForReq(item) };
+        // break;
         case FieldType.Command:
           let command = new Command();
           let tmp = command.concatKeys({ [key]: item });
-
+          // console.log(tmp)
           if (tmp.value instanceof Command) {
             realValue = tmp.value.parse(tmp.keys);
           } else {
             realValue = { [tmp.keys]: tmp.value }
           }
+          // console.log(realValue)
           break;
         default:
           realValue = { [key]: item };

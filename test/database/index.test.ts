@@ -3,6 +3,7 @@ import * as Mock from "./unit/mock";
 import * as app from "../../index";
 import * as Config from "../config";
 import { process } from "ts-jest/dist/preprocessor";
+import { __exportStar } from "tslib";
 
 describe("test/index.test.ts", async () => {
   const config = {
@@ -56,7 +57,16 @@ describe("test/index.test.ts", async () => {
     const result = await collection
       .doc("W2up4-qC-opZcSAe")
       .update({
-        d: { b: [2, 3] },
+        a: _.set(2),
+        b: _.set({
+          o: {
+            a: 1,
+            b: [2, 3]
+          }
+        }),
+        c: {
+          d: _.set(10)
+        }
       });
     console.log(result);
   });

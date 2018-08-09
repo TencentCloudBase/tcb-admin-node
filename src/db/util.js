@@ -48,9 +48,6 @@ Util.encodeDocumentDataForReq = (document, merge = false) => {
                 realValue = { [key]: Util.encodeServerDate(item) };
                 break;
             case constant_1.FieldType.Object:
-            case constant_1.FieldType.Array:
-                realValue = { [key]: Util.encodeDocumentDataForReq(item) };
-                break;
             case constant_1.FieldType.Command:
                 let command = new command_1.Command();
                 let tmp = command.concatKeys({ [key]: item });
