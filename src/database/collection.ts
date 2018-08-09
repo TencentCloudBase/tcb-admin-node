@@ -1,7 +1,6 @@
 import { Db } from "./db";
 import { DocumentReference } from "./document";
 import { Query } from "./query";
-import { Request } from "./request";
 
 /**
  * 集合模块，继承 Query 模块
@@ -46,18 +45,5 @@ export class CollectionReference extends Query {
   add(data: Object): Promise<any> {
     let docRef = this.doc();
     return docRef.create(data);
-  }
-
-  /**
-   * 创建集合
-   */
-  create() {
-    let request = new Request(this._db);
-
-    const params = {
-      collectionName: this._coll
-    };
-
-    return request.send("addCollection", params)
   }
 }

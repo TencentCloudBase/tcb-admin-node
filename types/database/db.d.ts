@@ -12,5 +12,6 @@ export declare class Db {
     constructor(config?: any);
     serverDate(offset?: number): ServerDate;
     collection(collName: string): CollectionReference;
+    createCollection(collName: string): Promise<any>;
 }
 export {};

@@ -136,7 +136,7 @@ new db.serverDate({
 ### 新增集合
 该方法没有参数，如果集合已存在，则报错
 
-collection.create()
+db.createCollection(collName)
 
 
 ### 新增文档

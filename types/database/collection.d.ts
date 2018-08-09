@@ -4,5 +4,4 @@ export declare class CollectionReference extends Query {
     readonly name: string;
     doc(docID?: string): DocumentReference;
     add(data: Object): Promise<any>;
-    create(): Promise<any>;
 }
