@@ -7,7 +7,7 @@ module.exports = function (args) {
     method = args.method || "get";
 
   params = Object.assign({}, params, {
-    env: config.env,
+    envName: config.envName,
     timestamp: new Date().valueOf(),
     eventId: ""
   });
