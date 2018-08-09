@@ -23,8 +23,8 @@ describe("test/index.test.ts", async () => {
   const nameList = ["f", "b", "e", "d", "a", "c"];
 
   it("Document - doc().update()", async () => {
-    console.log(await db.collection('ccc').create())
-    return;
+    // console.log(await db.createCollection('ccc'))
+    // return;
 
     //   // var a = { a: { b: _.and(_.gt(1), _.lt(32)) } };
     //   // var a = { a: 1, b: _.lte(2) }
@@ -33,17 +33,17 @@ describe("test/index.test.ts", async () => {
     //   // console.log(await collection.where(a).get());
     //   // return;
 
-    console.log(await collection.add({
-      a: { b: { d: 1 } },
-      b: { geo: new db.Geo.Point(21, -23) },
-      c: db.serverDate()
-    }))
-    return;
+    // console.log(await collection.add({
+    //   a: { b: { d: 1 } },
+    //   b: { geo: new db.Geo.Point(21, -23) },
+    //   c: db.serverDate()
+    // }))
+    // return;
 
-    console.log(await collection.where({
-      a: { b: { d: 1 } }
-    }).field({ c: true }).get())
-    return;
+    // console.log(await collection.where({
+    //   a: { b: { d: 1 } }
+    // }).field({ c: true }).get())
+    // return;
 
     // console.log(await collection.where({
     //   a: { b: { d: 1 } }
@@ -54,10 +54,9 @@ describe("test/index.test.ts", async () => {
     // return;
 
     const result = await collection
-      .doc("W2AQg-YZMMWl9VUz")
-      .set({
-        a: { b: 2 },
-        c: (2)
+      .doc("W2up4-qC-opZcSAe")
+      .update({
+        d: { b: [2, 3] },
       });
     console.log(result);
   });
