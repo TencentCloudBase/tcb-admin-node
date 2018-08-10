@@ -39,7 +39,7 @@ function callFunction({ name, data }) {
       return res;
     } else {
       return {
-        result: res.data.response_data,
+        result: JSON.parse(res.data.response_data),
         requestId: res.requestId
       };
     }
