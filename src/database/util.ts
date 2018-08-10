@@ -62,7 +62,7 @@ export class Util {
    *
    * @param document - 前端文档数据
    */
-  public static encodeDocumentDataForReq = (document, merge = false) => {
+  public static encodeDocumentDataForReq = (document, merge = false, concatKey = true) => {
     const keys = Object.keys(document);
     let params = {};
 
@@ -70,38 +70,42 @@ export class Util {
     if (Array.isArray(document)) {
       params = [];
     }
-    // console.log(document);
+    console.log(document);
+
+    const getCommandVal = (key, item) => {
+      let value
+      let command = new Command();
+      let tmp = command.concatKeys({ [key]: item });
+      // console.log(tmp)
+      if (tmp.value instanceof Command) {
+        value = tmp.value.parse(tmp.keys);
+      } else {
+        value = { [tmp.keys]: tmp.value }
+      }
+
+      return value
+    }
+
     keys.forEach(key => {
       const item = document[key];
       const type = Util.whichType(item);
       let realValue;
-      switch (type) {
-        case FieldType.GeoPoint:
-          realValue = { [key]: Util.encodeGeoPoint(item).coordinates };
-          break;
-        case FieldType.Timestamp:
-          realValue = { [key]: Util.encodeTimestamp(item) };
-          break;
-        case FieldType.ServerDate:
-          realValue = { [key]: Util.encodeServerDate(item) };
-          break;
-        case FieldType.Object:
-        // case FieldType.Array:
-        // realValue = { [key]: Util.encodeDocumentDataForReq(item) };
-        // break;
-        case FieldType.Command:
-          let command = new Command();
-          let tmp = command.concatKeys({ [key]: item });
-          // console.log(tmp)
-          if (tmp.value instanceof Command) {
-            realValue = tmp.value.parse(tmp.keys);
-          } else {
-            realValue = { [tmp.keys]: tmp.value }
-          }
-          // console.log(realValue)
-          break;
-        default:
-          realValue = { [key]: item };
+      if (type === FieldType.GeoPoint) {
+        realValue = { [key]: Util.encodeGeoPoint(item).coordinates };
+      } else if (type === FieldType.Timestamp) {
+        realValue = { [key]: Util.encodeTimestamp(item) };
+      } else if (type === FieldType.ServerDate) {
+        realValue = { [key]: Util.encodeServerDate(item) };
+      } else if (type === FieldType.Object) {
+        if (concatKey) {
+          realValue = getCommandVal(key, item)
+        } else {
+          realValue = { [key]: Util.encodeDocumentDataForReq(item, merge, concatKey) };
+        }
+      } else if (type === FieldType.Command) {
+        realValue = getCommandVal(key, item)
+      } else {
+        realValue = { [key]: item };
       }
 
       if (UpdateOperatorList.indexOf(Object.keys(realValue)[0]) === -1 && merge === true) {

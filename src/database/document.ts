@@ -66,7 +66,7 @@ export class DocumentReference {
   create(data): Promise<any> {
     let params = {
       collectionName: this._coll,
-      data: this.processData(data, false)
+      data: Util.encodeDocumentDataForReq(data, false, false)
     };
 
     if (this.id) {
@@ -129,7 +129,7 @@ export class DocumentReference {
     const merge = false; //data不能带有操作符
     let param = {
       collectionName: this._coll,
-      data: this.processData(data, merge),
+      data: Util.encodeDocumentDataForReq(data, merge, true),
       multi: false,
       merge,
       upsert: true
@@ -171,7 +171,7 @@ export class DocumentReference {
     const merge = true; //把所有更新数据转为带操作符的
     const param = {
       collectionName: this._coll,
-      data: this.processData(data, merge),
+      data: Util.encodeDocumentDataForReq(data, merge, true),
       query: query,
       multi: false,
       merge,
@@ -257,16 +257,5 @@ export class DocumentReference {
       }
     }
     return new DocumentReference(this._db, this._coll, this.id, projection);
-  }
-
-  /**
-   * 新增和更新文档时预处理文档数据
-   *
-   * @param data
-   * @internal
-   */
-  private processData(data, merge) {
-    const params = Util.encodeDocumentDataForReq(data, merge);
-    return params;
   }
 }
