@@ -46,7 +46,7 @@ Tcb.prototype.init = function ({
   sessionToken,
   env,
   proxy
-}) {
+} = {}) {
   if ((secretId && !secretKey) || (!secretId && secretKey)) {
     throw Error("secretId and secretKey must be a pair");
   }
