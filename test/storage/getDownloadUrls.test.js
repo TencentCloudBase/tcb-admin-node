@@ -12,7 +12,7 @@ describe("storage.getDownloadUrls: 获取文件链接", () => {
       let result = await tcb.getTempFileURL({
         fileList: [
           {
-            fileID: "cloud://jimmytest-088bef/test-admin.jpeg",
+            fileID: "cloud://jimmytest-088bef/my-photo.png",
             maxAge: 60
           }
         ]

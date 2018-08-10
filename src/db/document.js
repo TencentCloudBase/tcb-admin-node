@@ -32,6 +32,12 @@ class DocumentReference {
         });
     }
     set(data) {
+        if (!data) {
+            return Promise.resolve({
+                code: 'INVALID_PARAM',
+                message: 'set参数不能为空'
+            });
+        }
         let hasOperator = false;
         const checkMixed = (objs) => {
             if (typeof objs === 'object') {
@@ -79,6 +85,12 @@ class DocumentReference {
         });
     }
     update(data) {
+        if (!data) {
+            return Promise.resolve({
+                code: 'INVALID_PARAM',
+                message: 'update参数不能为空'
+            });
+        }
         const query = { _id: this.id };
         const merge = true;
         const param = {
