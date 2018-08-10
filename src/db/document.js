@@ -14,7 +14,7 @@ class DocumentReference {
     create(data) {
         let params = {
             collectionName: this._coll,
-            data: this.processData(data, false)
+            data: util_1.Util.encodeDocumentDataForReq(data, false, false)
         };
         if (this.id) {
             params["_id"] = this.id;
@@ -61,7 +61,7 @@ class DocumentReference {
         const merge = false;
         let param = {
             collectionName: this._coll,
-            data: this.processData(data, merge),
+            data: util_1.Util.encodeDocumentDataForReq(data, merge, true),
             multi: false,
             merge,
             upsert: true
@@ -95,7 +95,7 @@ class DocumentReference {
         const merge = true;
         const param = {
             collectionName: this._coll,
-            data: this.processData(data, merge),
+            data: util_1.Util.encodeDocumentDataForReq(data, merge, true),
             query: query,
             multi: false,
             merge,
@@ -173,10 +173,6 @@ class DocumentReference {
             }
         }
         return new DocumentReference(this._db, this._coll, this.id, projection);
-    }
-    processData(data, merge) {
-        const params = util_1.Util.encodeDocumentDataForReq(data, merge);
-        return params;
     }
 }
 exports.DocumentReference = DocumentReference;
