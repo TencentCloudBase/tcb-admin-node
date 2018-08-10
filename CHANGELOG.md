@@ -1,4 +1,8 @@
-# v1.0.21
+# v1.0.23
+
+- [fixed] 修复了新增内嵌文档的bug
+
+# v1.0.22
 
 - [fixed] update和set传空参数会报错，不再抛出异常
 - [fixed] init可以传空
