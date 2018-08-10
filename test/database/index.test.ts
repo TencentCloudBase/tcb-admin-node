@@ -24,6 +24,9 @@ describe("test/index.test.ts", async () => {
   const nameList = ["f", "b", "e", "d", "a", "c"];
 
   it("Document - doc().update()", async () => {
+    console.log(await collection
+      .doc("W2up4-qC-opZcSAe").set())
+    return;
     // console.log(await db.createCollection('ccc'))
     // return;
 
