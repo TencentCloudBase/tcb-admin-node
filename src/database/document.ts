@@ -95,6 +95,13 @@ export class DocumentReference {
    * @param data - 文档数据
    */
   set(data: Object): Promise<any> {
+    if (!data) {
+      return Promise.resolve({
+        code: 'INVALID_PARAM',
+        message: 'set参数不能为空'
+      })
+    }
+
     let hasOperator = false;
     const checkMixed = (objs) => {
       // console.log(objs)
@@ -153,6 +160,13 @@ export class DocumentReference {
    * @param data - 文档数据
    */
   update(data: Object) {
+    if (!data) {
+      return Promise.resolve({
+        code: 'INVALID_PARAM',
+        message: 'update参数不能为空'
+      })
+    }
+
     const query = { _id: this.id };
     const merge = true; //把所有更新数据转为带操作符的
     const param = {
