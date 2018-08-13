@@ -4,9 +4,9 @@
 
 | 字段 | 类型 | 必填 | 说明
 | --- | --- | --- | --- |
-| secretId | String | 否 | 腾讯云API固定密钥对，在云函数内执行可不填。[前往获取](https://console.cloud.tencent.com/cam/capi)
-| SecretKey | String | 否 |  同上
-| env | String | 否 | TCB环境ID，不填使用默认环境
+| secretId | string | 否 | 腾讯云API固定密钥对，在云函数内执行可不填。[前往获取](https://console.cloud.tencent.com/cam/capi)
+| SecretKey | string | 否 |  同上
+| env | string | 否 | TCB环境ID，不填使用默认环境
 
 ```javascript
 // 初始化示例
@@ -20,6 +20,15 @@ app.init({
   secretKey: 'xxxx', 
   env: 'xxx'
 });
+
+//云函数下使用默认环境
+app.init()
+
+//云函数下指定环境
+app.init({
+	env: 'xxx'
+})
+
 ```
 
 ## 数据库
@@ -146,7 +155,7 @@ db.createCollection(collName)
 示例：
 | 参数 | 类型 | 必填 | 说明
 | --- | --- | --- | --- |
-| data | Object | 是 | {_id: '10001', 'name': 'Ben'} _id 非必填
+| data | object | 是 | {_id: '10001', 'name': 'Ben'} _id 非必填
 
 ```js
 collection.add({
@@ -216,10 +225,10 @@ db.collection('goods').where({
 
 | 字段 | 类型 | 必填 | 说明
 | --- | --- | --- | ---
-| code | String | 否 | 状态码，操作成功则不返回
-| message | String | 否 | 错误描述
+| code | string | 否 | 状态码，操作成功则不返回
+| message | string | 否 | 错误描述
 | total | Integer | 否 | 计数结果
-| requestId | String | 否 | 请求序列号，用于错误排查
+| requestId | string | 否 | 请求序列号，用于错误排查
 
 
 
@@ -260,8 +269,8 @@ collection.orderBy()
 
 | 参数 | 类型 | 必填 | 说明
 | --- | --- | --- | --- |
-| field | String | 是 | 排序的字段
-| orderType | String | 是 | 排序的顺序，升序(asc) 或 降序(desc)
+| field | string | 是 | 排序的字段
+| orderType | string | 是 | 排序的顺序，升序(asc) 或 降序(desc)
 
 使用示例
 
@@ -277,7 +286,7 @@ collection.field()
 
 | 参数 | 类型 | 必填 | 说明
 | --- | --- | --- | --- |
-| - | Object | 是 | 要过滤的字段，不返回传false，返回传true
+| - | object | 是 | 要过滤的字段，不返回传false，返回传true
 
 使用示例
 
@@ -589,23 +598,24 @@ db.collection('comments').doc('comment-id').update({
 
 ## 文件存储
 
-### 上传文件: app.uploadFile(Object)
+### 上传文件
+app.uploadFile(object)
 
 请求参数
 
 | 字段 | 类型 | 必填 | 说明
 | --- | --- | --- | --- |
-| cloudPath | String | 是 | 文件的绝对路径，包含文件名。例如foo/bar.jpg、foo/bar/baz.jpg等，不能包含除[0-9 , a-z , A-Z]、/、!、-、_、.、和*以外的字符，使用 / 字符来实现类似传统文件系统的层级结构。[查看详情](https://cloud.tencent.com/document/product/436/13324)
+| cloudPath | string | 是 | 文件的绝对路径，包含文件名。例如foo/bar.jpg、foo/bar/baz.jpg等，不能包含除[0-9 , a-z , A-Z]、/、!、-、_、.、和*以外的字符，使用 / 字符来实现类似传统文件系统的层级结构。[查看详情](https://cloud.tencent.com/document/product/436/13324)
 | fileContent | fs.ReadStream | 是 | 要上传的文件实体，[查看类型详情](https://nodejs.org/api/stream.html#stream_class_stream_readable)
 
 响应参数
 
 | 字段 | 类型 | 必填 | 说明
 | --- | --- | --- | --- |
-| code | String | 否 | 状态码，操作成功则不返回
-| message | String | 否 | 错误描述
+| code | string | 否 | 状态码，操作成功则不返回
+| message | string | 否 | 错误描述
 | fildID | fileID | 是 | 文件唯一ID，用来访问文件，建议存储起来
-| requestId | String | 否 | 请求序列号，用于错误排查
+| requestId | string | 否 | 请求序列号，用于错误排查
 
 示例代码
 
@@ -617,73 +627,71 @@ let result = await app.uploadFile({
 });
 ```
 
-### 获取文件下载链接: app.getTempFileURL(Object)
+### 获取文件下载链接
+app.getTempFileURL(object)
 
 请求参数
 
 | 字段 | 类型 | 必填 | 说明
 | --- | --- | --- | --- |
-| fileList | <Array>.Object | 是 | 要下载的文件ID组成的数组
+| fileList | <Array>.object | 是 | 要下载的文件ID组成的数组
 
 fileList
 
 | 字段 | 类型 | 必填 | 说明
 | --- | --- | --- | --- |
-| fildID | String | 是 | 文件ID
+| fildID | string | 是 | 文件ID
 | maxAge | Integer | 是 | 文件链接有效期
 
 响应参数
 
 | 字段 | 类型 | 必填 | 说明
 | --- | --- | --- | --- |
-| code | String | 否 | 状态码，操作成功则为SUCCESS
-| message | String | 否 | 错误描述
-| fileList | \<Array>.Object | 否 | 存储下载链接的数组
-| requestId | String | 否 | 请求序列号，用于错误排查
+| code | string | 否 | 状态码，操作成功则为SUCCESS
+| message | string | 否 | 错误描述
+| fileList | \<Array>.string | 是 | 存储下载链接的数组
+| requestId | string | 否 | 请求序列号，用于错误排查
 
 fileList
 
 | 字段 | 类型 | 必填 | 说明
 | --- | --- | --- | --- |
-| code | String | 否 | 删除结果，成功为SUCCESS
-| fildID | String | 是 | 文件ID
-| tempFileURL | String | 是 | 文件访问链接
+| code | string | 否 | 删除结果，成功为SUCCESS
+| fildID | string | 是 | 文件ID
+| tempFileURL | string | 是 | 文件访问链接
 
 示例代码
 
 ```javascript
 let result = await app.getTempFileURL({
-    fileList: [{
-        fileID: "HHOeahVQ0fRTDsums4GVgMCsF6CE3wb7kmIkZbX+yilTJE4NPSQQW",
-        maxAge: 60
-    }]
+    fileList: ['cloud://test-28farb/a.png']
 });
 ```
 
 ### 删除文件
- app.deletfile(Object)
+ app.deletfile(object)
 
 请求参数
 
 | 字段 | 类型 | 必填 | 说明
 | --- | --- | --- | --- |
-| fileList | \<Array>.String | 是 | 要删除的文件ID组成的数组
+| fileList | \<Array>.string | 是 | 要删除的文件ID组成的数组
 
 响应参数
 
 | 字段 | 类型 | 必填 | 说明
 | --- | --- | --- | --- |
-| code | String | 否 | 状态码，操作成功则不返回
-| message | String | 否 | 错误描述
-| fileList | \<Array>.Object | 否 | 删除结果组成的数组
-| requestId | String | 否 | 请求序列号，用于错误排查
+| code | string | 否 | 状态码，操作成功则不返回
+| message | string | 否 | 错误描述
+| fileList | \<Array>.object | 否 | 删除结果组成的数组
+| requestId | string | 否 | 请求序列号，用于错误排查
 
 fileList
 
 | 字段 | 类型 | 必填 | 说明
 | --- | --- | --- | --- |
-| code | String | 否 | 删除结果，成功为SUCCESS
-| fildID | String | 是 | 文件ID
+| code | string | 否 | 删除结果，成功为SUCCESS
+| fildID | string | 是 | 文件ID
 
 示例代码
 
@@ -696,23 +704,23 @@ let result = await app.deleteFile({
 ```
 
 ### 下载文件
-app.downloadFile(Object)
+app.downloadFile(object)
 
 请求参数
 
 | 字段 | 类型 | 必填 | 说明
 | --- | --- | --- | --- |
-| fileID | String | 是 | 要下载的文件的id
-| tempFilePath | String | 否 | 下载的文件要存储的位置
+| fileID | string | 是 | 要下载的文件的id
+| tempFilePath | string | 否 | 下载的文件要存储的位置
 
 响应参数
 
 | 字段 | 类型 | 必填 | 说明
 | --- | --- | --- | --- |
-| code | String | 否 | 状态码，操作成功则不返回
-| message | String | 否 | 错误描述
+| code | string | 否 | 状态码，操作成功则不返回
+| message | string | 否 | 错误描述
 | fileContent | Buffer | 否 | 下载的文件的内容。如果传入tempFilePath则不返回该字段
-| requestId | String | 否 | 请求序列号，用于错误排查
+| requestId | string | 否 | 请求序列号，用于错误排查
 
 示例代码
 
@@ -725,23 +733,23 @@ let result = await tcb.downloadFile({
 
 ## 云函数
 
-### 执行函数: app.callFunction(Object)
+### 执行函数: app.callFunction(object)
 
 请求参数
 
 | 字段 | 类型 | 必填 | 说明
 | --- | --- | --- | ---
-| name | String | 是 | 云函数名称
-| data | Object | 否 | 云函数参数
+| name | string | 是 | 云函数名称
+| data | object | 否 | 云函数参数
 
 响应参数
 
 | 字段 | 类型 | 必填 | 说明
 | --- | --- | --- | ---
-| code | String | 否 | 状态码，操作成功则不返回
-| message | String | 否 | 错误描述
-| result | String | 否 | 云函数执行结果
-| requestId | String | 否 | 请求序列号，用于错误排查
+| code | string | 否 | 状态码，操作成功则不返回
+| message | string | 否 | 错误描述
+| result | object | 否 | 云函数执行结果
+| requestId | string | 否 | 请求序列号，用于错误排查
 
 示例代码
 

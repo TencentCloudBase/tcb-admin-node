@@ -10,12 +10,7 @@ describe("storage.getDownloadUrls: 获取文件链接", () => {
     "获取文件链接",
     async () => {
       let result = await tcb.getTempFileURL({
-        fileList: [
-          {
-            fileID: "cloud://jimmytest-088bef/my-photo.png",
-            maxAge: 60
-          }
-        ]
+        fileList: ["cloud://jimmytest-088bef/my-photo.png"]
       });
       console.log(JSON.stringify(result));
       assert(result.fileList[0].tempFileURL, "获取文件链接失败");
