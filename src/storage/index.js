@@ -92,21 +92,31 @@ async function getTempFileURL({ fileList }) {
 
   let file_list = [];
   for (let file of fileList) {
-    if (
-      typeof file !== "object" ||
-      !file.hasOwnProperty("fileID") ||
-      !file.hasOwnProperty("maxAge")
-    ) {
+    if (typeof file === 'object') {
+      if (
+        !file.hasOwnProperty("fileID") ||
+        !file.hasOwnProperty("maxAge")
+      ) {
+        return {
+          code: "INVALID_PARAM",
+          message: "fileList的元素必须是包含fileID和maxAge的对象"
+        };
+      }
+
+      file_list.push({
+        fileid: file.fileID,
+        max_age: file.maxAge
+      });
+    } else if (typeof file === 'string') {
+      file_list.push({
+        fileid: file,
+      });
+    } else {
       return {
         code: "INVALID_PARAM",
-        message: "fileList的元素必须是包含fileID和maxAge的对象"
+        message: "fileList的元素必须是字符串"
       };
     }
-
-    file_list.push({
-      fileid: file.fileID,
-      max_age: file.maxAge
-    });
   }
 
   let params = {
