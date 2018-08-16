@@ -107,6 +107,18 @@ class Query {
         return new Query(this._db, this._coll, this._fieldFilters, this._fieldOrders, option);
     }
     update(data) {
+        if (!data || typeof data !== "object") {
+            return Promise.resolve({
+                code: 'INVALID_PARAM',
+                message: '参数必需是非空对象'
+            });
+        }
+        if (data.hasOwnProperty('_id')) {
+            return Promise.resolve({
+                code: 'INVALID_PARAM',
+                message: '不能更新_id的值'
+            });
+        }
         let param = {
             collectionName: this._coll,
             query: this._fieldFilters,

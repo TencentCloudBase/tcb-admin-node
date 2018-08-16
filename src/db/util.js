@@ -33,7 +33,7 @@ Util.encodeDocumentDataForReq = (document, merge = false, concatKey = true) => {
     if (Array.isArray(document)) {
         params = [];
     }
-    console.log(document);
+    // console.log(document);
     const getCommandVal = (key, item) => {
         let value;
         let command = new command_1.Command();

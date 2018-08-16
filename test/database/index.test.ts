@@ -57,8 +57,8 @@ describe("test/index.test.ts", async () => {
     const result = await collection
       .doc("W2up4-qC-opZcSAe")
       .update({
-        _id: 'fdaeafae'
-        // a: _.set(2),
+        // _id: 'fdaeafae',
+        a: _.set(2)
         // b: _.set({
         //   o: {
         //     a: 1,

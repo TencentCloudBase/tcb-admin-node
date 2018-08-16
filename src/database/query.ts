@@ -278,6 +278,20 @@ export class Query {
    * @param data 数据
    */
   update(data: Object): Promise<any> {
+    if (!data || typeof data !== "object") {
+      return Promise.resolve({
+        code: 'INVALID_PARAM',
+        message: '参数必需是非空对象'
+      })
+    }
+
+    if (data.hasOwnProperty('_id')) {
+      return Promise.resolve({
+        code: 'INVALID_PARAM',
+        message: '不能更新_id的值'
+      })
+    }
+
     let param = {
       collectionName: this._coll,
       query: this._fieldFilters,
