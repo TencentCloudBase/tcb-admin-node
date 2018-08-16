@@ -7,7 +7,7 @@ const httpRequest = require("../utils/httpRequest");
  * @param {string} cloudPath 上传后的文件路径
  * @param {fs.ReadStream} fileContent  上传文件的二进制流
  */
-function uploadFile({ cloudPath, fileContent }) {
+function uploadFile({ cloudPath, fileContent }, { onResponseReceived } = {}) {
   let params = {
     action: "storage.uploadFile",
     path: cloudPath,
@@ -20,8 +20,11 @@ function uploadFile({ cloudPath, fileContent }) {
     method: "post",
     headers: {
       // "content-type": "multipart/form-data"
+    },
+    callback: (response) => {
+      onResponseReceived && typeof onResponseReceived === 'function' && onResponseReceived(response)
     }
-  }).then(res => {
+  }).then((res) => {
     if (res.code) {
       return res;
     } else {
