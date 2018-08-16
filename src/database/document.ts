@@ -90,15 +90,22 @@ export class DocumentReference {
    * 创建或添加数据
    *
    * 如果文档ID不存在，则创建该文档并插入数据，根据返回数据的 upserted_id 判断
-   * 添加数据的话，根据返回数据的 updated 判断影响的行数
+   * 添加数据的话，根据返回数据的 set 判断影响的行数
    *
    * @param data - 文档数据
    */
   set(data: Object): Promise<any> {
-    if (!data) {
+    if (!data || typeof data !== "object") {
       return Promise.resolve({
         code: 'INVALID_PARAM',
-        message: 'set参数不能为空'
+        message: '参数必需是非空对象'
+      })
+    }
+
+    if (data.hasOwnProperty('_id')) {
+      return Promise.resolve({
+        code: 'INVALID_PARAM',
+        message: '不能更新_id的值'
       })
     }
 
@@ -160,10 +167,17 @@ export class DocumentReference {
    * @param data - 文档数据
    */
   update(data: Object) {
-    if (!data) {
+    if (!data || typeof data !== "object") {
       return Promise.resolve({
         code: 'INVALID_PARAM',
-        message: 'update参数不能为空'
+        message: '参数必需是非空对象'
+      })
+    }
+
+    if (data.hasOwnProperty('_id')) {
+      return Promise.resolve({
+        code: 'INVALID_PARAM',
+        message: '不能更新_id的值'
       })
     }
 

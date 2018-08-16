@@ -32,10 +32,16 @@ class DocumentReference {
         });
     }
     set(data) {
-        if (!data) {
+        if (!data || typeof data !== "object") {
             return Promise.resolve({
                 code: 'INVALID_PARAM',
-                message: 'set参数不能为空'
+                message: '参数必需是非空对象'
+            });
+        }
+        if (data.hasOwnProperty('_id')) {
+            return Promise.resolve({
+                code: 'INVALID_PARAM',
+                message: '不能更新_id的值'
             });
         }
         let hasOperator = false;
@@ -85,10 +91,16 @@ class DocumentReference {
         });
     }
     update(data) {
-        if (!data) {
+        if (!data || typeof data !== "object") {
             return Promise.resolve({
                 code: 'INVALID_PARAM',
-                message: 'update参数不能为空'
+                message: '参数必需是非空对象'
+            });
+        }
+        if (data.hasOwnProperty('_id')) {
+            return Promise.resolve({
+                code: 'INVALID_PARAM',
+                message: '不能更新_id的值'
             });
         }
         const query = { _id: this.id };
