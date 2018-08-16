@@ -41,10 +41,10 @@ describe("test/index.test.ts", async () => {
     // }))
     // return;
 
-    console.log(await collection.where({
-      a: { b: { d: 1 } }
-    }).get())
-    return;
+    // console.log(await collection.where({
+    //   a: { b: { d: 1 } }
+    // }).get())
+    // return;
 
     // console.log(await collection.where({
     //   a: { b: { d: 1 } }
@@ -57,16 +57,17 @@ describe("test/index.test.ts", async () => {
     const result = await collection
       .doc("W2up4-qC-opZcSAe")
       .update({
-        a: _.set(2),
-        b: _.set({
-          o: {
-            a: 1,
-            b: [2, 3]
-          }
-        }),
-        c: {
-          d: _.set(10)
-        }
+        _id: 'fdaeafae'
+        // a: _.set(2),
+        // b: _.set({
+        //   o: {
+        //     a: 1,
+        //     b: [2, 3]
+        //   }
+        // }),
+        // c: {
+        //   d: _.set(10)
+        // }
       });
     console.log(result);
   });

@@ -81,6 +81,8 @@ module.exports = function (args) {
   return new Promise(function (resolve, reject) {
     request(opts, function (err, response, body) {
       // console.log(err, body);
+      args && args.callback && args.callback(response)
+
       if (err === null && response.statusCode == 200) {
         let res;
         try {
@@ -90,7 +92,7 @@ module.exports = function (args) {
         }
         return resolve(res);
       } else {
-        return reject(new Error(err));
+        return reject(err);
       }
     });
   });

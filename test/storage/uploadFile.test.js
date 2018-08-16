@@ -17,7 +17,11 @@ describe("storage.uploadFile: 上传文件", () => {
         // cloudPath: "test-admin.jpeg",
         cloudPath: "测试.jpeg",
         fileContent
-      });
+      }, {
+          onResponseReceived: (response) => {
+            console.log(response)
+          }
+        });
       console.log(result);
       assert(result.fileID, "上传文件失败");
 
