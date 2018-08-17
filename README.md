@@ -1,9 +1,13 @@
 # Tencent Cloud Base(TCB) Admin Node.js SDK
 
+![node (scoped)](https://img.shields.io/node/v/tcb-admin-node.svg)
+[![NPM Version](https://img.shields.io/npm/v/tcb-admin-node.svg?style=flat)](https://www.npmjs.com/package/tcb-admin-node)
+[![Deps](https://david-dm.org/TencentCloudBase/tcb-cli.svg)](https://img.shields.io/TencentCloudBase/tcb-admin-node)
+
 ## 目录
 * [介绍](#介绍)
 * [安装](#安装)
-* [文档](#文档)
+* [文档](#安装)
 
 
 ## 介绍
@@ -27,5 +31,8 @@ import * as admin from "tcb-admin-node";
 ```
 
 ## 文档
+- [概览](./docs/概览.md)
+- [文件存储](./docs/文件存储.md)
+- [数据库](./docs/数据库.md)
+- [云函数](./docs/云函数.md)
 
-- [接口文档](https://github.com/TencentCloudBase/tcb-admin-node/blob/master/docs/api.md)
