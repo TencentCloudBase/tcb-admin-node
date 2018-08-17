@@ -11,8 +11,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/TencentCloudBase/tcb-admin-node/blob/master/docs/api.md"
+    "url": "https://github.com/TencentCloudBase/tcb-admin-node"
   },
+  "bugs": {
+    "url": "https://github.com/TencentCloudBase/tcb-admin-node/issues"
+  },
+  "homepage": "https://github.com/TencentCloudBase/tcb-cli#readme",
   "keywords": [
     "tcb-admin"
   ],
