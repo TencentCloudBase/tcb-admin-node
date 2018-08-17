@@ -21,7 +21,7 @@
     "tcb-admin"
   ],
   "author": "jimmyzhang",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "deep-assign": "^2.0.0",
     "request": "^2.87.0"
