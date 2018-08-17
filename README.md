@@ -2,7 +2,7 @@
 
 ![node (scoped)](https://img.shields.io/node/v/tcb-admin-node.svg)
 [![NPM Version](https://img.shields.io/npm/v/tcb-admin-node.svg?style=flat)](https://www.npmjs.com/package/tcb-admin-node)
-[![Deps](https://david-dm.org/TencentCloudBase/tcb-admin-node.svg)](https://img.shields.io/TencentCloudBase/tcb-admin-node)
+[![Deps](https://david-dm.org/TencentCloudBase/tcb-admin-node.svg)](https://david-dm.org/TencentCloudBase/tcb-admin-node)
 
 ## 目录
 * [介绍](#介绍)
