@@ -1,6 +1,6 @@
 {
   "name": "tcb-admin-node",
-  "version": "1.0.29",
+  "version": "1.0.30",
   "description": "tencent cloud base admin sdk for node.js",
   "main": "index.js",
   "scripts": {
@@ -16,7 +16,7 @@
   "bugs": {
     "url": "https://github.com/TencentCloudBase/tcb-admin-node/issues"
   },
-  "homepage": "https://github.com/TencentCloudBase/tcb-cli#readme",
+  "homepage": "https://github.com/TencentCloudBase/tcb-admin-node#readme",
   "keywords": [
     "tcb-admin"
   ],
