@@ -7,7 +7,7 @@
 ## 目录
 * [介绍](#介绍)
 * [安装](#安装)
-* [文档](./docs/introduction.md)
+* [文档](docs/introduction.md)
 
 
 ## 介绍
@@ -31,8 +31,8 @@ import * as admin from "tcb-admin-node";
 ```
 
 ## 文档
-- [概览](./docs/introduction.md)
-- [文件存储](./docs/storage.md)
-- [数据库](./docs/database.md)
-- [云函数](./docs/functions.md)
+* [概览](docs/introduction.md)
+* [文件存储](docs/storage.md)
+* [数据库](docs/database.md)
+* [云函数](docs/functions.md)
 
