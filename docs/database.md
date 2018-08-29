@@ -622,7 +622,6 @@ db.collection('comments').doc('comment-id').update({
 删除数组头部元素。使用同pop
 
 <br>
-<br>
 
 **问题反馈**
 
