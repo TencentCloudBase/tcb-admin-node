@@ -1,5 +1,5 @@
 ### 执行函数
-callFunction(Object)
+callFunction(object)
 
 请求参数
 
