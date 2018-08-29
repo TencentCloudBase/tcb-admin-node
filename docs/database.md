@@ -142,26 +142,27 @@ const collection = db.collection('user');
 
   那么当我们需要使用客户端时间时，存放 Date 对象和存放毫秒数是否是一样的效果呢？不是的，我们的数据库有针对日期类型的优化，建议大家使用时都用 Date 或 serverDate 构造时间对象。
 
-```js
-//服务端当前时间
-new db.serverDate()
-```
+  ```js
+  //服务端当前时间
+  new db.serverDate()
+  ```
 
-```js
-//服务端当前时间加1S
-new db.serverDate({
-  offset: 1000
-})
-```
+  ```js
+  //服务端当前时间加1S
+  new db.serverDate({
+    offset: 1000
+  })
+  ```
 
 2. 地理位置
 
   GeoPoint 类型用于表示地理位置点，用经纬度唯一标记一个点，这是一个特殊的数据存储类型。注意，如果需要对类型为地理位置的字段进行查找，一定要建立地理位置索引。
 
-```js
-//传入经纬度构造一个地理位置字段值
-new db.Geo.Point(longitude, latitude)
-```
+  ```js
+  //传入经纬度构造一个地理位置字段值
+  new db.Geo.Point(longitude, latitude)
+  ```
+  
 3. Null
 
   Null 相当于一个占位符，表示一个字段存在但是值为空。
@@ -619,3 +620,8 @@ db.collection('comments').doc('comment-id').update({
 向数组头部添加元素，支持传入单个元素或数组。使用同push
 ##### shift
 删除数组头部元素。使用同pop
+
+**问题反馈**
+
+
+如果使用SDK遇到问题，请移步到我们的 [Github 仓库](https://github.com/TencentCloudBase/tcb-admin-node/issues/new/choose)，提交反馈建议。
