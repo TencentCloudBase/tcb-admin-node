@@ -1,3 +1,5 @@
+## 数据库
+
 <!-- TOC -->
 
 - [获取数据库的引用](#获取数据库的引用)
@@ -162,7 +164,7 @@ const collection = db.collection('user');
   //传入经纬度构造一个地理位置字段值
   new db.Geo.Point(longitude, latitude)
   ```
-  
+
 3. Null
 
   Null 相当于一个占位符，表示一个字段存在但是值为空。
@@ -620,9 +622,3 @@ db.collection('comments').doc('comment-id').update({
 向数组头部添加元素，支持传入单个元素或数组。使用同push
 ##### shift
 删除数组头部元素。使用同pop
-
-<br>
-
-**问题反馈**
-
-如果使用SDK遇到问题，请移步到我们的 [Github 仓库](https://github.com/TencentCloudBase/tcb-admin-node/issues/new/choose)，提交反馈建议。
