@@ -1,3 +1,9 @@
+# v1.0.31
+
+- [changed] 云函数调用返回的requestId可以在云控制台用来查看日志
+- [changed] 数据库地理位置初始化时第一个参数为longitude，第二个为latitude
+- [add] 新增条件删除文档接口
+
 # v1.0.29
 
 - [changed] 更新文档

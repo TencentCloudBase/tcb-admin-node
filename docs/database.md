@@ -496,6 +496,9 @@ db.collection('goods').where(_.or(
 ```
 
 ### 删除文档
+方式1 通过指定文档ID
+
+collection.doc(_id).remove()
 
 ```js
 // 清理全部数据
@@ -509,6 +512,17 @@ collection.get()
   .catch((e) => {
 
   });
+```
+
+方式2 条件查找文档然后直接批量删除
+
+collection.where().remove()
+
+```js
+// 删除字段a的值大于2的文档
+collection.where({
+  a: _.gt(2)
+}).remove()
 ```
 
 ### 更新文档
