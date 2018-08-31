@@ -1,3 +1,5 @@
+## 云函数
+
 ### 执行函数
 callFunction(object)
 
@@ -26,9 +28,3 @@ let result = await app.callFunction({
     data: { a: 1 }
 });
 ```
-
-<br>
-
-**问题反馈**
-
-如果使用SDK遇到问题，请移步到我们的 [Github 仓库](https://github.com/TencentCloudBase/tcb-admin-node/issues/new/choose)，提交反馈建议。
