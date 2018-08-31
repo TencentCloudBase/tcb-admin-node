@@ -1,4 +1,4 @@
-let tcb = require("../../index");
+const tcb = require("../../index");
 const fs = require("fs");
 
 const assert = require("assert");
@@ -15,7 +15,7 @@ describe("storage.uploadFile: 上传文件", () => {
     async () => {
       let result = await tcb.uploadFile({
         // cloudPath: "test-admin.jpeg",
-        cloudPath: "测试.jpeg",
+        cloudPath: "a|b.jpeg",
         fileContent
       }, {
           onResponseReceived: (response) => {

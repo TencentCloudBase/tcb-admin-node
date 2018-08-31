@@ -24,6 +24,10 @@ describe("test/index.test.ts", async () => {
   const nameList = ["f", "b", "e", "d", "a", "c"];
 
   it("Document - doc().update()", async () => {
+    console.log(await collection.where({
+      a: "2"
+    }).remove())
+    return
     // console.log(await db.createCollection('ccc'))
     // return;
 
