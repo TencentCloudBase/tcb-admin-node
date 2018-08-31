@@ -1,3 +1,5 @@
+## 文件存储
+
 <!-- TOC -->
 
 - [上传文件](#上传文件)
@@ -144,10 +146,4 @@ let result = await tcb.downloadFile({
     fileID: "cloud://aa-99j9f/my-photo.png",
     // tempFilePath: '/tmp/test/storage/my-photo.png'
 });
-```  
-
-<br>
-
-**问题反馈**
-
-如果使用SDK遇到问题，请移步到我们的 [Github 仓库](https://github.com/TencentCloudBase/tcb-admin-node/issues/new/choose)，提交反馈建议。
+```
