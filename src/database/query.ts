@@ -343,6 +343,32 @@ export class Query {
     );
   }
 
+  /**
+   * 条件删除文档
+   */
+  remove() {
+    const param = {
+      collectionName: this._coll,
+      query: this._fieldFilters,
+      multi: true
+    }
+    // console.log("this._queryOptions", this._queryOptions);
+    // console.log(param);
+    return new Promise<any>(resolve => {
+      this._request.send("deleteDocument", param).then(res => {
+        console.log(res)
+        if (res.code) {
+          resolve(res);
+        } else {
+          resolve({
+            requestId: res.requestId,
+            deleted: res.data.deleted
+          });
+        }
+      });
+    });
+  }
+
   convertParams(query: object) {
     // console.log(query);
     let queryParam = {};

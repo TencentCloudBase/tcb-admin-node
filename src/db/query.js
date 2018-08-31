@@ -155,6 +155,27 @@ class Query {
         option.projection = projection;
         return new Query(this._db, this._coll, this._fieldFilters, this._fieldOrders, option);
     }
+    remove() {
+        const param = {
+            collectionName: this._coll,
+            query: this._fieldFilters,
+            multi: true
+        };
+        return new Promise(resolve => {
+            this._request.send("deleteDocument", param).then(res => {
+                console.log(res);
+                if (res.code) {
+                    resolve(res);
+                }
+                else {
+                    resolve({
+                        requestId: res.requestId,
+                        deleted: res.data.deleted
+                    });
+                }
+            });
+        });
+    }
     convertParams(query) {
         let queryParam = {};
         if (query instanceof command_1.Command) {
