@@ -24,7 +24,7 @@ export class Point {
    * @param latitude    - 纬度 [-90, 90]
    * @param longitude   - 经度 [-180, 180]
    */
-  constructor(latitude: number, longitude: number) {
+  constructor(longitude: number, latitude: number) {
     Validate.isGeopoint("latitude", latitude);
     Validate.isGeopoint("longitude", longitude);
 
