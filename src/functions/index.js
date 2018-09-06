@@ -34,12 +34,16 @@ function callFunction({ name, data }) {
       "content-type": "application/json"
     }
   }).then(res => {
-    console.log(res);
+    // console.log(res);
     if (res.code) {
       return res;
     } else {
+      let result = res.data.response_data
+      try {
+        result = JSON.parse(res.data.response_data)
+      } catch (e) { }
       return {
-        result: JSON.parse(res.data.response_data),
+        result,
         requestId: res.requestId
       };
     }
