@@ -25,6 +25,9 @@ module.exports = function (args) {
   }
 
   if (!config.secretId || !config.secretKey) {
+    if (process.env.TENCENTCLOUD_RUNENV === 'SCF') {
+      throw Error("missing authoration key, redeploy the function")
+    }
     throw Error("missing secretId or secretKey of tencent cloud");
   }
 
@@ -71,6 +74,10 @@ module.exports = function (args) {
     opts.json = true;
   } else {
     opts.qs = params;
+  }
+
+  if (params.action === 'wx.api') {
+    opts.url = 'https://tcb-open.tencentcloudapi.com/admin'
   }
 
   if (args.proxy) {

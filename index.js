@@ -1,6 +1,7 @@
 const storage = require("./src/storage");
 const database = require("./src/db").Db;
 const functions = require("./src/functions");
+const wx = require("./src/wx");
 
 function Tcb() {
   this.config = {
@@ -88,5 +89,6 @@ function extend(target, source) {
 
 extend(Tcb.prototype, functions);
 extend(Tcb.prototype, storage);
+extend(Tcb.prototype, wx)
 
 module.exports = new Tcb();
