@@ -32,7 +32,7 @@ import * as admin from "tcb-admin-node";
 
 ## 文档
 * [初始化](docs/initialization.md)
-* [文件存储](docs/storage.md)
+* [存储](docs/storage.md)
 * [数据库](docs/database.md)
 * [云函数](docs/functions.md)
 
