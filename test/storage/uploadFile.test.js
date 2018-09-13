@@ -19,7 +19,7 @@ describe("storage.uploadFile: 上传文件", () => {
         fileContent
       }, {
           onResponseReceived: (response) => {
-            console.log(response)
+            // console.log(response)
           }
         });
       console.log(result);
