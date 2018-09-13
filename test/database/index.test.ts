@@ -19,15 +19,15 @@ describe("test/index.test.ts", async () => {
   const _ = db.command;
 
   const defaultDbName = "default";
-  const collName = "coll-1";
+  const collName = "coll-1---";
   const collection = db.collection(collName);
   const nameList = ["f", "b", "e", "d", "a", "c"];
 
   it("Document - doc().update()", async () => {
-    console.log(await collection.where({
-      a: "2"
-    }).remove())
-    return
+    // console.log(await collection.where({
+    //   a: "2"
+    // }).remove())
+    // return
     // console.log(await db.createCollection('ccc'))
     // return;
 
@@ -38,12 +38,11 @@ describe("test/index.test.ts", async () => {
     //   // console.log(await collection.where(a).get());
     //   // return;
 
-    // console.log(await collection.add({
-    //   a: { b: { d: 1 } },
-    //   b: { geo: new db.Geo.Point(21, -23) },
-    //   c: db.serverDate()
-    // }))
-    // return;
+    console.log(await collection.add({
+      _id: '12234',
+      a: { b: { d: 1 } }
+    }))
+    return;
 
     // console.log(await collection.where({
     //   a: { b: { d: 1 } }

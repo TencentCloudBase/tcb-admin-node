@@ -3,7 +3,22 @@ const database = require("./src/db").Db;
 const functions = require("./src/functions");
 const wx = require("./src/wx");
 
-function Tcb() {
+function Tcb(config) {
+  // console.log(config)
+  this.config = config ? config : this.config
+}
+
+Tcb.prototype.init = function ({
+  secretId,
+  secretKey,
+  sessionToken,
+  env,
+  proxy
+} = {}) {
+  if ((secretId && !secretKey) || (!secretId && secretKey)) {
+    throw Error("secretId and secretKey must be a pair");
+  }
+
   this.config = {
     get secretId() {
       return this._secretId
@@ -36,36 +51,15 @@ function Tcb() {
     set sessionToken(token) {
       this._sessionToken = token;
     },
-    envName: undefined,
-    proxy: undefined
+    envName: env,
+    proxy: proxy
   };
-}
 
-Tcb.prototype.init = function ({
-  secretId,
-  secretKey,
-  sessionToken,
-  env,
-  proxy
-} = {}) {
-  if ((secretId && !secretKey) || (!secretId && secretKey)) {
-    throw Error("secretId and secretKey must be a pair");
-  }
+  this.config.secretId = secretId;
+  this.config.secretKey = secretKey;
+  this.config.sessionToken = sessionToken ? sessionToken : (secretId && secretKey ? false : undefined);
 
-  if (secretId) {
-    this.config.secretId = secretId;
-  }
-
-  if (secretKey) {
-    this.config.secretKey = secretKey;
-  }
-
-  if (secretId && secretKey) {
-    this.config.sessionToken = sessionToken ? sessionToken : false;
-  }
-
-  env && (this.config.envName = env);
-  proxy && (this.config.proxy = proxy);
+  return new Tcb(this.config);
 };
 
 Tcb.prototype.database = function () {

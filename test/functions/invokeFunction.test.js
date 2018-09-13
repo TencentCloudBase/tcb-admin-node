@@ -5,12 +5,13 @@ const config = require("../config.js");
 
 // TODO 删除前先创建
 describe("functions.invokeFunction: 执行云函数", () => {
-  Tcb.init(config);
+  const app = Tcb.init({ env: 'a' })
+  const app1 = Tcb.init(config);
 
   it(
     "执行云函数",
     async () => {
-      let result = await Tcb.callFunction({
+      let result = await app1.callFunction({
         name: "test",
         data: { a: 1 }
       });

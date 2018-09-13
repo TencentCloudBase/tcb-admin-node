@@ -4,13 +4,18 @@ const assert = require("assert");
 const config = require("../config.js");
 
 describe("storage.downloadFile: 下载文件", () => {
-    tcb.init(config);
+    const app = tcb.init(config);
+    const app1 = tcb.init({
+        secretId: "AKIDY3Ws27uiEg0CC1QEg4GJCvWZUFrJhw66",
+        secretKey: "2xiKmx1tdEhy76tVvJWggU7ZYP5cyCHO",
+        env: "tcbenv-mPIgjhnq"
+    })
 
     it(
         "获取文件链接",
         async () => {
-            let result = await tcb.downloadFile({
-                fileID: "cloud://jimmytest-088bef/my-photo.png",
+            let result = await app.downloadFile({
+                fileID: "cloud://jimmytest-088bef/1534576354877.jpg",
                 // tempFilePath: '/Users/jimmyzhang/repo/tcb-admin-node/test/storage/my-photo.png'
             });
             require('fs').writeFileSync('/Users/jimmyzhang/repo/tcb-admin-node/test/storage/my-photo.png', result.fileContent)

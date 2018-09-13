@@ -10,22 +10,28 @@
 
 ```javascript
 // 初始化示例
-const app = require('tcb-admin-node');
+const tcb = require('tcb-admin-node');
 
 // 初始化资源
 // 云函数下不需要secretId和secretKey。
 // env如果不指定将使用默认环境
-app.init({
+tcb.init({
   secretId: 'xxxxx',
   secretKey: 'xxxx',
   env: 'xxx'
 });
 
 //云函数下使用默认环境
-app.init()
+tcb.init()
 
 //云函数下指定环境
-app.init({
+tcb.init({
   env: 'xxx'
+})
+
+//使用多个环境
+//初始化环境'xx-zz'
+const app = tcb.init({
+  env: 'xx-zz'
 })
 ```
