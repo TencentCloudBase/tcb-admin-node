@@ -18,8 +18,10 @@ describe("storage.downloadFile: 下载文件", () => {
                 fileID: "cloud://jimmytest-088bef/1534576354877.jpg",
                 // tempFilePath: '/Users/jimmyzhang/repo/tcb-admin-node/test/storage/my-photo.png'
             });
-            require('fs').writeFileSync('/Users/jimmyzhang/repo/tcb-admin-node/test/storage/my-photo.png', result.fileContent)
-            assert(result.fileContent, "下载文件结果");
+            console.log(result)
+            if (!result.code)
+                require('fs').writeFileSync('/Users/jimmyzhang/repo/tcb-admin-node/test/storage/my-photo.png', result.fileContent)
+            assert(result, "下载文件结果");
         },
         10000
     );
