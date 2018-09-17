@@ -152,7 +152,7 @@ async function downloadFile({ fileID, tempFilePath }) {
   let tmpUrl,
     self = this;
   try {
-    let tmpUrlRes = await this.getTempFileURL({
+    const tmpUrlRes = await this.getTempFileURL({
       fileList: [
         {
           fileID,
@@ -160,15 +160,16 @@ async function downloadFile({ fileID, tempFilePath }) {
         }
       ]
     });
-    console.log(tmpUrlRes);
+    // console.log(tmpUrlRes);
+    const res = tmpUrlRes.fileList[0]
 
     if (
-      tmpUrlRes.code
+      res.code != 'SUCCESS'
     ) {
-      return tmpUrlRes;
+      return res;
     }
 
-    tmpUrl = tmpUrlRes.fileList[0].tempFileURL;
+    tmpUrl = res.tempFileURL;
   } catch (e) {
     throw e
   }
