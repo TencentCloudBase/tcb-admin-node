@@ -70,7 +70,7 @@ export class Util {
     if (Array.isArray(document)) {
       params = [];
     }
-    console.log(document);
+    // console.log(document);
 
     const getCommandVal = (key, item) => {
       let value

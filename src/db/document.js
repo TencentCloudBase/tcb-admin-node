@@ -67,7 +67,7 @@ class DocumentReference {
         const merge = false;
         let param = {
             collectionName: this._coll,
-            data: util_1.Util.encodeDocumentDataForReq(data, merge, true),
+            data: util_1.Util.encodeDocumentDataForReq(data, merge, false),
             multi: false,
             merge,
             upsert: true
