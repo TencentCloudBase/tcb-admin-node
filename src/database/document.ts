@@ -136,7 +136,7 @@ export class DocumentReference {
     const merge = false; //data不能带有操作符
     let param = {
       collectionName: this._coll,
-      data: Util.encodeDocumentDataForReq(data, merge, true),
+      data: Util.encodeDocumentDataForReq(data, merge, false),
       multi: false,
       merge,
       upsert: true
