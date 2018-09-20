@@ -49,13 +49,14 @@ describe("test/index.test.ts", async () => {
     // }).get())
     // return;
 
-    // console.log(await collection.where({
-    //   a: { b: { d: 1 } }
-    // }).update({
-    //   c: db.serverDate(),
-    //   d: _.inc(2)
-    // }))
-    // return;
+    console.log(await collection.where({
+      a: "10"
+    }).update({
+      c: db.serverDate(),
+    }))
+    const r = await collection.where({ a: "10" }).get()
+    console.log(r.data[0].c)
+    return;
 
     const result = await collection
       .doc("W5-zLLOVH2exDS7d")

@@ -154,7 +154,7 @@ export class Util {
     keys.forEach(key => {
       const item = document[key];
       const type = Util.whichType(item);
-      // console.log(type)
+      // console.log(type, item)
       let realValue;
       switch (type) {
         case FieldType.GeoPoint:
@@ -166,6 +166,9 @@ export class Util {
         case FieldType.Object:
         case FieldType.Array:
           realValue = Util.formatField(item);
+          break;
+        case FieldType.ServerDate:
+          realValue = new Date(item.$date);
           break;
 
         default:
@@ -192,6 +195,7 @@ export class Util {
     let type = Object.prototype.toString.call(obj).slice(8, -1);
 
     if (type === FieldType.Object) {
+      // console.log(obj)
       if (obj instanceof Point) {
         return FieldType.GeoPoint;
       } else if (obj instanceof Date) {
@@ -204,6 +208,8 @@ export class Util {
 
       if (obj.$timestamp) {
         type = FieldType.Timestamp;
+      } else if (obj.$date) {
+        type = FieldType.ServerDate;
       } else if (Array.isArray(obj.coordinates) && obj.type === "Point") {
         type = FieldType.GeoPoint;
       }
