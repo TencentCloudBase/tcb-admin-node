@@ -110,6 +110,9 @@ Util.formatField = document => {
             case constant_1.FieldType.Array:
                 realValue = Util.formatField(item);
                 break;
+            case constant_1.FieldType.ServerDate:
+                realValue = new Date(item.$date);
+                break;
             default:
                 realValue = item;
         }
@@ -139,6 +142,9 @@ Util.whichType = (obj) => {
         }
         if (obj.$timestamp) {
             type = constant_1.FieldType.Timestamp;
+        }
+        else if (obj.$date) {
+            type = constant_1.FieldType.ServerDate;
         }
         else if (Array.isArray(obj.coordinates) && obj.type === "Point") {
             type = constant_1.FieldType.GeoPoint;
