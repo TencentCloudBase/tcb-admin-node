@@ -52,10 +52,10 @@ describe("test/index.test.ts", async () => {
     console.log(await collection.where({
       a: "10"
     }).update({
-      c: db.serverDate(),
+      c: db.serverDate({ offset: 100 }),
     }))
-    const r = await collection.where({ a: "10" }).get()
-    console.log(r.data[0].c)
+    // const r = await collection.where({ a: "10" }).get()
+    // console.log(r.data[0].c)
     return;
 
     const result = await collection
