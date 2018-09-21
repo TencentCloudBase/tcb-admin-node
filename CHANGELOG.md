@@ -1,4 +1,7 @@
 # v1.1.3
+- [fixed] 修复了serverDate传入参数时的bug
+
+# v1.1.3
 - [fixed] 修复了数据库读取serverDate结构的问题
 
 # v1.1.2

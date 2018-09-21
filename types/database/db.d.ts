@@ -10,7 +10,9 @@ export declare class Db {
     command: Command;
     config: any;
     constructor(config?: any);
-    serverDate(offset?: number): ServerDate;
+    serverDate({ offset }?: {
+        offset?: number;
+    }): ServerDate;
     collection(collName: string): CollectionReference;
     createCollection(collName: string): Promise<any>;
 }

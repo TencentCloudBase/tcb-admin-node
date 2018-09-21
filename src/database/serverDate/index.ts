@@ -1,7 +1,7 @@
 export class ServerDate {
     readonly offset: number;
 
-    constructor(offset: number = 0) {
+    constructor({offset}) {
         this.offset = offset
     }
 }

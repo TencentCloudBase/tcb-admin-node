@@ -11,8 +11,8 @@ class Db {
         this.Geo = Geo;
         this.command = new command_1.Command();
     }
-    serverDate(offset = 0) {
-        return new serverDate_1.ServerDate(offset);
+    serverDate({ offset = 0 } = {}) {
+        return new serverDate_1.ServerDate({ offset });
     }
     collection(collName) {
         if (!collName) {

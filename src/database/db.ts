@@ -44,8 +44,8 @@ export class Db {
     this.command = new Command();
   }
 
-  serverDate(offset: number = 0) {
-    return new ServerDate(offset)
+  serverDate({ offset = 0 } = {}) {
+    return new ServerDate({ offset })
   }
 
   /**
