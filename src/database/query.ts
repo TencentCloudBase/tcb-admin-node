@@ -356,7 +356,7 @@ export class Query {
     // console.log(param);
     return new Promise<any>(resolve => {
       this._request.send("deleteDocument", param).then(res => {
-        console.log(res)
+        // console.log(res)
         if (res.code) {
           resolve(res);
         } else {
@@ -370,7 +370,7 @@ export class Query {
   }
 
   convertParams(query: object) {
-    // console.log(query);
+    // console.log(JSON.stringify(query));
     let queryParam = {};
     if (query instanceof Command) {
       queryParam = query.parse();

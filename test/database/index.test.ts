@@ -31,12 +31,12 @@ describe("test/index.test.ts", async () => {
     // console.log(await db.createCollection('ccc'))
     // return;
 
-    //   // var a = { a: { b: _.and(_.gt(1), _.lt(32)) } };
+    // var a = { a: { b: _.and(_.gt(1), _.lt(32)) } };
     //   // var a = { a: 1, b: _.lte(2) }
-    //   // var a = { a: _.and(_.gt(2), _.lte(25)) }
-    //   // var a = { a: 1, b: _.or([_.gt(4), _.lt(32)]) }
-    //   // console.log(await collection.where(a).get());
-    //   // return;
+    // var a = { b: _.and(_.gt(2), _.lte(25)) }
+    // var a = _.or([{ a: 1 }, { b: _.and(_.gt(2), _.lte(25)) }])
+    // console.log(await collection.where(a).get());
+    // return;
 
     // console.log(await collection.add({
     //   _id: '12234',
@@ -46,33 +46,20 @@ describe("test/index.test.ts", async () => {
 
     // console.log(await collection.where({
     //   a: { b: { d: 1 } }
-    // }).get())
+    // }).skip(0).get())
     // return;
 
-    console.log(await collection.where({
-      a: "10"
-    }).update({
-      c: db.serverDate({ offset: 100 }),
-    }))
-    // const r = await collection.where({ a: "10" }).get()
-    // console.log(r.data[0].c)
-    return;
+    // console.log(await collection.where({
+    //   a: "10"
+    // }).update({
+    //   c: db.serverDate({ offset: 100 }),
+    // }))
+    // return;
 
     const result = await collection
-      .doc("W5-zLLOVH2exDS7d")
-      .set({
-        a: '10',
-        b: { c: 1 },
-        // _id: 'fdaeafae',
-        // b: _.set({
-        //   o: {
-        //     a: 1,
-        //     b: [2, 3]
-        //   }
-        // }),
-        // c: {
-        //   d: _.set(10)
-        // }
+      .doc("W5HglB8xr6KrrmL6")
+      .update({
+        t1: { name: 1, age: 2 }, t2: { name: 3, age: 4, }
       });
     console.log(result);
   });
