@@ -100,9 +100,22 @@ class Command {
             }
             else {
                 const tmp = this.concatKeys(target);
-                logicParams.push({
-                    [tmp.keys]: tmp.value instanceof Command ? tmp.value.logicParam : tmp.value
-                });
+                if (tmp.value instanceof Command) {
+                    const logicParam = tmp.value.logicParam;
+                    if (logicParam.hasOwnProperty('$or') || logicParam.hasOwnProperty('$and')) {
+                        logicParams.push(tmp.value.parse(tmp.keys));
+                    }
+                    else {
+                        logicParams.push({
+                            [tmp.keys]: logicParam
+                        });
+                    }
+                }
+                else {
+                    logicParams.push({
+                        [tmp.keys]: tmp.value
+                    });
+                }
             }
         }
         this.logicParam = [];

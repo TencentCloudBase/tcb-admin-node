@@ -122,7 +122,7 @@ export class Command {
   // }
 
   private connectOperate(operator: string, targets: any[]) {
-    // console.log(this.logicParam, target.logicParam, targets);
+    // console.log(targets);
     let logicParams: object[] = [];
     if (Object.keys(this.logicParam).length > 0) {
       logicParams.push(this.logicParam);
@@ -130,6 +130,7 @@ export class Command {
 
     for (let target of targets) {
       if (target instanceof Command) {
+        // console.log(target)
         if (Object.keys(target.logicParam).length === 0) {
           continue;
         }
@@ -137,15 +138,25 @@ export class Command {
       } else {
         const tmp = this.concatKeys(target);
         // console.log(tmp);
-        logicParams.push({
-          [tmp.keys]:
-            tmp.value instanceof Command ? tmp.value.logicParam : tmp.value
-        });
+        if (tmp.value instanceof Command) {
+          const logicParam = tmp.value.logicParam
+          if (logicParam.hasOwnProperty('$or') || logicParam.hasOwnProperty('$and')) {
+            logicParams.push(tmp.value.parse(tmp.keys))
+          } else {
+            logicParams.push({
+              [tmp.keys]: logicParam
+            });
+          }
+        } else {
+          logicParams.push({
+            [tmp.keys]: tmp.value
+          });
+        }
       }
     }
 
     this.logicParam = [];
-    // console.log(logicParam);
+    // console.log(logicParams);
     return {
       [operator]: logicParams
     };

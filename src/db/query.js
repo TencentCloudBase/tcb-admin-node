@@ -163,7 +163,6 @@ class Query {
         };
         return new Promise(resolve => {
             this._request.send("deleteDocument", param).then(res => {
-                console.log(res);
                 if (res.code) {
                     resolve(res);
                 }
