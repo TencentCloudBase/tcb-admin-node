@@ -73,17 +73,24 @@ export class Util {
     // console.log(document);
 
     const getCommandVal = (key, item) => {
-      let value
-      let command = new Command();
-      let tmp = command.concatKeys({ [key]: item });
-      // console.log(tmp)
-      if (tmp.value instanceof Command) {
-        value = tmp.value.parse(tmp.keys);
-      } else {
-        value = { [tmp.keys]: tmp.value }
+      console.log(key, item)
+      let res = {}
+      for (let k in item) {
+        let value
+        let command = new Command();
+        let tmp = command.concatKeys({ [key]: {[k]: item[k]} });
+        // console.log(tmp)
+        if (tmp.value instanceof Command) {
+          value = tmp.value.parse(tmp.keys);
+        } else {
+          value = { [tmp.keys]: tmp.value }
+        }
+
+        res = Object.assign({}, res, value)
       }
 
-      return value
+
+      return res
     }
 
     keys.forEach(key => {

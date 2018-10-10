@@ -59,7 +59,7 @@ describe("test/index.test.ts", async () => {
     const result = await collection
       .doc("W5HglB8xr6KrrmL6")
       .update({
-        t1: { name: 1, age: 2 }, t2: { name: 3, age: 4, }
+        t1: { name: 1, age: 2 }, t2: { name: 3, age: 4000, }
       });
     console.log(result);
   });

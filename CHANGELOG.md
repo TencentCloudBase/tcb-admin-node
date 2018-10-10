@@ -1,3 +1,7 @@
+# v1.1.5
+- [fixed] 修复了逻辑操作符嵌套使用会报错的bug
+- [fixed] 修复了update嵌套对象部分生效的bug
+
 # v1.1.3
 - [fixed] 修复了serverDate传入参数时的bug
 

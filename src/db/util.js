@@ -34,16 +34,21 @@ Util.encodeDocumentDataForReq = (document, merge = false, concatKey = true) => {
         params = [];
     }
     const getCommandVal = (key, item) => {
-        let value;
-        let command = new command_1.Command();
-        let tmp = command.concatKeys({ [key]: item });
-        if (tmp.value instanceof command_1.Command) {
-            value = tmp.value.parse(tmp.keys);
+        console.log(key, item);
+        let res = {};
+        for (let k in item) {
+            let value;
+            let command = new command_1.Command();
+            let tmp = command.concatKeys({ [key]: { [k]: item[k] } });
+            if (tmp.value instanceof command_1.Command) {
+                value = tmp.value.parse(tmp.keys);
+            }
+            else {
+                value = { [tmp.keys]: tmp.value };
+            }
+            res = Object.assign({}, res, value);
         }
-        else {
-            value = { [tmp.keys]: tmp.value };
-        }
-        return value;
+        return res;
     };
     keys.forEach(key => {
         const item = document[key];
