@@ -81,7 +81,7 @@ export class Util {
           res[key] = res[key].parse(key);
         }
       }
-      console.log(res)
+      // console.log(res)
       return res
     }
 
