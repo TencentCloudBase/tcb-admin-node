@@ -3,6 +3,7 @@
 export class Command {
   public logicParam: object = {};
   private placeholder = "{{{AAA}}}";
+  private baseOperator = ['$eq', '$ne', '$gt', '$gte', '$lt', '$lte', '$in', '$nin'];
 
   constructor(logicParam?: object) {
     if (logicParam) {
@@ -122,7 +123,7 @@ export class Command {
   // }
 
   private connectOperate(operator: string, targets: any[]) {
-    // console.log(targets);
+    // console.log(JSON.stringify(targets));
     let logicParams: object[] = [];
     if (Object.keys(this.logicParam).length > 0) {
       logicParams.push(this.logicParam);
@@ -140,18 +141,19 @@ export class Command {
         this.concatKeys(target, '', tmp);
         let keys = Object.keys(tmp)[0]
         let value = tmp[keys]
-        console.log(tmp)
+        // console.log(tmp)
 
         // console.log(tmp);
         if (value instanceof Command) {
-          const logicParam = value.logicParam
-          if (logicParam.hasOwnProperty('$or') || logicParam.hasOwnProperty('$and')) {
-            logicParams.push(value.parse(keys))
-          } else {
-            logicParams.push({
-              [keys]: logicParam
-            });
-          }
+          // const logicParam = value.logicParam
+          logicParams.push(value.parse(keys))
+          // if (logicParam.hasOwnProperty('$or') || logicParam.hasOwnProperty('$and')) {
+          //   logicParams.push(value.parse(keys))
+          // } else {
+          //   logicParams.push({
+          //     [keys]: logicParam
+          //   });
+          // }
         } else {
           logicParams.push({
             [keys]: value

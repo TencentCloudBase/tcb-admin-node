@@ -1,6 +1,7 @@
 export declare class Command {
     logicParam: object;
     private placeholder;
+    private baseOperator;
     constructor(logicParam?: object);
     eq(target: any): Command;
     neq(target: any): Command;

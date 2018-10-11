@@ -32,11 +32,11 @@ describe("test/index.test.ts", async () => {
     // return;
 
     // var a = { a: { b: _.and(_.gt(1), _.lt(32)) } };
-    //   // var a = { a: 1, b: _.lte(2) }
+    // var a = { b: _.lte(2) }
     // var a = { b: _.and(_.gt(2), _.lte(25)) }
-    // var a = _.or([{ a: 1 }, { b: _.and(_.gt(2), _.lte(25)) }])
-    // console.log(await collection.where(a).get());
-    // return;
+    var a = _.or([{ b: _.and(_.gt(1), _.lte(25)) }, { b: _.and(_.gt(20), _.lte(25)) }])
+    console.log(await collection.where(a).get());
+    return;
 
     // console.log(await collection.add({
     //   _id: '12234',
@@ -65,30 +65,15 @@ describe("test/index.test.ts", async () => {
               'l-04-01': {
                 level: 1,
                 name: 'l-01',
-                flag: '1111111',
-                'l-02-01': {
-                  level: 2,
-                  name: 'l-02.01',
-                  flag: '2222222',
-                  'l-03-01': {
-                    level: 3,
-                    name: 'l-03.01',
-                    flag: '3',
-                  },
-                },
-                'l-02-02': {
-                  level: 1,
-                  name: 'l-01.2',
-                  flag: '1212121212',
-                }
+                flag: '0'
               }
             }
           }
         }
       });
-      console.log(JSON.stringify(await collection
-        .doc("W5HglB8xr6KrrmL6")
-        .get()))
+    console.log(JSON.stringify(await collection
+      .doc("W5HglB8xr6KrrmL6")
+      .get()))
     console.log(result);
   });
   return;
