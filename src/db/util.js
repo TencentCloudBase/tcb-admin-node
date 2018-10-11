@@ -42,7 +42,6 @@ Util.encodeDocumentDataForReq = (document, merge = false, concatKey = true) => {
                 res[key] = res[key].parse(key);
             }
         }
-        console.log(res);
         return res;
     };
     keys.forEach(key => {
