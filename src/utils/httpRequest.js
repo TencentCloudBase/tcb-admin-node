@@ -84,7 +84,7 @@ module.exports = function (args) {
     opts.proxy = args.proxy;
   }
 
-  console.log(JSON.stringify(opts));
+  // console.log(JSON.stringify(opts));
   return new Promise(function (resolve, reject) {
     request(opts, function (err, response, body) {
       // console.log(err, body);
