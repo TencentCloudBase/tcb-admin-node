@@ -54,7 +54,7 @@ module.exports = function (args) {
   // console.log(params);
   var opts = {
     // url: 'http://localhost:8002/admin',
-    url: "https://tcb-admin.tencentcloudapi.com/admin",
+    url: "http://tcb-admin.tencentcloudapi.com/admin",
     method: args.method || "get",
     timeout: args.timeout || 50000,
     headers: authObj.Headers,
@@ -84,7 +84,7 @@ module.exports = function (args) {
     opts.proxy = args.proxy;
   }
 
-  // console.log(JSON.stringify(opts));
+  console.log(JSON.stringify(opts));
   return new Promise(function (resolve, reject) {
     request(opts, function (err, response, body) {
       // console.log(err, body);

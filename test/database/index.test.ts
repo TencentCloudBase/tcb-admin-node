@@ -34,9 +34,9 @@ describe("test/index.test.ts", async () => {
     // var a = { a: { b: _.and(_.gt(1), _.lt(32)) } };
     //   // var a = { a: 1, b: _.lte(2) }
     // var a = { b: _.and(_.gt(2), _.lte(25)) }
-    // var a = _.or([{ a: 1 }, { b: _.and(_.gt(2), _.lte(25)) }])
-    // console.log(await collection.where(a).get());
-    // return;
+    var a = _.or([{ a: 1 }, { b: _.and(_.gt(2), _.lte(25)) }])
+    console.log(await collection.where(a).get());
+    return;
 
     // console.log(await collection.add({
     //   _id: '12234',
@@ -59,7 +59,31 @@ describe("test/index.test.ts", async () => {
     const result = await collection
       .doc("W5HglB8xr6KrrmL6")
       .update({
-        t1: { name: 1, age: 2 }, t2: { name: 3, age: 4000, }
+        'l-01': {
+          level: 1,
+          name: 'l-01',
+          flag: '1111111',
+          'l-02.01': {
+            level: 2,
+            name: 'l-02.01',
+            flag: '2222222',
+            'l-03.01': {
+              level: 3,
+              name: 'l-03.01',
+              flag: '33333333',
+              'l-04.01': {
+                level: 4,
+                name: 'l-04.01',
+                flag: '4444444444',
+              },
+            },
+          },
+          'l-02.02': {
+            level: 1,
+            name: 'l-01.2',
+            flag: '1212121212',
+          }
+        }
       });
     console.log(result);
   });

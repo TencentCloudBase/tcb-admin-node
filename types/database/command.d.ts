@@ -24,8 +24,5 @@ export declare class Command {
     private connectOperate;
     parse(key?: string): object;
     toString: () => object;
-    concatKeys(obj: object): {
-        keys: string;
-        value: any;
-    };
+    concatKeys(obj: object, key: string, res: object): void;
 }

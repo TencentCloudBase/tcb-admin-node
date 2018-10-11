@@ -33,21 +33,16 @@ Util.encodeDocumentDataForReq = (document, merge = false, concatKey = true) => {
     if (Array.isArray(document)) {
         params = [];
     }
-    const getCommandVal = (key, item) => {
-        console.log(key, item);
+    const getCommandVal = (obj) => {
         let res = {};
-        for (let k in item) {
-            let value;
-            let command = new command_1.Command();
-            let tmp = command.concatKeys({ [key]: { [k]: item[k] } });
-            if (tmp.value instanceof command_1.Command) {
-                value = tmp.value.parse(tmp.keys);
+        let command = new command_1.Command();
+        command.concatKeys(obj, '', res);
+        for (let key in res) {
+            if (res[key] instanceof command_1.Command) {
+                res[key] = res[key].parse(key);
             }
-            else {
-                value = { [tmp.keys]: tmp.value };
-            }
-            res = Object.assign({}, res, value);
         }
+        console.log(res);
         return res;
     };
     keys.forEach(key => {
@@ -65,14 +60,14 @@ Util.encodeDocumentDataForReq = (document, merge = false, concatKey = true) => {
         }
         else if (type === constant_1.FieldType.Object) {
             if (concatKey) {
-                realValue = getCommandVal(key, item);
+                realValue = getCommandVal({ [key]: item });
             }
             else {
                 realValue = { [key]: Util.encodeDocumentDataForReq(item, merge, concatKey) };
             }
         }
         else if (type === constant_1.FieldType.Command) {
-            realValue = getCommandVal(key, item);
+            realValue = getCommandVal({ [key]: item });
         }
         else {
             realValue = { [key]: item };

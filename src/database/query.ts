@@ -384,13 +384,14 @@ export class Query {
           );
         } else if (typeof query[key] === "object") {
           let command = new Command();
-          let tmp = command.concatKeys({ [key]: query[key] });
-          // console.log(tmp)
-          let value
-          if (tmp.value instanceof Command) {
-            value = tmp.value.parse(tmp.keys);
+          let tmp = {}
+          command.concatKeys({ [key]: query[key] }, '', tmp);
+          let keys = Object.keys(tmp)[0]
+          let value = tmp[keys]
+          if (value instanceof Command) {
+            value = value.parse(keys);
           } else {
-            value = { [tmp.keys]: tmp.value }
+            value = { [keys]: value }
           }
 
           queryParam = Object.assign({}, queryParam, value);

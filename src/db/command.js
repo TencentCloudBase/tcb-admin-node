@@ -99,21 +99,25 @@ class Command {
                 logicParams.push(target.logicParam);
             }
             else {
-                const tmp = this.concatKeys(target);
-                if (tmp.value instanceof Command) {
-                    const logicParam = tmp.value.logicParam;
+                let tmp = {};
+                this.concatKeys(target, '', tmp);
+                let keys = Object.keys(tmp)[0];
+                let value = tmp[keys];
+                console.log(tmp);
+                if (value instanceof Command) {
+                    const logicParam = value.logicParam;
                     if (logicParam.hasOwnProperty('$or') || logicParam.hasOwnProperty('$and')) {
-                        logicParams.push(tmp.value.parse(tmp.keys));
+                        logicParams.push(value.parse(keys));
                     }
                     else {
                         logicParams.push({
-                            [tmp.keys]: logicParam
+                            [keys]: logicParam
                         });
                     }
                 }
                 else {
                     logicParams.push({
-                        [tmp.keys]: tmp.value
+                        [keys]: value
                     });
                 }
             }
@@ -126,22 +130,20 @@ class Command {
     parse(key) {
         return JSON.parse(JSON.stringify(this.logicParam).replace(/{{{AAA}}}/g, key));
     }
-    concatKeys(obj) {
-        let keys = "", value;
-        for (let key in obj) {
-            if (typeof obj[key] === "object" &&
-                obj[key] instanceof Command === false) {
-                let tmp = this.concatKeys(obj[key]);
-                keys = key + "." + tmp.keys;
-                value = tmp.value;
+    concatKeys(obj, key, res) {
+        let keys, value;
+        for (let k in obj) {
+            if (typeof obj[k] === 'object' &&
+                obj[k] instanceof Command === false) {
+                keys = key ? key + '.' + k : k;
+                this.concatKeys(obj[k], keys, res);
             }
             else {
-                keys = key;
-                value = obj[key];
+                keys = key ? key + '.' + k : k;
+                value = obj[k];
+                Object.assign(res, { [keys]: value });
             }
-            break;
         }
-        return { keys, value };
     }
 }
 exports.Command = Command;
