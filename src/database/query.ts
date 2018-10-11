@@ -372,6 +372,7 @@ export class Query {
   convertParams(query: object) {
     // console.log(JSON.stringify(query));
     let queryParam = {};
+    // console.log(query)
     if (query instanceof Command) {
       queryParam = query.parse();
     } else {
