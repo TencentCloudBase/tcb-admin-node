@@ -72,24 +72,16 @@ export class Util {
     }
     // console.log(document);
 
-    const getCommandVal = (key, item) => {
-      console.log(key, item)
-      let res = {}
-      for (let k in item) {
-        let value
-        let command = new Command();
-        let tmp = command.concatKeys({ [key]: {[k]: item[k]} });
-        // console.log(tmp)
-        if (tmp.value instanceof Command) {
-          value = tmp.value.parse(tmp.keys);
-        } else {
-          value = { [tmp.keys]: tmp.value }
+    const getCommandVal = (obj) => {
+      let res: object = {}
+      let command = new Command();
+      command.concatKeys(obj, '', res)
+      for(let key in res) {
+        if (res[key] instanceof Command) {
+          res[key] = res[key].parse(key);
         }
-
-        res = Object.assign({}, res, value)
       }
-
-
+      console.log(res)
       return res
     }
 
@@ -105,12 +97,12 @@ export class Util {
         realValue = { [key]: Util.encodeServerDate(item) };
       } else if (type === FieldType.Object) {
         if (concatKey) {
-          realValue = getCommandVal(key, item)
+          realValue = getCommandVal({ [key]: item })
         } else {
           realValue = { [key]: Util.encodeDocumentDataForReq(item, merge, concatKey) };
         }
       } else if (type === FieldType.Command) {
-        realValue = getCommandVal(key, item)
+        realValue = getCommandVal({ [key]: item })
       } else {
         realValue = { [key]: item };
       }
