@@ -102,16 +102,19 @@ class Command {
             else {
                 let tmp = {};
                 this.concatKeys(target, '', tmp);
-                let keys = Object.keys(tmp)[0];
-                let value = tmp[keys];
-                if (value instanceof Command) {
-                    logicParams.push(value.parse(keys));
+                let tmp1 = {};
+                for (let keys in tmp) {
+                    let value = tmp[keys];
+                    if (value instanceof Command) {
+                        Object.assign(tmp1, value.parse(keys));
+                    }
+                    else {
+                        Object.assign(tmp1, {
+                            [keys]: value
+                        });
+                    }
                 }
-                else {
-                    logicParams.push({
-                        [keys]: value
-                    });
-                }
+                logicParams.push(tmp1);
             }
         }
         this.logicParam = [];
