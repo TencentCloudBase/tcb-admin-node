@@ -123,7 +123,7 @@ export class Command {
   // }
 
   private connectOperate(operator: string, targets: any[]) {
-    // console.log(JSON.stringify(targets));
+    // console.log(targets);
     let logicParams: object[] = [];
     if (Object.keys(this.logicParam).length > 0) {
       logicParams.push(this.logicParam);
@@ -139,26 +139,33 @@ export class Command {
       } else {
         let tmp = {}
         this.concatKeys(target, '', tmp);
-        let keys = Object.keys(tmp)[0]
-        let value = tmp[keys]
         // console.log(tmp)
 
-        // console.log(tmp);
-        if (value instanceof Command) {
-          // const logicParam = value.logicParam
-          logicParams.push(value.parse(keys))
-          // if (logicParam.hasOwnProperty('$or') || logicParam.hasOwnProperty('$and')) {
-          //   logicParams.push(value.parse(keys))
-          // } else {
-          //   logicParams.push({
-          //     [keys]: logicParam
-          //   });
-          // }
-        } else {
-          logicParams.push({
-            [keys]: value
-          });
+        let tmp1 = {}
+        for (let keys in tmp) {
+          let value = tmp[keys]
+
+          if (value instanceof Command) {
+            // const logicParam = value.logicParam
+            // logicParams.push(value.parse(keys))
+            Object.assign(tmp1, value.parse(keys))
+            // if (logicParam.hasOwnProperty('$or') || logicParam.hasOwnProperty('$and')) {
+            //   logicParams.push(value.parse(keys))
+            // } else {
+            //   logicParams.push({
+            //     [keys]: logicParam
+            //   });
+            // }
+          } else {
+            Object.assign(tmp1, {
+              [keys]: value
+            })
+            // logicParams.push({
+            //   [keys]: value
+            // });
+          }
         }
+        logicParams.push(tmp1)
       }
     }
 
