@@ -26,7 +26,7 @@ uploadFile(object)
 | --- | --- | --- | --- |
 | code | string | 否 | 状态码，操作成功则不返回
 | message | string | 否 | 错误描述
-| fildID | fileID | 是 | 文件唯一ID，用来访问文件，建议存储起来
+| fileID | fileID | 是 | 文件唯一ID，用来访问文件，建议存储起来
 | requestId | string | 否 | 请求序列号，用于错误排查
 
 示例代码
@@ -55,7 +55,7 @@ fileList
 
 | 字段 | 类型 | 必填 | 说明
 | --- | --- | --- | --- |
-| fildID | string | 是 | 文件ID
+| fileID | string | 是 | 文件ID
 | maxAge | Integer | 是 | 文件链接有效期
 
 响应参数
@@ -72,7 +72,7 @@ fileList
 | 字段 | 类型 | 必填 | 说明
 | --- | --- | --- | --- |
 | code | string | 否 | 删除结果，成功为SUCCESS
-| fildID | string | 是 | 文件ID
+| fileID | string | 是 | 文件ID
 | tempFileURL | string | 是 | 文件访问链接
 
 示例代码
@@ -107,7 +107,7 @@ fileList
 | 字段 | 类型 | 必填 | 说明
 | --- | --- | --- | --- |
 | code | string | 否 | 删除结果，成功为SUCCESS
-| fildID | string | 是 | 文件ID
+| fileID | string | 是 | 文件ID
 
 示例代码
 
