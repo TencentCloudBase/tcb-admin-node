@@ -48,6 +48,10 @@ export class Command {
     return new Command(this.baseOperate("$nin", target));
   }
 
+  regex(target: any[]) {
+    return new Command(this.baseOperate("$regex", target))
+  }
+
   /**
    * Update Operators
    * https://docs.mongodb.com/manual/reference/operator/update/

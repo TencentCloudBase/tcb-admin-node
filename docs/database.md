@@ -28,6 +28,7 @@
         - [in](#in)
         - [and](#and)
         - [or](#or)
+        - [regex](#regex)
 - [删除文档](#删除文档)
 - [更新文档](#更新文档)
     - [更新指定文档](#更新指定文档)
@@ -496,6 +497,20 @@ db.collection('goods').where(_.or(
   }
 ))
 ```
+
+##### regex
+
+根据正则表达式进行筛选
+
+例如下面可以筛选 `title` 字段的第一个字符是数字的记录，注意正则表达式需要使用转义字符：
+```js
+const _ = db.command
+db.collection('articles').where({
+  title: _.regex('^\\d') // 正则表达式为 /^\d/，转义后变成 '^\\d'
+})
+```
+
+
 
 ### 删除文档
 方式1 通过指定文档ID
