@@ -1,7 +1,6 @@
 export declare class Command {
     logicParam: object;
     private placeholder;
-    private baseOperator;
     constructor(logicParam?: object);
     eq(target: any): Command;
     neq(target: any): Command;
@@ -11,6 +10,7 @@ export declare class Command {
     lte(target: any): Command;
     in(target: any[]): Command;
     nin(target: any[]): Command;
+    regex(target: any): Command;
     mul(target: number): Command;
     remove(): Command;
     inc(target: number): Command;

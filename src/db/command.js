@@ -4,7 +4,6 @@ class Command {
     constructor(logicParam) {
         this.logicParam = {};
         this.placeholder = "{{{AAA}}}";
-        this.baseOperator = ['$eq', '$ne', '$gt', '$gte', '$lt', '$lte', '$in', '$nin'];
         this.toString = () => {
             return this.logicParam[0];
         };
@@ -35,6 +34,11 @@ class Command {
     }
     nin(target) {
         return new Command(this.baseOperate("$nin", target));
+    }
+    regex(target) {
+        var result = new Command(this.baseOperate("$regex", target.regex));
+        result.logicParam[this.placeholder]['$options'] = target.options;
+        return result;
     }
     mul(target) {
         return new Command({ $mul: { [this.placeholder]: target } });

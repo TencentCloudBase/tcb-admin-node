@@ -4,6 +4,7 @@ const request_1 = require("./request");
 const validate_1 = require("./validate");
 const util_1 = require("./util");
 const command_1 = require("./command");
+const isRegExp = require("is-regex");
 class Query {
     constructor(db, coll, fieldFilters, fieldOrders, queryOptions) {
         this._db = db;
@@ -49,13 +50,17 @@ class Query {
                 }
                 else {
                     const documents = util_1.Util.formatResDocumentData(res.data.list);
-                    resolve({
+                    const result = {
                         data: documents,
-                        requestId: res.requestId,
-                        total: res.TotalCount,
-                        limit: res.Limit,
-                        offset: res.Offset
-                    });
+                        requestId: res.requestId
+                    };
+                    if (res.TotalCount)
+                        result.total = res.TotalCount;
+                    if (res.Limit)
+                        result.limit = res.Limit;
+                    if (res.Offset)
+                        result.offset = res.Offset;
+                    resolve(result);
                 }
             });
         });
@@ -184,6 +189,14 @@ class Query {
             for (let key in query) {
                 if (query[key] instanceof command_1.Command) {
                     queryParam = Object.assign({}, queryParam, query[key].parse(key));
+                }
+                else if (isRegExp(query[key])) {
+                    queryParam = {
+                        [key]: {
+                            $regex: query[key].source,
+                            $options: query[key].flags
+                        }
+                    };
                 }
                 else if (typeof query[key] === "object") {
                     let command = new command_1.Command();

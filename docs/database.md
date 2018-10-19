@@ -502,11 +502,20 @@ db.collection('goods').where(_.or(
 
 根据正则表达式进行筛选
 
-例如下面可以筛选 `title` 字段的第一个字符是数字的记录，注意正则表达式需要使用转义字符：
+例如下面可以筛选出 `version` 字段开头是 "数字+s" 的记录，并且忽略大小写：
 ```js
+// 可以直接使用正则表达式
+db.collection('articles').where({
+  version: /^\ds/i
+})
+
+// 或者
 const _ = db.command
 db.collection('articles').where({
-  title: _.regex('^\\d') // 正则表达式为 /^\d/，转义后变成 '^\\d'
+  version: _.regex({
+    regex: '^\\d'   // 正则表达式为 /^\d/，转义后变成 '^\\d'
+    options: 'i'    // i表示忽略大小写
+  }) 
 })
 ```
 
