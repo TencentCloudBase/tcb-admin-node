@@ -24,6 +24,7 @@
   "license": "MIT",
   "dependencies": {
     "deep-assign": "^2.0.0",
+    "is-regex": "^1.0.4",
     "request": "^2.87.0"
   },
   "devDependencies": {

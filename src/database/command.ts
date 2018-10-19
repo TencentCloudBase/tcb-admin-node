@@ -3,7 +3,7 @@
 export class Command {
   public logicParam: object = {};
   private placeholder = "{{{AAA}}}";
-  private baseOperator = ['$eq', '$ne', '$gt', '$gte', '$lt', '$lte', '$in', '$nin'];
+  // private baseOperator = ['$eq', '$ne', '$gt', '$gte', '$lt', '$lte', '$in', '$nin'];
 
   constructor(logicParam?: object) {
     if (logicParam) {
@@ -48,8 +48,10 @@ export class Command {
     return new Command(this.baseOperate("$nin", target));
   }
 
-  regex(target: any[]) {
-    return new Command(this.baseOperate("$regex", target))
+  regex(target: any) {
+    var result = new Command(this.baseOperate("$regex", target.regex))
+    result.logicParam[this.placeholder]['$options'] = target.options
+    return result
   }
 
   /**

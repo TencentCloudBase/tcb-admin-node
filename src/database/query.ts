@@ -4,6 +4,7 @@ import { Db } from "./db";
 import { Validate } from "./validate";
 import { Util } from "./util";
 import { Command } from "./command";
+import * as isRegExp from 'is-regex'
 
 interface getRes {
   data: any[];
@@ -151,13 +152,14 @@ export class Query {
           resolve(res);
         } else {
           const documents = Util.formatResDocumentData(res.data.list);
-          resolve({
+          const result: any = {
             data: documents,
-            requestId: res.requestId,
-            total: res.TotalCount,
-            limit: res.Limit,
-            offset: res.Offset
-          });
+            requestId: res.requestId
+          }
+          if (res.TotalCount) result.total = res.TotalCount
+          if (res.Limit) result.limit = res.Limit
+          if (res.Offset) result.offset = res.Offset
+          resolve(result);
         }
       });
     });
@@ -372,7 +374,6 @@ export class Query {
   convertParams(query: object) {
     // console.log(JSON.stringify(query));
     let queryParam = {};
-    // console.log(query)
     if (query instanceof Command) {
       queryParam = query.parse();
     } else {
@@ -383,6 +384,13 @@ export class Query {
             queryParam,
             query[key].parse(key)
           );
+        } else if (isRegExp(query[key])) {
+          queryParam = {
+            [key]: {
+              $regex: query[key].source,
+              $options: query[key].flags
+            }
+          }
         } else if (typeof query[key] === "object") {
           let command = new Command();
           let tmp = {}
