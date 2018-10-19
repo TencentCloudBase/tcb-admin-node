@@ -513,7 +513,7 @@ db.collection('articles').where({
 const _ = db.command
 db.collection('articles').where({
   version: _.regex({
-    regex: '^\\d'   // 正则表达式为 /^\d/，转义后变成 '^\\d'
+    regex: '^\\ds'   // 正则表达式为 /^\ds/，转义后变成 '^\\ds'
     options: 'i'    // i表示忽略大小写
   }) 
 })
