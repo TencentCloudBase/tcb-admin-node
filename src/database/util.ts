@@ -76,7 +76,7 @@ export class Util {
       let res: object = {}
       let command = new Command();
       command.concatKeys(obj, '', res)
-      for(let key in res) {
+      for (let key in res) {
         if (res[key] instanceof Command) {
           res[key] = res[key].parse(key);
         }
@@ -102,7 +102,7 @@ export class Util {
           realValue = { [key]: Util.encodeDocumentDataForReq(item, merge, concatKey) };
         }
       } else if (type === FieldType.Command) {
-        realValue = getCommandVal({ [key]: item })
+        realValue = item.parse(key)
       } else {
         realValue = { [key]: item };
       }
