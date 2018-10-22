@@ -66,7 +66,7 @@ Util.encodeDocumentDataForReq = (document, merge = false, concatKey = true) => {
             }
         }
         else if (type === constant_1.FieldType.Command) {
-            realValue = getCommandVal({ [key]: item });
+            realValue = item.parse(key);
         }
         else {
             realValue = { [key]: item };
