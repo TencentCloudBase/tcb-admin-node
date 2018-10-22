@@ -4,7 +4,7 @@ import { Db } from "../../../src/database";
 // import * as Mock from "./mock";
 import * as Config from '../../config'
 
-describe("test/unit/collection.test.ts", () => {
+describe("test/unit/collection.test.ts", async () => {
   const collName = "coll-1";
   const db = new Db({
     secretId: Config.secretId,
@@ -77,6 +77,7 @@ describe("test/unit/collection.test.ts", () => {
   // });
 
   it('API - use field', async () => {
+    await db.createCollection(collName)
     const res = await collection.field({ 'age': 1 }).get();
     assert(Array.isArray(res.data))
   })
