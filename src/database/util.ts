@@ -64,7 +64,7 @@ export class Util {
    */
   public static encodeDocumentDataForReq = (document, merge = false, concatKey = true) => {
     const keys = Object.keys(document);
-    let params = {};
+    let params: any = {};
 
     // 数组递归的情况
     if (Array.isArray(document)) {
@@ -118,7 +118,28 @@ export class Util {
         params = deepAssign({}, params, realValue);
       }
     });
-    // console.log(params)
+
+
+    // 修复嵌套operator
+    if (params.$set) {
+      for (let concatKey in params.$set) {
+        for (let key in params.$set[concatKey]) {
+          if (UpdateOperatorList.indexOf(key) > -1) {
+            if (params[key] === undefined) {
+              params[key] = {
+                ...params.$set[concatKey][key]
+              }
+            } else {
+              params[key] = {
+                ...params[key],
+                ...params.$set[concatKey][key]
+              }
+            }
+            delete params.$set[concatKey]
+          }
+        }
+      }
+    }
     return params;
   };
 
