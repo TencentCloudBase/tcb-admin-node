@@ -81,6 +81,21 @@ Util.encodeDocumentDataForReq = (document, merge = false, concatKey = true) => {
             params = deepAssign({}, params, realValue);
         }
     });
+    if (params.$set) {
+        for (let concatKey in params.$set) {
+            for (let key in params.$set[concatKey]) {
+                if (constant_1.UpdateOperatorList.indexOf(key) > -1) {
+                    if (params[key] === undefined) {
+                        params[key] = Object.assign({}, params.$set[concatKey][key]);
+                    }
+                    else {
+                        params[key] = Object.assign({}, params[key], params.$set[concatKey][key]);
+                    }
+                    delete params.$set[concatKey];
+                }
+            }
+        }
+    }
     return params;
 };
 Util.formatResDocumentData = (documents) => {
