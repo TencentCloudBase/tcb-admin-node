@@ -5,7 +5,7 @@ import * as Mock from "./mock";
 import * as Config from '../../config'
 
 describe("test/unit/document.test.ts", () => {
-  const collName = "coll-1";
+  const collName = "coll-2";
   const docIDGenerated = Util.generateDocId();
   const db = new Db({
     secretId: Config.secretId,
@@ -40,10 +40,23 @@ describe("test/unit/document.test.ts", () => {
   it("API - set data in document existed", async () => {
     const documents = await db.collection(collName).limit(1).get();
     const docId = documents.data[0].id;
-    const data = await db.collection(collName).doc(docId).set({
+    let data = await db.collection(collName).doc(docId).set({
       data: { type: "set" }
     });
     assert(data.updated === 1);
+
+    data = await db.collection(collName).doc(docId).set({
+      data: { arr: [1, 2, 3], foo: 123 },
+      array: [0, 0, 0]
+    });
+    assert(data.updated === 1);
+
+    data = await db.collection(collName).doc(docId).update({
+      data: { arr: db.command.push([4, 5, 6]), foo: db.command.inc(1) },
+      array: db.command.pop()
+    });
+    console.log(data)
+    assert.strictEqual(data.updated, 1);
   });
 
   it("API - remove document that not exist", async () => {

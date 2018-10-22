@@ -29,7 +29,7 @@ describe("test/index.test.ts", async () => {
   })
 
   const initialData = {
-    name: 'ben',
+    name: 'aaa',
     array: [1, 2, 3, [4, 5, 6], { a: 1, b: { c: 'fjasklfljkas', d: false } }],
     deepObject: {
       'l-02-01': {
@@ -54,6 +54,7 @@ describe("test/index.test.ts", async () => {
     const result = await collection.where({
       _id: id
     }).get()
+    console.log(result)
     assert.deepStrictEqual(result.data[0].name, initialData.name)
     assert.deepStrictEqual(result.data[0].array, initialData.array)
     assert.deepStrictEqual(result.data[0].deepObject, initialData.deepObject)
@@ -64,16 +65,24 @@ describe("test/index.test.ts", async () => {
     assert.deepStrictEqual(doc.data[0].deepObject, initialData.deepObject)
 
 
-    // Update
+    // Update(TODO)
 
+
+    // Delete
+    const deleteRes = await collection.doc(id).remove()
+    assert.strictEqual(deleteRes.deleted, 1)
   })
 
   it("Document - query", async () => {
-    await collection.add({ a: 1, b: 100 })
-    await collection.doc().set({ a: 10, b: 1 })
+    assert((await collection.add({ a: 1, b: 100 })).id)
+    assert((await collection.add({ a: 10, b: 1 })).id)
     const query = _.or([{ b: _.and(_.gte(1), _.lte(10)) }, { b: _.and(_.gt(99), _.lte(101)) }])
     const result = await collection.where(query).get()
     assert.strictEqual(result.data.length, 2)
+
+    // Delete
+    const deleteRes = await collection.where(query).remove()
+    assert(deleteRes.deleted, 2)
   })
 
   it("Document - doc().update()", async () => {
