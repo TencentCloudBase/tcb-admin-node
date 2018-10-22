@@ -3,7 +3,6 @@ let Tcb = require("../../index");
 const assert = require("assert");
 const config = require("../config.js");
 
-// TODO 删除前先创建
 describe("functions.invokeFunction: 执行云函数", () => {
   const app = Tcb.init({ env: 'a' })
   const app1 = Tcb.init(config);
