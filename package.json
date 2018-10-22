@@ -7,7 +7,7 @@
     "tsc": "tsc -p tsconfig.json",
     "tsc:w": "tsc -p tsconfig.json -w",
     "tstest": "mocha --require espower-typescript/guess test/**/*.test.ts",
-    "test": "jest"
+    "test": "jest --verbose false"
   },
   "repository": {
     "type": "git",
@@ -34,9 +34,9 @@
     "jest": "^23.3.0",
     "mocha": "^5.2.0",
     "power-assert": "^1.5.0",
-    "typescript": "^2.3.4",
-    "ts-jest": "^23.0.0",
-    "tslib": "^1.7.1"
+    "ts-jest": "^23.10.4",
+    "tslib": "^1.7.1",
+    "typescript": "^2.3.4"
   },
   "jest": {
     "transform": {

@@ -10,11 +10,11 @@ describe("test/unit/db.test.ts", () => {
     env: Mock.env,
     mpAppId: Mock.appId
   });
-  const defaultDbName = "default";
+  // const defaultDbName = "default";
 
-  it("use default db", () => {
-    assert(db.config.dbname === defaultDbName);
-  });
+  // it("use default db", () => {
+  //   assert(db.config.dbname === defaultDbName);
+  // });
 
   it("use custom db", () => {
     const customDbName = "custom-db";

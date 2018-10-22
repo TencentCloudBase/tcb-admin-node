@@ -1,7 +1,7 @@
 import * as assert from "power-assert";
 import { Db } from "../../../src/database";
-import { ErrorCode } from "../../../src/database/constant";
-import * as Mock from "./mock";
+// import { ErrorCode } from "../../../src/database/constant";
+// import * as Mock from "./mock";
 import * as Config from '../../config'
 
 describe("test/unit/collection.test.ts", () => {
@@ -9,8 +9,9 @@ describe("test/unit/collection.test.ts", () => {
   const db = new Db({
     secretId: Config.secretId,
     secretKey: Config.secretKey,
-    env: Mock.env,
-    mpAppId: Mock.appId
+    env: Config.env,
+    mpAppId: Config.appId,
+    config: Config
   });
   const collection = db.collection(collName);
 
@@ -76,7 +77,7 @@ describe("test/unit/collection.test.ts", () => {
   // });
 
   it('API - use field', async () => {
-    const res = await collection.field({ 'age': 1 });
+    const res = await collection.field({ 'age': 1 }).get();
     assert(Array.isArray(res.data))
   })
 

@@ -11,8 +11,14 @@ describe("test/unit/document.test.ts", () => {
     secretId: Config.secretId,
     secretKey: Config.secretKey,
     env: Mock.env,
-    mpAppId: Mock.appId
+    mpAppId: Mock.appId,
+    config: Config
   });
+
+  it("API - createCollection", async () => {
+    const result = await db.createCollection(collName)
+    assert(result)
+  })
 
   it("docID test", () => {
     const document = db.collection(collName).doc(docIDGenerated);
@@ -50,6 +56,6 @@ describe("test/unit/document.test.ts", () => {
     const documents = await db.collection(collName).get();
     const docId = documents.data[0]._id;
     const data = await db.collection(collName).doc(docId).remove();
-    assert(data.deleted === 1);
+    assert.strictEqual(data.deleted, 1);
   });
 });

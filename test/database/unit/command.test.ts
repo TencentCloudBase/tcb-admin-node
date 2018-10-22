@@ -1,5 +1,4 @@
 import { Db } from "../../../src/database/db";
-import * as Mock from "./mock";
 import * as Config from "../../config";
 
 describe("test/unit/collection.test.ts", async () => {
