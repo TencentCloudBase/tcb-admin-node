@@ -139,7 +139,14 @@ export class Util {
           }
         }
       }
+
+      // 嵌套的operator提升到顶层后，$set可能为空，所以要删掉
+      if (Object.keys(params.$set).length === 0) {
+        delete params.$set
+      }
     }
+
+
     return params;
   };
 

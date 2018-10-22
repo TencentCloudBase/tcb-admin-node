@@ -95,6 +95,9 @@ Util.encodeDocumentDataForReq = (document, merge = false, concatKey = true) => {
                 }
             }
         }
+        if (Object.keys(params.$set).length === 0) {
+            delete params.$set;
+        }
     }
     return params;
 };
