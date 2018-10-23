@@ -1,5 +1,5 @@
 import { Db } from "../../../src/database/db";
-import * as Config from "../../config";
+import * as Config from "../../config.local";
 
 describe("test/unit/collection.test.ts", async () => {
   const collName = "coll-1";

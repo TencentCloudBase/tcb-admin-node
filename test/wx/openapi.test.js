@@ -1,7 +1,7 @@
 let Tcb = require("../../index");
 
 const assert = require("assert");
-const config = require("../config");
+const config = require("../config.local");
 
 // TODO 删除前先创建
 describe("wx.openApi: 微信openapi", () => {

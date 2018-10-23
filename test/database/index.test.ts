@@ -1,7 +1,7 @@
 import * as assert from "power-assert";
 import * as Mock from "./unit/mock";
 import * as app from "../../index";
-import * as Config from "../config";
+import * as Config from "../config.local";
 // import { process } from "ts-jest/dist/preprocessor";
 // import { __exportStar } from "tslib";
 

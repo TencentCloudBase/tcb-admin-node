@@ -1,7 +1,7 @@
 let tcb = require("../../index");
 
 const assert = require("assert");
-const config = require("../config.js");
+const config = require("../config.local");
 
 describe("storage.downloadFile: 下载文件", () => {
     const app = tcb.init(config);

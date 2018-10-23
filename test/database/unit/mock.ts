@@ -1,4 +1,4 @@
-import * as Config from '../../config'
+import * as Config from '../../config.local'
 
 export const env = Config.env;
 export const appId = Config.appId;
