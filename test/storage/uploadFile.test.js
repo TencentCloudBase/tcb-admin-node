@@ -2,7 +2,7 @@ const tcb = require("../../index");
 const fs = require("fs");
 
 const assert = require("assert");
-const config = require("../config.js");
+const config = require("../config.local");
 
 function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms))

@@ -1,7 +1,7 @@
 import * as assert from "power-assert";
 import { Db } from "../../../src/database/";
 import * as Mock from "./mock";
-import * as Config from '../../config'
+import * as Config from '../../config.local'
 
 describe("test/unit/db.test.ts", () => {
   const db = new Db({

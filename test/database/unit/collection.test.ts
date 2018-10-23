@@ -2,7 +2,7 @@ import * as assert from "power-assert";
 import { Db } from "../../../src/database";
 // import { ErrorCode } from "../../../src/database/constant";
 // import * as Mock from "./mock";
-import * as Config from '../../config'
+import * as Config from '../../config.local'
 
 describe("test/unit/collection.test.ts", async () => {
   const collName = "coll-1";

@@ -1,7 +1,7 @@
 let Tcb = require("../../index");
 
 const assert = require("assert");
-const config = require("../config.js");
+const config = require("../config.local");
 
 describe("functions.invokeFunction: 执行云函数", () => {
   const app = Tcb.init({ env: 'a' })

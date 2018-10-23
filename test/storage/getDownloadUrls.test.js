@@ -2,7 +2,7 @@ let tcb = require("../../index");
 const fs = require("fs");
 let fileContent = fs.createReadStream(`${__dirname}/cos.jpeg`);
 const assert = require("assert");
-const config = require("../config.js");
+const config = require("../config.local");
 
 describe("storage.batchDeleteFile: 删除文件", () => {
   tcb.init(config);
