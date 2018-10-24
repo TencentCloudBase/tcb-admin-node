@@ -6,10 +6,12 @@ module.exports = function (args) {
     params = args.params,
     method = args.method || "get";
 
+  const eventId = (new Date()).valueOf() + '_' + Math.random().toString().substr(2,5)
+
   params = Object.assign({}, params, {
     envName: config.envName,
     timestamp: new Date().valueOf(),
-    eventId: ""
+    eventId
   });
 
   for (let key in params) {
@@ -83,6 +85,8 @@ module.exports = function (args) {
   if (args.proxy) {
     opts.proxy = args.proxy;
   }
+
+  opts.url = `${opts.url}?eventId=${eventId}`
 
   // console.log(JSON.stringify(opts));
   return new Promise(function (resolve, reject) {
