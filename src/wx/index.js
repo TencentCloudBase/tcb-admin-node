@@ -1,13 +1,14 @@
 const httpRequest = require("../utils/httpRequest");
 
-exports.callWxOpenApi = function ({ apiName, requestData, event } = {}) {
+exports.callWxOpenApi = function ({ apiName, requestData } = {}) {
     try {
         requestData = requestData ? JSON.stringify(requestData) : "";
     } catch (e) {
         throw Error(e)
     }
 
-    const { wxCloudApiToken } = event
+    const wxCloudApiToken = process.env.WX_API_TOKEN || ''
+
     let params = {
         action: "wx.api",
         apiName,
