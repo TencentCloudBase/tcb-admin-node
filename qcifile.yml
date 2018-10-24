@@ -5,4 +5,5 @@ version: 1.0                            # QCIFile版本号，自己指定
 stages:
     - stage: testQCI                    # 自定义stage的名称，多个stage为顺序执行
       cmds:                             # 多条命令顺序执行
-          - echo 'Hello Word!'
+          - tnpm install -ddd
+          - npm test
