@@ -2,6 +2,7 @@ import * as assert from "power-assert";
 import * as Mock from "./unit/mock";
 import * as app from "../../index";
 import * as Config from "../config.local";
+import * as common from '../common/index';
 // import { process } from "ts-jest/dist/preprocessor";
 // import { __exportStar } from "tslib";
 
@@ -24,8 +25,7 @@ describe("test/index.test.ts", async () => {
   // const nameList = ["f", "b", "e", "d", "a", "c"];
 
   it("Document - createCollection()", async () => {
-    const res = await db.createCollection(collName)
-    assert.strictEqual(res.message, 'success')
+    await common.safeCreateCollection(db, collName)
   })
 
   const initialData = {
