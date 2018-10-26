@@ -78,7 +78,7 @@ describe("test/index.test.ts", async () => {
     assert((await collection.add({ a: 10, b: 1 })).id)
     const query = _.or([{ b: _.and(_.gte(1), _.lte(10)) }, { b: _.and(_.gt(99), _.lte(101)) }])
     const result = await collection.where(query).get()
-    assert.strictEqual(result.data.length, 2)
+    assert(result.data.length >= 2)
 
     // Delete
     const deleteRes = await collection.where(query).remove()
