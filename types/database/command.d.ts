@@ -11,8 +11,8 @@ export declare const Command: {
     gte(val: any): QueryCommmand;
     in(val: any): QueryCommmand;
     nin(val: any): QueryCommmand;
-    and(...__expressions__: import("../../../../../../Users/jimmyzhang/repo/tcb-admin-node/src/database/serializer/query").IQueryCondition[]): LogicCommand;
-    or(...__expressions__: import("../../../../../../Users/jimmyzhang/repo/tcb-admin-node/src/database/serializer/query").IQueryCondition[]): LogicCommand;
+    and(...__expressions__: IQueryCondition[]): LogicCommand;
+    or(...__expressions__: IQueryCondition[]): LogicCommand;
     set(val: any): UpdateCommand;
     remove(): UpdateCommand;
     inc(val: number): UpdateCommand;
