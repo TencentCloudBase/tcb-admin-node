@@ -7,7 +7,7 @@ interface GeoTeyp {
 }
 export declare class Db {
     Geo: GeoTeyp;
-    command: Command;
+    command: typeof Command;
     config: any;
     constructor(config?: any);
     serverDate({ offset }?: {

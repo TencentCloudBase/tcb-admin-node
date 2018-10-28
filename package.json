@@ -1,6 +1,6 @@
 {
   "name": "tcb-admin-node",
-  "version": "1.1.9",
+  "version": "1.2.0",
   "description": "tencent cloud base admin sdk for node.js",
   "main": "index.js",
   "scripts": {
@@ -55,8 +55,5 @@
       "node"
     ],
     "testEnvironment": "node"
-  },
-  "engines": {
-    "node": ">=8.9.0"
   }
 }

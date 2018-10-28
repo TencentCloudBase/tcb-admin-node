@@ -23,6 +23,7 @@
     "skipDefaultLibCheck": true,
     "skipLibCheck": true,
     "target": "es6",
+    "moduleResolution": "node"
   },
   "include": [
     "src/**/*"

@@ -3,8 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const request_1 = require("./request");
 const validate_1 = require("./validate");
 const util_1 = require("./util");
-const command_1 = require("./command");
-const isRegExp = require("is-regex");
+const query_1 = require("./serializer/query");
+const update_1 = require("./serializer/update");
 class Query {
     constructor(db, coll, fieldFilters, fieldOrders, queryOptions) {
         this._db = db;
@@ -87,7 +87,7 @@ class Query {
         });
     }
     where(query) {
-        return new Query(this._db, this._coll, this.convertParams(query), this._fieldOrders, this._queryOptions);
+        return new Query(this._db, this._coll, query_1.QuerySerializer.encode(query), this._fieldOrders, this._queryOptions);
     }
     orderBy(fieldPath, directionStr) {
         validate_1.Validate.isFieldPath(fieldPath);
@@ -126,11 +126,11 @@ class Query {
         }
         let param = {
             collectionName: this._coll,
-            query: this._fieldFilters,
+            query: query_1.QuerySerializer.encode(this._fieldFilters),
             multi: true,
             merge: true,
             upsert: false,
-            data: util_1.Util.encodeDocumentDataForReq(data, true)
+            data: update_1.UpdateSerializer.encode(data)
         };
         return new Promise(resolve => {
             this._request.send("updateDocument", param).then(res => {
@@ -163,7 +163,7 @@ class Query {
     remove() {
         const param = {
             collectionName: this._coll,
-            query: this._fieldFilters,
+            query: query_1.QuerySerializer.encode(this._fieldFilters),
             multi: true
         };
         return new Promise(resolve => {
@@ -179,45 +179,6 @@ class Query {
                 }
             });
         });
-    }
-    convertParams(query) {
-        let queryParam = {};
-        if (query instanceof command_1.Command) {
-            queryParam = query.parse();
-        }
-        else {
-            for (let key in query) {
-                if (query[key] instanceof command_1.Command) {
-                    queryParam = Object.assign({}, queryParam, query[key].parse(key));
-                }
-                else if (isRegExp(query[key])) {
-                    queryParam = {
-                        [key]: {
-                            $regex: query[key].source,
-                            $options: query[key].flags
-                        }
-                    };
-                }
-                else if (typeof query[key] === "object") {
-                    let command = new command_1.Command();
-                    let tmp = {};
-                    command.concatKeys({ [key]: query[key] }, '', tmp);
-                    let keys = Object.keys(tmp)[0];
-                    let value = tmp[keys];
-                    if (value instanceof command_1.Command) {
-                        value = value.parse(keys);
-                    }
-                    else {
-                        value = { [keys]: value };
-                    }
-                    queryParam = Object.assign({}, queryParam, value);
-                }
-                else {
-                    queryParam = Object.assign({}, queryParam, { [key]: query[key] });
-                }
-            }
-        }
-        return queryParam;
     }
 }
 exports.Query = Query;

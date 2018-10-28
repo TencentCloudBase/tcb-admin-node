@@ -1,7 +1,10 @@
 import { Request } from "./request";
 import { Db } from "./db";
 import { Util } from "./util";
-import { Command } from "./command";
+// import { Command } from "./command";
+import { UpdateSerializer } from './serializer/update'
+import { serialize } from './serializer/datatype'
+import { UpdateCommand } from './commands/update'
 
 /**
  * 文档模块
@@ -66,7 +69,8 @@ export class DocumentReference {
   create(data): Promise<any> {
     let params = {
       collectionName: this._coll,
-      data: Util.encodeDocumentDataForReq(data, false, false)
+      // data: Util.encodeDocumentDataForReq(data, false, false)
+      data: serialize(data)
     };
 
     if (this.id) {
@@ -114,7 +118,7 @@ export class DocumentReference {
       // console.log(objs)
       if (typeof objs === 'object') {
         for (let key in objs) {
-          if (objs[key] instanceof Command) {
+          if (objs[key] instanceof UpdateCommand) {
             hasOperator = true
           } else if (typeof objs[key] === 'object') {
             checkMixed(objs[key])
@@ -133,10 +137,12 @@ export class DocumentReference {
       })
     }
 
+    console.log(data, JSON.stringify(data))
     const merge = false; //data不能带有操作符
     let param = {
       collectionName: this._coll,
-      data: Util.encodeDocumentDataForReq(data, merge, false),
+      // data: Util.encodeDocumentDataForReq(data, merge, false),
+      data,
       multi: false,
       merge,
       upsert: true
@@ -185,7 +191,8 @@ export class DocumentReference {
     const merge = true; //把所有更新数据转为带操作符的
     const param = {
       collectionName: this._coll,
-      data: Util.encodeDocumentDataForReq(data, merge, true),
+      // data: Util.encodeDocumentDataForReq(data, merge, true),
+      data: UpdateSerializer.encode(data),
       query: query,
       multi: false,
       merge,

@@ -8,5 +8,14 @@ class Point {
         this.latitude = latitude;
         this.longitude = longitude;
     }
+    toJSON() {
+        return {
+            type: 'Point',
+            coordinates: [
+                this.longitude,
+                this.latitude,
+            ],
+        };
+    }
 }
 exports.Point = Point;
