@@ -3,8 +3,10 @@ import { OrderByDirection } from "./constant";
 import { Db } from "./db";
 import { Validate } from "./validate";
 import { Util } from "./util";
-import { Command } from "./command";
-import * as isRegExp from 'is-regex'
+// import { Command } from "./command";
+// import * as isRegExp from 'is-regex'
+import { QuerySerializer } from './serializer/query'
+import { UpdateSerializer } from './serializer/update'
 
 interface getRes {
   data: any[];
@@ -203,7 +205,8 @@ export class Query {
     return new Query(
       this._db,
       this._coll,
-      this.convertParams(query),
+      // this.convertParams(query),
+      QuerySerializer.encode(query),
       this._fieldOrders,
       this._queryOptions
     );
@@ -296,11 +299,13 @@ export class Query {
 
     let param = {
       collectionName: this._coll,
-      query: this._fieldFilters,
+      // query: this._fieldFilters,
+      query: QuerySerializer.encode(this._fieldFilters),
       multi: true,
       merge: true,
       upsert: false,
-      data: Util.encodeDocumentDataForReq(data, true)
+      data: UpdateSerializer.encode(data)
+      // data: Util.encodeDocumentDataForReq(data, true)
       // data: this.convertParams(data)
     };
 
@@ -351,7 +356,7 @@ export class Query {
   remove() {
     const param = {
       collectionName: this._coll,
-      query: this._fieldFilters,
+      query: QuerySerializer.encode(this._fieldFilters),
       multi: true
     }
     // console.log("this._queryOptions", this._queryOptions);
@@ -370,7 +375,7 @@ export class Query {
       });
     });
   }
-
+  /*
   convertParams(query: object) {
     // console.log(JSON.stringify(query));
     let queryParam = {};
@@ -411,5 +416,5 @@ export class Query {
     }
     // console.log(JSON.stringify(queryParam));
     return queryParam;
-  }
+  }*/
 }

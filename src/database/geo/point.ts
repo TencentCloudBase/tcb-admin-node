@@ -32,4 +32,13 @@ export class Point {
     this.longitude = longitude;
   }
 
+  toJSON(): object {
+    return {
+      type: 'Point',
+      coordinates: [
+        this.longitude,
+        this.latitude,
+      ],
+    }
+  }
 }

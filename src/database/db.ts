@@ -26,7 +26,7 @@ export class Db {
   /**
    * 逻辑操作的命令
    */
-  command: Command;
+  command: typeof Command;
 
 
   /**
@@ -41,7 +41,7 @@ export class Db {
   constructor(config?: any) {
     this.config = config;
     this.Geo = Geo;
-    this.command = new Command();
+    this.command = Command;
   }
 
   serverDate({ offset = 0 } = {}) {

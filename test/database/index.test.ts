@@ -25,7 +25,7 @@ describe("test/index.test.ts", async () => {
 
   it("Document - createCollection()", async () => {
     const res = await db.createCollection(collName)
-    assert.strictEqual(res.message, 'success')
+    // assert.strictEqual(res.message, 'success')
   })
 
   const initialData = {

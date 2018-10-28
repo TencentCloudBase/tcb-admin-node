@@ -2,7 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const request_1 = require("./request");
 const util_1 = require("./util");
-const command_1 = require("./command");
+const update_1 = require("./serializer/update");
+const datatype_1 = require("./serializer/datatype");
+const update_2 = require("./commands/update");
 class DocumentReference {
     constructor(db, coll, docID, projection = {}) {
         this._db = db;
@@ -14,7 +16,7 @@ class DocumentReference {
     create(data) {
         let params = {
             collectionName: this._coll,
-            data: util_1.Util.encodeDocumentDataForReq(data, false, false)
+            data: datatype_1.serialize(data)
         };
         if (this.id) {
             params["_id"] = this.id;
@@ -48,7 +50,7 @@ class DocumentReference {
         const checkMixed = (objs) => {
             if (typeof objs === 'object') {
                 for (let key in objs) {
-                    if (objs[key] instanceof command_1.Command) {
+                    if (objs[key] instanceof update_2.UpdateCommand) {
                         hasOperator = true;
                     }
                     else if (typeof objs[key] === 'object') {
@@ -64,10 +66,11 @@ class DocumentReference {
                 message: 'update operator complicit'
             });
         }
+        console.log(data, JSON.stringify(data));
         const merge = false;
         let param = {
             collectionName: this._coll,
-            data: util_1.Util.encodeDocumentDataForReq(data, merge, false),
+            data,
             multi: false,
             merge,
             upsert: true
@@ -107,7 +110,7 @@ class DocumentReference {
         const merge = true;
         const param = {
             collectionName: this._coll,
-            data: util_1.Util.encodeDocumentDataForReq(data, merge, true),
+            data: update_1.UpdateSerializer.encode(data),
             query: query,
             multi: false,
             merge,
