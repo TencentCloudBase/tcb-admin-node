@@ -24,7 +24,7 @@ Util.encodeTimestamp = (stamp) => {
         throw new Error("encodeTimestamp: must be Date type");
     }
     return {
-        $timestamp: Math.floor(stamp.getTime() / 1000)
+        $date: stamp.getTime()
     };
 };
 Util.encodeDocumentDataForReq = (document, merge = false, concatKey = true) => {
@@ -121,7 +121,7 @@ Util.formatField = document => {
                 realValue = new point_1.Point(item.coordinates[0], item.coordinates[1]);
                 break;
             case constant_1.FieldType.Timestamp:
-                realValue = new Date(item.$timestamp * 1000);
+                realValue = new Date(item.$date);
                 break;
             case constant_1.FieldType.Object:
             case constant_1.FieldType.Array:
