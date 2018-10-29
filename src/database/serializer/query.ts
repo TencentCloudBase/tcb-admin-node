@@ -6,8 +6,6 @@ import { getType, isObject, isArray } from '../utils/type'
 import { operatorToString } from '../operator-map'
 import { flattenQueryObject, isConversionRequired, encodeInternalDataType } from './common'
 
-// types
-import { DB } from '../typings'
 
 export type IQueryCondition = Record<string, any> | LogicCommand
 
