@@ -115,14 +115,14 @@ class Query {
     update(data) {
         if (!data || typeof data !== "object") {
             return Promise.resolve({
-                code: 'INVALID_PARAM',
-                message: '参数必需是非空对象'
+                code: "INVALID_PARAM",
+                message: "参数必需是非空对象"
             });
         }
-        if (data.hasOwnProperty('_id')) {
+        if (data.hasOwnProperty("_id")) {
             return Promise.resolve({
-                code: 'INVALID_PARAM',
-                message: '不能更新_id的值'
+                code: "INVALID_PARAM",
+                message: "不能更新_id的值"
             });
         }
         let param = {
@@ -188,7 +188,7 @@ class Query {
         }
         else {
             for (let key in query) {
-                if (query[key] instanceof command_1.Command || query[key] instanceof regexp_1.default) {
+                if (query[key] instanceof command_1.Command || query[key] instanceof regexp_1.RegExp) {
                     queryParam = Object.assign({}, queryParam, query[key].parse(key));
                 }
                 else if (isRegExp(query[key])) {
@@ -202,7 +202,7 @@ class Query {
                 else if (typeof query[key] === "object") {
                     let command = new command_1.Command();
                     let tmp = {};
-                    command.concatKeys({ [key]: query[key] }, '', tmp);
+                    command.concatKeys({ [key]: query[key] }, "", tmp);
                     let keys = Object.keys(tmp)[0];
                     let value = tmp[keys];
                     if (value instanceof command_1.Command) {
