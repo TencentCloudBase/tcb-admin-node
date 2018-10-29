@@ -11,9 +11,6 @@ export type AnyObject = {
   [x: string]: any
 }
 
-// types
-import { DB, AnyObject } from '../typings'
-
 export function serialize(val: any): IQueryCondition {
   return serializeHelper(val, [val])
 }
