@@ -8,5 +8,13 @@ class RegExp {
         this.regexp = regexp;
         this.options = options;
     }
+    parse(key) {
+        return {
+            [key]: {
+                $regex: this.regexp,
+                $options: this.options
+            }
+        };
+    }
 }
 exports.default = RegExp;

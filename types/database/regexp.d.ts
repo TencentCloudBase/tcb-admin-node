@@ -5,4 +5,10 @@ export default class RegExp {
         regexp: any;
         options: any;
     });
+    parse(key: any): {
+        [x: number]: {
+            $regex: string;
+            $options: string;
+        };
+    };
 }
