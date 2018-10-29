@@ -2,9 +2,9 @@ import { Point } from "./geo/point";
 import * as Geo from "./geo";
 import { CollectionReference } from "./collection";
 import { Command } from "./command";
-import { ServerDate } from "./serverDate"
+import { ServerDate } from "./serverDate";
 import { Request } from "./request";
-import RegExp from './regexp'
+import { RegExpConstructor } from "./regexp";
 
 /**
  * 地理位置类型
@@ -44,11 +44,11 @@ export class Db {
     this.config = config;
     this.Geo = Geo;
     this.command = new Command();
-    this.RegExp = RegExp;
+    this.RegExp = RegExpConstructor;
   }
 
   serverDate({ offset = 0 } = {}) {
-    return new ServerDate({ offset })
+    return new ServerDate({ offset });
   }
 
   /**
@@ -73,7 +73,7 @@ export class Db {
       collectionName: collName
     };
 
-    return request.send("addCollection", params)
+    return request.send("addCollection", params);
   }
 
   // /**

@@ -1,4 +1,4 @@
-export default class RegExp {
+export declare class RegExp {
     regexp: string;
     options: string;
     constructor({ regexp, options }: {
@@ -12,3 +12,4 @@ export default class RegExp {
         };
     };
 }
+export declare function RegExpConstructor(param: any): RegExp;

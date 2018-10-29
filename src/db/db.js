@@ -11,7 +11,7 @@ class Db {
         this.config = config;
         this.Geo = Geo;
         this.command = new command_1.Command();
-        this.RegExp = regexp_1.default;
+        this.RegExp = regexp_1.RegExpConstructor;
     }
     serverDate({ offset = 0 } = {}) {
         return new serverDate_1.ServerDate({ offset });

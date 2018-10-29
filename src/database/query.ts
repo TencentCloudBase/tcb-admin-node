@@ -4,8 +4,8 @@ import { Db } from "./db";
 import { Validate } from "./validate";
 import { Util } from "./util";
 import { Command } from "./command";
-import RegExp from './regexp'
-import * as isRegExp from 'is-regex'
+import { RegExp } from "./regexp";
+import * as isRegExp from "is-regex";
 
 interface getRes {
   data: any[];
@@ -156,10 +156,10 @@ export class Query {
           const result: any = {
             data: documents,
             requestId: res.requestId
-          }
-          if (res.TotalCount) result.total = res.TotalCount
-          if (res.Limit) result.limit = res.Limit
-          if (res.Offset) result.offset = res.Offset
+          };
+          if (res.TotalCount) result.total = res.TotalCount;
+          if (res.Limit) result.limit = res.Limit;
+          if (res.Offset) result.offset = res.Offset;
           resolve(result);
         }
       });
@@ -283,16 +283,16 @@ export class Query {
   update(data: Object): Promise<any> {
     if (!data || typeof data !== "object") {
       return Promise.resolve({
-        code: 'INVALID_PARAM',
-        message: '参数必需是非空对象'
-      })
+        code: "INVALID_PARAM",
+        message: "参数必需是非空对象"
+      });
     }
 
-    if (data.hasOwnProperty('_id')) {
+    if (data.hasOwnProperty("_id")) {
       return Promise.resolve({
-        code: 'INVALID_PARAM',
-        message: '不能更新_id的值'
-      })
+        code: "INVALID_PARAM",
+        message: "不能更新_id的值"
+      });
     }
 
     let param = {
@@ -354,7 +354,7 @@ export class Query {
       collectionName: this._coll,
       query: this._fieldFilters,
       multi: true
-    }
+    };
     // console.log("this._queryOptions", this._queryOptions);
     // console.log(param);
     return new Promise<any>(resolve => {
@@ -380,28 +380,24 @@ export class Query {
     } else {
       for (let key in query) {
         if (query[key] instanceof Command || query[key] instanceof RegExp) {
-          queryParam = Object.assign(
-            {},
-            queryParam,
-            query[key].parse(key)
-          );
+          queryParam = Object.assign({}, queryParam, query[key].parse(key));
         } else if (isRegExp(query[key])) {
           queryParam = {
             [key]: {
               $regex: query[key].source,
               $options: query[key].flags
             }
-          }
+          };
         } else if (typeof query[key] === "object") {
           let command = new Command();
-          let tmp = {}
-          command.concatKeys({ [key]: query[key] }, '', tmp);
-          let keys = Object.keys(tmp)[0]
-          let value = tmp[keys]
+          let tmp = {};
+          command.concatKeys({ [key]: query[key] }, "", tmp);
+          let keys = Object.keys(tmp)[0];
+          let value = tmp[keys];
           if (value instanceof Command) {
             value = value.parse(keys);
           } else {
-            value = { [keys]: value }
+            value = { [keys]: value };
           }
 
           queryParam = Object.assign({}, queryParam, value);
