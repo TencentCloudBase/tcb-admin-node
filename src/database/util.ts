@@ -51,7 +51,7 @@ export class Util {
       throw new Error("encodeTimestamp: must be Date type");
     }
     return {
-      $timestamp: Math.floor(stamp.getTime() / 1000)
+      $date: stamp.getTime()
     };
   };
 
@@ -188,7 +188,7 @@ export class Util {
           realValue = new Point(item.coordinates[0], item.coordinates[1]);
           break;
         case FieldType.Timestamp:
-          realValue = new Date(item.$timestamp * 1000);
+          realValue = new Date(item.$date);
           break;
         case FieldType.Object:
         case FieldType.Array:
