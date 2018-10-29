@@ -4,6 +4,7 @@ const request_1 = require("./request");
 const validate_1 = require("./validate");
 const util_1 = require("./util");
 const command_1 = require("./command");
+const regexp_1 = require("./regexp");
 const isRegExp = require("is-regex");
 class Query {
     constructor(db, coll, fieldFilters, fieldOrders, queryOptions) {
@@ -187,7 +188,7 @@ class Query {
         }
         else {
             for (let key in query) {
-                if (query[key] instanceof command_1.Command) {
+                if (query[key] instanceof command_1.Command || query[key] instanceof regexp_1.default) {
                     queryParam = Object.assign({}, queryParam, query[key].parse(key));
                 }
                 else if (isRegExp(query[key])) {
