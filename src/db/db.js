@@ -5,11 +5,13 @@ const collection_1 = require("./collection");
 const command_1 = require("./command");
 const serverDate_1 = require("./serverDate");
 const request_1 = require("./request");
+const regexp_1 = require("./regexp");
 class Db {
     constructor(config) {
         this.config = config;
         this.Geo = Geo;
         this.command = new command_1.Command();
+        this.RegExp = regexp_1.default;
     }
     serverDate({ offset = 0 } = {}) {
         return new serverDate_1.ServerDate({ offset });

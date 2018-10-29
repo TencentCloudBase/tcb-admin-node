@@ -29,6 +29,8 @@
         - [and](#and)
         - [or](#or)
         - [regex](#regex)
+    - [正则表达式查询](#正则表达式查询)
+        - [db.RegExp]
 - [删除文档](#删除文档)
 - [更新文档](#更新文档)
     - [更新指定文档](#更新指定文档)
@@ -498,7 +500,7 @@ db.collection('goods').where(_.or(
 ))
 ```
 
-##### regex
+#### 正则表达式查询
 
 根据正则表达式进行筛选
 
@@ -510,16 +512,13 @@ db.collection('articles').where({
 })
 
 // 或者
-const _ = db.command
 db.collection('articles').where({
-  version: _.regex({
+  version: new db.RegExp({
     regex: '^\\ds'   // 正则表达式为 /^\ds/，转义后变成 '^\\ds'
     options: 'i'    // i表示忽略大小写
   }) 
 })
 ```
-
-
 
 ### 删除文档
 方式1 通过指定文档ID
