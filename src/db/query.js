@@ -188,16 +188,8 @@ class Query {
         }
         else {
             for (let key in query) {
-                if (query[key] instanceof command_1.Command) {
+                if (query[key] instanceof command_1.Command || query[key] instanceof regexp_1.default) {
                     queryParam = Object.assign({}, queryParam, query[key].parse(key));
-                }
-                else if (query[key] instanceof regexp_1.default) {
-                    queryParam = {
-                        [key]: {
-                            $regex: query[key].regexp,
-                            $options: query[key].options
-                        }
-                    };
                 }
                 else if (isRegExp(query[key])) {
                     queryParam = {
