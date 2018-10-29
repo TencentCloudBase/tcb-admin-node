@@ -4,6 +4,7 @@ import { Db } from "./db";
 import { Validate } from "./validate";
 import { Util } from "./util";
 import { Command } from "./command";
+import RexExp from './regexp'
 import * as isRegExp from 'is-regex'
 
 interface getRes {
@@ -384,6 +385,13 @@ export class Query {
             queryParam,
             query[key].parse(key)
           );
+        } else if (query[key] instanceof RexExp) {
+          queryParam = {
+            [key]: {
+              $regex: query[key].regexp,
+              $options: query[key].options
+            }
+          }
         } else if (isRegExp(query[key])) {
           queryParam = {
             [key]: {
