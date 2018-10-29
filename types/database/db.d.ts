@@ -8,6 +8,7 @@ interface GeoTeyp {
 export declare class Db {
     Geo: GeoTeyp;
     command: Command;
+    RegExp: any;
     config: any;
     constructor(config?: any);
     serverDate({ offset }?: {

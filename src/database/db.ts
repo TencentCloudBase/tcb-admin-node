@@ -4,6 +4,7 @@ import { CollectionReference } from "./collection";
 import { Command } from "./command";
 import { ServerDate } from "./serverDate"
 import { Request } from "./request";
+import RegExp from './regexp'
 
 /**
  * 地理位置类型
@@ -28,6 +29,7 @@ export class Db {
    */
   command: Command;
 
+  RegExp: any;
 
   /**
    * 初始化
@@ -42,6 +44,7 @@ export class Db {
     this.config = config;
     this.Geo = Geo;
     this.command = new Command();
+    this.RegExp = RegExp;
   }
 
   serverDate({ offset = 0 } = {}) {
