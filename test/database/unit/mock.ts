@@ -20,7 +20,7 @@ export const documentRes = {
         "1",
         "2",
         {
-          $timestamp: 1529234575
+          $date: 1529234575
         }
       ],
       e: true,
@@ -30,7 +30,7 @@ export const documentRes = {
         type: "Point"
       },
       w: {
-        $timestamp: 1529154030
+        $date: 1529154030
       }
     }
   ],
