@@ -24,7 +24,7 @@ describe("正则表达式查询", async () => {
   it("Document - createCollection()", async () => {
     await common.safeCreateCollection(db, collName);
   });
-  it("Document - CRUD", async () => {
+  it("Document - OrderBy", async () => {
     // Create
 
     for (var i = 0; i < 7; i++) {
@@ -71,5 +71,5 @@ describe("正则表达式查询", async () => {
       .remove();
     console.log(deleteRes);
     assert(deleteRes.deleted >= 11);
-  });
+  }, 20000);
 });
