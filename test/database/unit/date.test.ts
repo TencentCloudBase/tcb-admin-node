@@ -30,7 +30,10 @@ describe("Date类型", async () => {
     const date = new Date()
     const initialData = {
         name: 'test',
-        date
+        date,
+        serverDate: db.serverDate({
+            offset: 1000 * 60
+        })
     }
     it("Document - CRUD", async () => {
         // Create
@@ -41,11 +44,29 @@ describe("Date类型", async () => {
 
         // Read
         const { id } = res
-        const result = await collection.where({
+        let result = await collection.where({
             _id: id
         }).get()
         console.log(result)
         assert.strictEqual(result.data[0].date.getTime(), date.getTime())
+
+        result = await collection.where({
+            date: db.command.eq(date)
+        }).get()
+        console.log(result)
+        assert.strictEqual(result.data[0].date.getTime(), date.getTime())
+
+        result = await collection.where({
+            date: db.command.lte(date)
+        }).get()
+        console.log(result)
+        assert(result.data.length > 0)
+
+        result = await collection.where({
+            date: db.command.lte(date).and(db.command.gte(date))
+        }).get()
+        console.log(result)
+        assert(result.data.length > 0)
 
         // Update(TODO)
 

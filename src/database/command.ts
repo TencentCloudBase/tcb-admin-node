@@ -106,6 +106,15 @@ export class Command {
   }
 
   private baseOperate(operator: string, target: any): object {
+    if (target instanceof Date) {
+      return {
+        [this.placeholder]: {
+          [operator]: {
+            $date: target.getTime()
+          }
+        }
+      }
+    }
     return {
       [this.placeholder]: { [operator]: target }
     };
@@ -131,7 +140,7 @@ export class Command {
   // }
 
   private connectOperate(operator: string, targets: any[]) {
-    // console.log(targets);
+    // console.log(operator, targets);
     let logicParams: object[] = [];
     if (Object.keys(this.logicParam).length > 0) {
       logicParams.push(this.logicParam);
