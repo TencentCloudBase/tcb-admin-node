@@ -47,6 +47,8 @@ describe("正则表达式查询", async () => {
     assert(res.requestId);
 
     // Read
+
+    // 直接使用正则表达式
     let result = await collection
       .where({
         name: /^abcdef.*\d+$/i
@@ -55,6 +57,7 @@ describe("正则表达式查询", async () => {
     console.log(result);
     assert(result.data.length > 0);
 
+    // new db.RegExp
     result = await collection
       .where({
         name: new db.RegExp({
@@ -66,7 +69,61 @@ describe("正则表达式查询", async () => {
     console.log(result);
     assert(result.data.length > 0);
 
+    // db.RegExp
+    result = await collection
+      .where({
+        name: db.RegExp({
+          regexp: "^abcdef.*\\d+$",
+          options: "i"
+        })
+      })
+      .get();
+    console.log(result);
+    assert(result.data.length > 0);
+
+    // db.command.regex
+    result = await collection
+      .where({
+        name: db.command.regex({
+          regex: "^abcdef.*\\d+$",
+          options: "i"
+        })
+      })
+      .get();
+    console.log(result);
+    assert(result.data.length > 0);
+
+    // with _.or
+    result = await collection
+      .where({
+        name: db.command.or(new db.RegExp({
+          regexp: "^abcdef.*\\d+$",
+          options: "i"
+        }), db.RegExp({
+          regexp: "^fffffff$",
+          options: "i"
+        }))
+      })
+      .get();
+    console.log(result);
+    assert(result.data.length > 0);
+
     // Update(TODO)
+    result = await collection
+      .where({
+        name: db.command.or(new db.RegExp({
+          regexp: "^abcdef.*\\d+$",
+          options: "i"
+        }), db.RegExp({
+          regexp: "^fffffff$",
+          options: "i"
+        }))
+      })
+      .update({
+        name: 'ABCDEFxxxx5678'
+      });
+    console.log(result);
+    assert(result.updated > 0)
 
     // Delete
     const deleteRes = await collection

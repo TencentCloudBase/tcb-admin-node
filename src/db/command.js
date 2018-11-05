@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const regexp_1 = require("./regexp");
 class Command {
     constructor(logicParam) {
         this.logicParam = {};
@@ -36,9 +37,10 @@ class Command {
         return new Command(this.baseOperate("$nin", target));
     }
     regex(target) {
-        var result = new Command(this.baseOperate("$regex", target.regex));
-        result.logicParam[this.placeholder]['$options'] = target.options;
-        return result;
+        return regexp_1.RegExpConstructor({
+            regexp: target.regex,
+            options: target.options
+        });
     }
     mul(target) {
         return new Command({ $mul: { [this.placeholder]: target } });
@@ -104,6 +106,15 @@ class Command {
                 logicParams.push(target.logicParam);
             }
             else {
+                if (target instanceof regexp_1.RegExp) {
+                    logicParams.push({
+                        [this.placeholder]: {
+                            $regex: target.regexp,
+                            $options: target.options
+                        }
+                    });
+                    continue;
+                }
                 let tmp = {};
                 this.concatKeys(target, '', tmp);
                 let tmp1 = {};
