@@ -77,6 +77,15 @@ class Command {
         return new Command({ $pop: { [this.placeholder]: -1 } });
     }
     baseOperate(operator, target) {
+        if (target instanceof Date) {
+            return {
+                [this.placeholder]: {
+                    [operator]: {
+                        $date: target.getTime()
+                    }
+                }
+            };
+        }
         return {
             [this.placeholder]: { [operator]: target }
         };
