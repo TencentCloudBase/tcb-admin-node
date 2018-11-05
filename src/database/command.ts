@@ -1,4 +1,5 @@
 // import { UpdateOperatorList } from "./constant";
+import { RegExp, RegExpConstructor } from './regexp'
 
 export class Command {
   public logicParam: object = {};
@@ -49,9 +50,10 @@ export class Command {
   }
 
   regex(target: any) {
-    var result = new Command(this.baseOperate("$regex", target.regex))
-    result.logicParam[this.placeholder]['$options'] = target.options
-    return result
+    return RegExpConstructor({
+      regexp: target.regex,
+      options: target.options
+    })
   }
 
   /**
@@ -143,6 +145,16 @@ export class Command {
         }
         logicParams.push(target.logicParam);
       } else {
+        if (target instanceof RegExp) {
+          logicParams.push({
+            [this.placeholder]: {
+              $regex: target.regexp,
+              $options: target.options
+            }
+          })
+          continue
+        }
+
         let tmp = {}
         this.concatKeys(target, '', tmp);
         // console.log(tmp)

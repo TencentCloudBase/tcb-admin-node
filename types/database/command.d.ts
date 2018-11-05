@@ -1,3 +1,4 @@
+import { RegExp } from './regexp';
 export declare class Command {
     logicParam: object;
     private placeholder;
@@ -10,7 +11,7 @@ export declare class Command {
     lte(target: any): Command;
     in(target: any[]): Command;
     nin(target: any[]): Command;
-    regex(target: any): Command;
+    regex(target: any): RegExp;
     mul(target: number): Command;
     remove(): Command;
     inc(target: number): Command;
