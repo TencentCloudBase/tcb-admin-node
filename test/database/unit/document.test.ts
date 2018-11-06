@@ -1,19 +1,14 @@
 import * as assert from "power-assert";
-import { Db } from "../../../src/database";
 import { Util } from "../../../src/database/util";
-import * as Mock from "./mock";
+import * as tcb from '../../../';
 import * as Config from '../../config.local'
 
 describe("test/unit/document.test.ts", () => {
   const collName = "coll-2";
   const docIDGenerated = Util.generateDocId();
-  const db = new Db({
-    secretId: Config.secretId,
-    secretKey: Config.secretKey,
-    env: Mock.env,
-    mpAppId: Mock.appId,
-    config: Config
-  });
+
+  const app = tcb.init(Config)
+  const db = app.database()
 
   it("API - createCollection", async () => {
     const result = await db.createCollection(collName)

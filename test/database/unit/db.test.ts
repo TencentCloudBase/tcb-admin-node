@@ -1,32 +1,15 @@
 import * as assert from "power-assert";
-import { Db } from "../../../src/database/";
-import * as Mock from "./mock";
+import * as tcb from '../../../';
 import * as Config from '../../config.local'
 
 describe("test/unit/db.test.ts", () => {
-  const db = new Db({
-    secretId: Config.secretId,
-    secretKey: Config.secretKey,
-    env: Mock.env,
-    mpAppId: Mock.appId
-  });
+  const app = tcb.init(Config)
+  const db = app.database()
   // const defaultDbName = "default";
 
   // it("use default db", () => {
   //   assert(db.config.dbname === defaultDbName);
   // });
-
-  it("use custom db", () => {
-    const customDbName = "custom-db";
-    const customDB = new Db({
-      secretId: Config.secretId,
-      secretKey: Config.secretKey,
-      env: Mock.env,
-      mpAppId: Mock.appId,
-      dbname: customDbName
-    });
-    assert(customDB.config.dbname === customDbName);
-  });
 
   it("get collection reference", () => {
     const collName = "coll-1";
