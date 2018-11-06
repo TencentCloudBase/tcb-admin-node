@@ -1,12 +1,11 @@
-import { Db } from "../../../src/database/db";
+
+import * as tcb from '../../../';
 import * as Config from "../../config.local";
 
 describe("test/unit/collection.test.ts", async () => {
   const collName = "coll-1";
-  const db = new Db({
-    secretId: Config.secretId,
-    secretKey: Config.secretKey
-  });
+  const app = tcb.init(Config)
+  const db = app.database()
   const collection = db.collection(collName);
   const command = db.command;
   const _ = command;

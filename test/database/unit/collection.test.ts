@@ -1,5 +1,5 @@
 import * as assert from "power-assert";
-import { Db } from "../../../src/database";
+import * as tcb from '../../../';
 import { ErrorCode } from "../../../src/database/constant";
 // import * as Mock from "./mock";
 import * as Config from '../../config.local'
@@ -7,13 +7,9 @@ import * as common from '../../common'
 
 describe("test/unit/collection.test.ts", async () => {
   const collName = "coll-1";
-  const db = new Db({
-    secretId: Config.secretId,
-    secretKey: Config.secretKey,
-    env: Config.env,
-    mpAppId: Config.appId,
-    config: Config
-  });
+
+  const app = tcb.init(Config)
+  const db = app.database()
   const collection = db.collection(collName);
 
 
