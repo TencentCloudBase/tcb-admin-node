@@ -1,4 +1,9 @@
-# v1.2.0
+# v1.2.2
+- [fixed] 修复GeoPoint的查询、储存问题
+- [fixed] 修复db.RegExp不支持or的问题
+- [fixed] 修复Date不能使用query查询的问题
+
+# v1.2.1
 - [add] 查询支持 db.RegExp
 - [fixed] 修复Date对象的底层表示，与微信对齐
 
