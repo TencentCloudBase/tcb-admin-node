@@ -25,11 +25,20 @@ export class Point {
    * @param longitude   - 经度 [-180, 180]
    */
   constructor(longitude: number, latitude: number) {
-    Validate.isGeopoint("latitude", latitude);
     Validate.isGeopoint("longitude", longitude);
+    Validate.isGeopoint("latitude", latitude);
 
-    this.latitude = latitude;
     this.longitude = longitude;
+    this.latitude = latitude;
+  }
+
+  parse(key) {
+    return {
+      [key]: {
+        type: 'Point',
+        coordinates: [this.longitude, this.latitude]
+      }
+    }
   }
 
 }

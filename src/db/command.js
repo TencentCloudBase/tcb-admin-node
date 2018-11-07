@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const regexp_1 = require("./regexp");
+const geo_1 = require("./geo");
 class Command {
     constructor(logicParam) {
         this.logicParam = {};
@@ -82,6 +83,16 @@ class Command {
                 [this.placeholder]: {
                     [operator]: {
                         $date: target.getTime()
+                    }
+                }
+            };
+        }
+        if (target instanceof geo_1.Point) {
+            return {
+                [this.placeholder]: {
+                    [operator]: {
+                        type: 'Point',
+                        coordinates: [target.longitude, target.latitude]
                     }
                 }
             };

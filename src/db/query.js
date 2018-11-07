@@ -6,6 +6,7 @@ const util_1 = require("./util");
 const command_1 = require("./command");
 const regexp_1 = require("./regexp");
 const isRegExp = require("is-regex");
+const geo_1 = require("./geo");
 class Query {
     constructor(db, coll, fieldFilters, fieldOrders, queryOptions) {
         this._db = db;
@@ -188,7 +189,7 @@ class Query {
         }
         else {
             for (let key in query) {
-                if (query[key] instanceof command_1.Command || query[key] instanceof regexp_1.RegExp) {
+                if (query[key] instanceof command_1.Command || query[key] instanceof regexp_1.RegExp || query[key] instanceof geo_1.Point) {
                     queryParam = Object.assign({}, queryParam, query[key].parse(key));
                 }
                 else if (isRegExp(query[key])) {

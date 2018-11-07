@@ -13,7 +13,7 @@ Util.encodeGeoPoint = (point) => {
     }
     return {
         type: "Point",
-        coordinates: [point.latitude, point.longitude]
+        coordinates: [point.longitude, point.latitude]
     };
 };
 Util.encodeServerDate = (serverDate) => {
@@ -49,7 +49,7 @@ Util.encodeDocumentDataForReq = (document, merge = false, concatKey = true) => {
         const type = Util.whichType(item);
         let realValue;
         if (type === constant_1.FieldType.GeoPoint) {
-            realValue = { [key]: Util.encodeGeoPoint(item).coordinates };
+            realValue = { [key]: Util.encodeGeoPoint(item) };
         }
         else if (type === constant_1.FieldType.Timestamp) {
             realValue = { [key]: Util.encodeTimestamp(item) };
