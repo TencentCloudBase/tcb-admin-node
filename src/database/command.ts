@@ -1,5 +1,6 @@
 // import { UpdateOperatorList } from "./constant";
 import { RegExp, RegExpConstructor } from './regexp'
+import { Point } from './geo'
 
 export class Command {
   public logicParam: object = {};
@@ -111,6 +112,16 @@ export class Command {
         [this.placeholder]: {
           [operator]: {
             $date: target.getTime()
+          }
+        }
+      }
+    }
+    if (target instanceof Point) {
+      return {
+        [this.placeholder]: {
+          [operator]: {
+            type: 'Point',
+            coordinates: [target.longitude, target.latitude]
           }
         }
       }

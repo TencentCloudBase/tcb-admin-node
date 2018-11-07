@@ -6,6 +6,7 @@ import { Util } from "./util";
 import { Command } from "./command";
 import { RegExp } from "./regexp";
 import * as isRegExp from "is-regex";
+import { Point } from "./geo";
 
 interface getRes {
   data: any[];
@@ -379,7 +380,7 @@ export class Query {
       queryParam = query.parse();
     } else {
       for (let key in query) {
-        if (query[key] instanceof Command || query[key] instanceof RegExp) {
+        if (query[key] instanceof Command || query[key] instanceof RegExp || query[key] instanceof Point) {
           queryParam = Object.assign({}, queryParam, query[key].parse(key));
         } else if (isRegExp(query[key])) {
           queryParam = {

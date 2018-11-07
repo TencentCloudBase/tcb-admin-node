@@ -33,7 +33,7 @@ export class Util {
     }
     return {
       type: "Point",
-      coordinates: [point.latitude, point.longitude]
+      coordinates: [point.longitude, point.latitude]
     };
   };
 
@@ -90,7 +90,7 @@ export class Util {
       const type = Util.whichType(item);
       let realValue;
       if (type === FieldType.GeoPoint) {
-        realValue = { [key]: Util.encodeGeoPoint(item).coordinates };
+        realValue = { [key]: Util.encodeGeoPoint(item) };
       } else if (type === FieldType.Timestamp) {
         realValue = { [key]: Util.encodeTimestamp(item) };
       } else if (type === FieldType.ServerDate) {
@@ -208,7 +208,6 @@ export class Util {
       } else {
         protoField[key] = realValue;
       }
-      // console.log(protoField)
     });
     return protoField;
   };
