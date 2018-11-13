@@ -51,7 +51,7 @@ describe("test/index.test.ts", async () => {
 
     // Read
     const { id } = res
-    const result = await collection.where({
+    let result = await collection.where({
       _id: id
     }).get()
     console.log(result)
@@ -66,6 +66,12 @@ describe("test/index.test.ts", async () => {
 
 
     // Update(TODO)
+    result = await collection.where({
+      _id: id
+    }).update({
+      name: 'bbb'
+    })
+    assert(result.updated > 0)
 
 
     // Delete
