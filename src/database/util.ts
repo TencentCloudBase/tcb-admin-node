@@ -1,7 +1,7 @@
 import { FieldType, UpdateOperatorList } from "./constant";
 import { Point } from "./geo/point";
 import { Command } from "./command";
-import * as deepAssign from "deep-assign";
+import * as lodashMerge from "lodash.merge";
 import { ServerDate } from "./serverDate";
 
 interface DocumentModel {
@@ -115,7 +115,7 @@ export class Util {
         params.push(realValue);
       } else {
         // params[key] = realValue;
-        params = deepAssign({}, params, realValue);
+        params = lodashMerge({}, params, realValue);
       }
     });
 
