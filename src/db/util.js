@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const constant_1 = require("./constant");
 const point_1 = require("./geo/point");
 const command_1 = require("./command");
-const deepAssign = require("deep-assign");
+const lodashMerge = require("lodash.merge");
 const serverDate_1 = require("./serverDate");
 class Util {
 }
@@ -78,7 +78,7 @@ Util.encodeDocumentDataForReq = (document, merge = false, concatKey = true) => {
             params.push(realValue);
         }
         else {
-            params = deepAssign({}, params, realValue);
+            params = lodashMerge({}, params, realValue);
         }
     });
     if (params.$set) {
