@@ -88,7 +88,7 @@ module.exports = function (args) {
 
   opts.url = `${opts.url}?eventId=${eventId}`
 
-  console.log(JSON.stringify(opts));
+  // console.log(JSON.stringify(opts));
   return new Promise(function (resolve, reject) {
     request(opts, function (err, response, body) {
       // console.log(err, body);

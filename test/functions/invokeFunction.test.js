@@ -14,8 +14,9 @@ describe("functions.invokeFunction: 执行云函数", () => {
         name: "test",
         data: { a: 1 }
       });
-      console.log(result);
-      assert(result.result, "执行云函数失败");
+      // console.log(result);
+      // assert(result.result, "执行云函数失败");
+      expect.objectContaining({result: expect.anything()})
     },
     10000
   );
