@@ -26,7 +26,7 @@ describe("正则表达式查询", async () => {
   });
 
   const initialData = {
-    name: "AbCdEfxxxxxxxxxxxxxx1234",
+    name: "AbCdEfxxxxxxxxxxxxxx1234结尾",
     array: [1, 2, 3, [4, 5, 6], { a: 1, b: { c: "fjasklfljkas", d: false } }],
     deepObject: {
       "l-02-01": {
@@ -52,7 +52,7 @@ describe("正则表达式查询", async () => {
     // // 直接使用正则表达式
     let result = await collection
       .where({
-        name: /^abcdef.*\d+$/i
+        name: /^abcdef.*\d+结尾$/i
       })
       .get();
     // console.log(result);
@@ -62,7 +62,7 @@ describe("正则表达式查询", async () => {
     result = await collection
       .where({
         name: new db.RegExp({
-          regexp: "^abcdef.*\\d+$",
+          regexp: "^abcdef.*\\d+结尾$",
           options: "i"
         })
       })
@@ -74,19 +74,31 @@ describe("正则表达式查询", async () => {
     result = await collection
       .where({
         name: db.RegExp({
-          regexp: "^abcdef.*\\d+$",
+          regexp: "^abcdef.*\\d+结尾$",
           options: "i"
         })
       })
       .get();
-    // console.log(result);
+    console.log(result);
+    assert(result.data.length > 0);
+
+    // db.command.regex
+    result = await collection
+      .where({
+        name: db.command.regex({
+          regex: "^abcdef.*\\d+结尾$",
+          options: "i"
+        })
+      })
+      .get();
+    console.log(result);
     assert(result.data.length > 0);
 
     // // Update(TODO)
     result = await collection
       .where({
         name: db.command.or(new db.RegExp({
-          regexp: "^abcdef.*\\d+$",
+          regexp: "^abcdef.*\\d+结尾$",
           options: "i"
         }), db.RegExp({
           regexp: "^fffffff$",
@@ -95,13 +107,30 @@ describe("正则表达式查询", async () => {
       })
       .get();
     console.log(result);
-    // assert(result.updated > 0)
+    assert(result.data.length > 0);
+
+    // Update(TODO)
+    result = await collection
+      .where({
+        name: db.command.or(new db.RegExp({
+          regexp: "^abcdef.*\\d+结尾$",
+          options: "i"
+        }), db.RegExp({
+          regexp: "^fffffff$",
+          options: "i"
+        }))
+      })
+      .update({
+        name: 'ABCDEFxxxx5678结尾'
+      });
+    console.log(result);
+    assert(result.updated > 0)
 
     // Delete
     const deleteRes = await collection
       .where({
         name: db.RegExp({
-          regexp: "^abcdef.*\\d+$",
+          regexp: "^abcdef.*\\d+结尾$",
           options: "i"
         })
       })
