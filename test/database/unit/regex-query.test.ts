@@ -82,18 +82,6 @@ describe("正则表达式查询", async () => {
     console.log(result);
     assert(result.data.length > 0);
 
-    // db.command.regex
-    result = await collection
-      .where({
-        name: db.command.regex({
-          regex: "^abcdef.*\\d+结尾$",
-          options: "i"
-        })
-      })
-      .get();
-    console.log(result);
-    assert(result.data.length > 0);
-
     // // Update(TODO)
     result = await collection
       .where({
