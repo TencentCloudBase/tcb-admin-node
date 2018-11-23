@@ -1,251 +1,91 @@
-// import { UpdateOperatorList } from "./constant";
-import { RegExp, RegExpConstructor } from './regexp'
-import { Point } from './geo'
+import { QueryCommand, QUERY_COMMANDS_LITERAL } from './commands/query'
+import { LogicCommand, LOGIC_COMMANDS_LITERAL } from './commands/logic'
+import { UpdateCommand, UPDATE_COMMANDS_LITERAL } from './commands/update'
+import { isArray } from './utils/type'
 
-export class Command {
-  public logicParam: object = {};
-  private placeholder = "{{{AAA}}}";
-  // private baseOperator = ['$eq', '$ne', '$gt', '$gte', '$lt', '$lte', '$in', '$nin'];
 
-  constructor(logicParam?: object) {
-    if (logicParam) {
-      this.logicParam = logicParam;
-    }
-  }
 
-  /**
-   * Query and Projection Operators
-   * https://docs.mongodb.com/manual/reference/operator/query/
-   * @param target
-   */
-  eq(target: any) {
-    return new Command(this.baseOperate("$eq", target));
-  }
+export type IQueryCondition = Record<string, any> | LogicCommand
 
-  neq(target: any) {
-    return new Command(this.baseOperate("$ne", target));
-  }
+export const Command = {
 
-  gt(target: any) {
-    return new Command(this.baseOperate("$gt", target));
-  }
+  eq(val: any) {
+    return new QueryCommand(QUERY_COMMANDS_LITERAL.EQ, [val])
+  },
 
-  gte(target: any) {
-    return new Command(this.baseOperate("$gte", target));
-  }
+  neq(val: any) {
+    return new QueryCommand(QUERY_COMMANDS_LITERAL.NEQ, [val])
+  },
 
-  lt(target: any) {
-    return new Command(this.baseOperate("$lt", target));
-  }
+  lt(val: any) {
+    return new QueryCommand(QUERY_COMMANDS_LITERAL.LT, [val])
+  },
 
-  lte(target: any) {
-    return new Command(this.baseOperate("$lte", target));
-  }
+  lte(val: any) {
+    return new QueryCommand(QUERY_COMMANDS_LITERAL.LTE, [val])
+  },
 
-  in(target: any[]) {
-    return new Command(this.baseOperate("$in", target));
-  }
+  gt(val: any) {
+    return new QueryCommand(QUERY_COMMANDS_LITERAL.GT, [val])
+  },
 
-  nin(target: any[]) {
-    return new Command(this.baseOperate("$nin", target));
-  }
+  gte(val: any) {
+    return new QueryCommand(QUERY_COMMANDS_LITERAL.GTE, [val])
+  },
 
-  regex(target: any) {
-    return RegExpConstructor({
-      regexp: target.regex,
-      options: target.options
-    })
-  }
+  in(val: any) {
+    return new QueryCommand(QUERY_COMMANDS_LITERAL.IN, val)
+  },
 
-  /**
-   * Update Operators
-   * https://docs.mongodb.com/manual/reference/operator/update/
-   * @param target
-   */
-  mul(target: number) {
-    return new Command({ $mul: { [this.placeholder]: target } });
-  }
+  nin(val: any) {
+    return new QueryCommand(QUERY_COMMANDS_LITERAL.NIN, val)
+  },
+
+  and(...__expressions__: IQueryCondition[]) {
+    const expressions = isArray(arguments[0]) ? arguments[0] : Array.from(arguments)
+    return new LogicCommand(LOGIC_COMMANDS_LITERAL.AND, expressions)
+  },
+
+  or(...__expressions__: IQueryCondition[]) {
+    const expressions = isArray(arguments[0]) ? arguments[0] : Array.from(arguments)
+    return new LogicCommand(LOGIC_COMMANDS_LITERAL.OR, expressions)
+  },
+
+  set(val: any) {
+    return new UpdateCommand(UPDATE_COMMANDS_LITERAL.SET, [val])
+  },
 
   remove() {
-    return new Command({ $unset: { [this.placeholder]: "" } });
-  }
+    return new UpdateCommand(UPDATE_COMMANDS_LITERAL.REMOVE, [])
+  },
 
-  inc(target: number) {
-    return new Command({ $inc: { [this.placeholder]: target } });
-  }
+  inc(val: number) {
+    return new UpdateCommand(UPDATE_COMMANDS_LITERAL.INC, [val])
+  },
 
-  set(target: any) {
-    return new Command({ $set: { [this.placeholder]: target } });
-  }
+  mul(val: number) {
+    return new UpdateCommand(UPDATE_COMMANDS_LITERAL.MUL, [val])
+  },
 
-  push(target: any) {
-    let value = target;
-    if (Array.isArray(target)) {
-      value = { $each: target };
-    }
-
-    return new Command({ $push: { [this.placeholder]: value } });
-  }
+  push(...__values__: any[]) {
+    const values = isArray(arguments[0]) ? arguments[0] : Array.from(arguments)
+    return new UpdateCommand(UPDATE_COMMANDS_LITERAL.PUSH, values)
+  },
 
   pop() {
-    return new Command({ $pop: { [this.placeholder]: 1 } });
-  }
-
-  unshift(target: any) {
-    let value = { $each: [target], $position: 0 };
-    if (Array.isArray(target)) {
-      value = { $each: target, $position: 0 };
-    }
-
-    return new Command({
-      $push: { [this.placeholder]: value }
-    });
-  }
+    return new UpdateCommand(UPDATE_COMMANDS_LITERAL.POP, [])
+  },
 
   shift() {
-    return new Command({ $pop: { [this.placeholder]: -1 } });
-  }
+    return new UpdateCommand(UPDATE_COMMANDS_LITERAL.SHIFT, [])
+  },
 
-  private baseOperate(operator: string, target: any): object {
-    if (target instanceof Date) {
-      return {
-        [this.placeholder]: {
-          [operator]: {
-            $date: target.getTime()
-          }
-        }
-      }
-    }
-    if (target instanceof Point) {
-      return {
-        [this.placeholder]: {
-          [operator]: {
-            type: 'Point',
-            coordinates: [target.longitude, target.latitude]
-          }
-        }
-      }
-    }
-    return {
-      [this.placeholder]: { [operator]: target }
-    };
-  }
+  unshift(...__values__: any[]) {
+    const values = isArray(arguments[0]) ? arguments[0] : Array.from(arguments)
+    return new UpdateCommand(UPDATE_COMMANDS_LITERAL.UNSHIFT, values)
+  },
 
-  and(...targets: any[]) {
-    if (targets.length === 1 && Array.isArray(targets[0])) {
-      targets = targets[0]
-    }
-    return new Command(this.connectOperate("$and", targets));
-  }
-
-  or(...targets: any[]) {
-    // console.log(targets)
-    if (targets.length === 1 && Array.isArray(targets[0])) {
-      targets = targets[0]
-    }
-    return new Command(this.connectOperate("$or", targets));
-  }
-
-  // not(target: any) {
-  //   return new Command(this.connectOperate("$not", target));
-  // }
-
-  private connectOperate(operator: string, targets: any[]) {
-    // console.log(operator, targets);
-    let logicParams: object[] = [];
-    if (Object.keys(this.logicParam).length > 0) {
-      logicParams.push(this.logicParam);
-    }
-
-    for (let target of targets) {
-      if (target instanceof Command) {
-        // console.log(target)
-        if (Object.keys(target.logicParam).length === 0) {
-          continue;
-        }
-        logicParams.push(target.logicParam);
-      } else {
-        if (target instanceof RegExp) {
-          logicParams.push({
-            [this.placeholder]: {
-              $regex: target.regexp,
-              $options: target.options
-            }
-          })
-          continue
-        }
-
-        let tmp = {}
-        this.concatKeys(target, '', tmp);
-        // console.log(tmp)
-
-        let tmp1 = {}
-        for (let keys in tmp) {
-          let value = tmp[keys]
-
-          if (value instanceof Command) {
-            // const logicParam = value.logicParam
-            // logicParams.push(value.parse(keys))
-            Object.assign(tmp1, value.parse(keys))
-            // if (logicParam.hasOwnProperty('$or') || logicParam.hasOwnProperty('$and')) {
-            //   logicParams.push(value.parse(keys))
-            // } else {
-            //   logicParams.push({
-            //     [keys]: logicParam
-            //   });
-            // }
-          } else {
-            Object.assign(tmp1, {
-              [keys]: value
-            })
-            // logicParams.push({
-            //   [keys]: value
-            // });
-          }
-        }
-        logicParams.push(tmp1)
-      }
-    }
-
-    this.logicParam = [];
-    // console.log(logicParams);
-    return {
-      [operator]: logicParams
-    };
-  }
-
-  parse(key?: string): object {
-    // if (UpdateOperatorList.indexOf(Object.keys(this.logicParam)[0]) > -1) {
-    return JSON.parse(
-      JSON.stringify(this.logicParam).replace(/{{{AAA}}}/g, key)
-    );
-    // }
-  }
-
-  public toString = (): object => {
-    return this.logicParam[0];
-  };
-
-  /**
-   * ??????
-   * @param obj
-   */
-  public concatKeys(obj: object, key: string, res: object) {
-    let keys, value
-
-    for (let k in obj) {
-      if (typeof obj[k] === 'object' &&
-        obj[k] instanceof Command === false) {
-        keys = key ? key + '.' + k : k
-        this.concatKeys(obj[k], keys, res)
-      } else {
-        keys = key ? key + '.' + k : k
-        value = obj[k]
-
-        // console.log(res, keys, value)
-        Object.assign(res, { [keys]: value })
-        // console.log(keys, val)
-      }
-    }
-  }
 }
+
+export default Command
+

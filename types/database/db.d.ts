@@ -7,7 +7,7 @@ interface GeoTeyp {
 }
 export declare class Db {
     Geo: GeoTeyp;
-    command: Command;
+    command: typeof Command;
     RegExp: any;
     config: any;
     constructor(config?: any);

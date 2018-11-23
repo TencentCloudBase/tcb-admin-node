@@ -1,3 +1,6 @@
+#1.3.0
+- [upgrade] 重构了command的实现
+
 # v1.2.2
 - [fixed] 修复GeoPoint的查询、储存问题
 - [fixed] 修复db.RegExp不支持or的问题

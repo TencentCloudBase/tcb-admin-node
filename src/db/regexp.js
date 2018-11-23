@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const symbol_1 = require("./helper/symbol");
 class RegExp {
     constructor({ regexp, options }) {
         if (!regexp) {
@@ -8,13 +9,14 @@ class RegExp {
         this.regexp = regexp;
         this.options = options;
     }
-    parse(key) {
+    parse() {
         return {
-            [key]: {
-                $regex: this.regexp,
-                $options: this.options
-            }
+            $regex: this.regexp,
+            $options: this.options
         };
+    }
+    get _internalType() {
+        return symbol_1.SYMBOL_REGEXP;
     }
 }
 exports.RegExp = RegExp;

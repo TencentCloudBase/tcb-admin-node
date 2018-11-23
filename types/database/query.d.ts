@@ -16,6 +16,5 @@ export declare class Query {
     update(data: Object): Promise<any>;
     field(projection: Object): Query;
     remove(): Promise<any>;
-    convertParams(query: object): {};
 }
 export {};
