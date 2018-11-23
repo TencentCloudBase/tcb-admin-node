@@ -11,10 +11,10 @@ describe("test/unit/util.test.ts", () => {
     assert.strictEqual(data[0]["g"].latitude, -78);
   });
 
-  it("Util - encodeDocumentDataForReq ", async () => {
-    const param = Util.formatResDocumentData(Mock.documentRes.data);
-    const data = Util.encodeDocumentDataForReq(param[0]);
-    assert.strictEqual(data["a"], "a");
-    assert(data["w"].$date);
-  });
+  // it("Util - encodeDocumentDataForReq ", async () => {
+  //   const param = Util.formatResDocumentData(Mock.documentRes.data);
+  //   const data = Util.encodeDocumentDataForReq(param[0]);
+  //   assert.strictEqual(data["a"], "a");
+  //   assert(data["w"].$date);
+  // });
 });

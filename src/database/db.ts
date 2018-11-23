@@ -27,7 +27,7 @@ export class Db {
   /**
    * 逻辑操作的命令
    */
-  command: Command;
+  command: typeof Command;
 
   RegExp: any;
 
@@ -43,7 +43,7 @@ export class Db {
   constructor(config?: any) {
     this.config = config;
     this.Geo = Geo;
-    this.command = new Command();
+    this.command = Command;
     this.RegExp = RegExpConstructor;
   }
 

@@ -1,3 +1,5 @@
+import { SYMBOL_REGEXP } from '../helper/symbol'
+
 export class RegExp {
   regexp: string;
   options: string;
@@ -16,6 +18,10 @@ export class RegExp {
         $options: this.options
       }
     };
+  }
+
+  get _internalType() {
+    return SYMBOL_REGEXP
   }
 }
 

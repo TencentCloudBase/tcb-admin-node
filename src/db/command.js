@@ -1,179 +1,67 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const regexp_1 = require("./regexp");
-const geo_1 = require("./geo");
-class Command {
-    constructor(logicParam) {
-        this.logicParam = {};
-        this.placeholder = "{{{AAA}}}";
-        this.toString = () => {
-            return this.logicParam[0];
-        };
-        if (logicParam) {
-            this.logicParam = logicParam;
-        }
-    }
-    eq(target) {
-        return new Command(this.baseOperate("$eq", target));
-    }
-    neq(target) {
-        return new Command(this.baseOperate("$ne", target));
-    }
-    gt(target) {
-        return new Command(this.baseOperate("$gt", target));
-    }
-    gte(target) {
-        return new Command(this.baseOperate("$gte", target));
-    }
-    lt(target) {
-        return new Command(this.baseOperate("$lt", target));
-    }
-    lte(target) {
-        return new Command(this.baseOperate("$lte", target));
-    }
-    in(target) {
-        return new Command(this.baseOperate("$in", target));
-    }
-    nin(target) {
-        return new Command(this.baseOperate("$nin", target));
-    }
-    regex(target) {
-        return regexp_1.RegExpConstructor({
-            regexp: target.regex,
-            options: target.options
-        });
-    }
-    mul(target) {
-        return new Command({ $mul: { [this.placeholder]: target } });
-    }
+const query_1 = require("./commands/query");
+const logic_1 = require("./commands/logic");
+const update_1 = require("./commands/update");
+const type_1 = require("./utils/type");
+exports.Command = {
+    eq(val) {
+        return new query_1.QueryCommand(query_1.QUERY_COMMANDS_LITERAL.EQ, [val]);
+    },
+    neq(val) {
+        return new query_1.QueryCommand(query_1.QUERY_COMMANDS_LITERAL.NEQ, [val]);
+    },
+    lt(val) {
+        return new query_1.QueryCommand(query_1.QUERY_COMMANDS_LITERAL.LT, [val]);
+    },
+    lte(val) {
+        return new query_1.QueryCommand(query_1.QUERY_COMMANDS_LITERAL.LTE, [val]);
+    },
+    gt(val) {
+        return new query_1.QueryCommand(query_1.QUERY_COMMANDS_LITERAL.GT, [val]);
+    },
+    gte(val) {
+        return new query_1.QueryCommand(query_1.QUERY_COMMANDS_LITERAL.GTE, [val]);
+    },
+    in(val) {
+        return new query_1.QueryCommand(query_1.QUERY_COMMANDS_LITERAL.IN, val);
+    },
+    nin(val) {
+        return new query_1.QueryCommand(query_1.QUERY_COMMANDS_LITERAL.NIN, val);
+    },
+    and(...__expressions__) {
+        const expressions = type_1.isArray(arguments[0]) ? arguments[0] : Array.from(arguments);
+        return new logic_1.LogicCommand(logic_1.LOGIC_COMMANDS_LITERAL.AND, expressions);
+    },
+    or(...__expressions__) {
+        const expressions = type_1.isArray(arguments[0]) ? arguments[0] : Array.from(arguments);
+        return new logic_1.LogicCommand(logic_1.LOGIC_COMMANDS_LITERAL.OR, expressions);
+    },
+    set(val) {
+        return new update_1.UpdateCommand(update_1.UPDATE_COMMANDS_LITERAL.SET, [val]);
+    },
     remove() {
-        return new Command({ $unset: { [this.placeholder]: "" } });
-    }
-    inc(target) {
-        return new Command({ $inc: { [this.placeholder]: target } });
-    }
-    set(target) {
-        return new Command({ $set: { [this.placeholder]: target } });
-    }
-    push(target) {
-        let value = target;
-        if (Array.isArray(target)) {
-            value = { $each: target };
-        }
-        return new Command({ $push: { [this.placeholder]: value } });
-    }
+        return new update_1.UpdateCommand(update_1.UPDATE_COMMANDS_LITERAL.REMOVE, []);
+    },
+    inc(val) {
+        return new update_1.UpdateCommand(update_1.UPDATE_COMMANDS_LITERAL.INC, [val]);
+    },
+    mul(val) {
+        return new update_1.UpdateCommand(update_1.UPDATE_COMMANDS_LITERAL.MUL, [val]);
+    },
+    push(...__values__) {
+        const values = type_1.isArray(arguments[0]) ? arguments[0] : Array.from(arguments);
+        return new update_1.UpdateCommand(update_1.UPDATE_COMMANDS_LITERAL.PUSH, values);
+    },
     pop() {
-        return new Command({ $pop: { [this.placeholder]: 1 } });
-    }
-    unshift(target) {
-        let value = { $each: [target], $position: 0 };
-        if (Array.isArray(target)) {
-            value = { $each: target, $position: 0 };
-        }
-        return new Command({
-            $push: { [this.placeholder]: value }
-        });
-    }
+        return new update_1.UpdateCommand(update_1.UPDATE_COMMANDS_LITERAL.POP, []);
+    },
     shift() {
-        return new Command({ $pop: { [this.placeholder]: -1 } });
-    }
-    baseOperate(operator, target) {
-        if (target instanceof Date) {
-            return {
-                [this.placeholder]: {
-                    [operator]: {
-                        $date: target.getTime()
-                    }
-                }
-            };
-        }
-        if (target instanceof geo_1.Point) {
-            return {
-                [this.placeholder]: {
-                    [operator]: {
-                        type: 'Point',
-                        coordinates: [target.longitude, target.latitude]
-                    }
-                }
-            };
-        }
-        return {
-            [this.placeholder]: { [operator]: target }
-        };
-    }
-    and(...targets) {
-        if (targets.length === 1 && Array.isArray(targets[0])) {
-            targets = targets[0];
-        }
-        return new Command(this.connectOperate("$and", targets));
-    }
-    or(...targets) {
-        if (targets.length === 1 && Array.isArray(targets[0])) {
-            targets = targets[0];
-        }
-        return new Command(this.connectOperate("$or", targets));
-    }
-    connectOperate(operator, targets) {
-        let logicParams = [];
-        if (Object.keys(this.logicParam).length > 0) {
-            logicParams.push(this.logicParam);
-        }
-        for (let target of targets) {
-            if (target instanceof Command) {
-                if (Object.keys(target.logicParam).length === 0) {
-                    continue;
-                }
-                logicParams.push(target.logicParam);
-            }
-            else {
-                if (target instanceof regexp_1.RegExp) {
-                    logicParams.push({
-                        [this.placeholder]: {
-                            $regex: target.regexp,
-                            $options: target.options
-                        }
-                    });
-                    continue;
-                }
-                let tmp = {};
-                this.concatKeys(target, '', tmp);
-                let tmp1 = {};
-                for (let keys in tmp) {
-                    let value = tmp[keys];
-                    if (value instanceof Command) {
-                        Object.assign(tmp1, value.parse(keys));
-                    }
-                    else {
-                        Object.assign(tmp1, {
-                            [keys]: value
-                        });
-                    }
-                }
-                logicParams.push(tmp1);
-            }
-        }
-        this.logicParam = [];
-        return {
-            [operator]: logicParams
-        };
-    }
-    parse(key) {
-        return JSON.parse(JSON.stringify(this.logicParam).replace(/{{{AAA}}}/g, key));
-    }
-    concatKeys(obj, key, res) {
-        let keys, value;
-        for (let k in obj) {
-            if (typeof obj[k] === 'object' &&
-                obj[k] instanceof Command === false) {
-                keys = key ? key + '.' + k : k;
-                this.concatKeys(obj[k], keys, res);
-            }
-            else {
-                keys = key ? key + '.' + k : k;
-                value = obj[k];
-                Object.assign(res, { [keys]: value });
-            }
-        }
-    }
-}
-exports.Command = Command;
+        return new update_1.UpdateCommand(update_1.UPDATE_COMMANDS_LITERAL.SHIFT, []);
+    },
+    unshift(...__values__) {
+        const values = type_1.isArray(arguments[0]) ? arguments[0] : Array.from(arguments);
+        return new update_1.UpdateCommand(update_1.UPDATE_COMMANDS_LITERAL.UNSHIFT, values);
+    },
+};
+exports.default = exports.Command;

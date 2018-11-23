@@ -1,20 +1,11 @@
-import { FieldType, UpdateOperatorList } from "./constant";
+import { FieldType } from "./constant";
 import { Point } from "./geo/point";
-import { Command } from "./command";
-import * as lodashMerge from "lodash.merge";
 import { ServerDate } from "./serverDate";
 
 interface DocumentModel {
   _id: string;
 }
 
-/**
- * 后端要求的地理位置格式
- */
-interface GeoPointRes {
-  type: "Point";
-  coordinates: number[];
-}
 
 /**
  * 工具模块
@@ -22,133 +13,6 @@ interface GeoPointRes {
  * @author haroldhu
  */
 export class Util {
-  /**
-   * 编码为后端格式的地理位置数据
-   *
-   * @internal
-   */
-  private static encodeGeoPoint = (point: Point): GeoPointRes => {
-    if (!(point instanceof Point)) {
-      throw new Error("encodeGeoPoint: must be GeoPoint type");
-    }
-    return {
-      type: "Point",
-      coordinates: [point.longitude, point.latitude]
-    };
-  };
-
-  private static encodeServerDate = (serverDate: ServerDate): object => {
-    return { $date: { offset: serverDate.offset } }
-  }
-
-  /**
-   * 编码为后端格式的日期数据
-   *
-   * @internal
-   */
-  private static encodeTimestamp = (stamp: Date) => {
-    if (!(stamp instanceof Date)) {
-      throw new Error("encodeTimestamp: must be Date type");
-    }
-    return {
-      $date: stamp.getTime()
-    };
-  };
-
-  /**
-   * 编码为后端数据格式
-   *
-   * 主要递归对象和数组，目的是处理地理位置和时间戳
-   *
-   * @param document - 前端文档数据
-   */
-  public static encodeDocumentDataForReq = (document, merge = false, concatKey = true) => {
-    const keys = Object.keys(document);
-    let params: any = {};
-
-    // 数组递归的情况
-    if (Array.isArray(document)) {
-      params = [];
-    }
-    // console.log(document);
-
-    const getCommandVal = (obj) => {
-      let res: object = {}
-      let command = new Command();
-      command.concatKeys(obj, '', res)
-      for (let key in res) {
-        if (res[key] instanceof Command) {
-          res[key] = res[key].parse(key);
-        }
-      }
-      // console.log(res)
-      return res
-    }
-
-    keys.forEach(key => {
-      const item = document[key];
-      const type = Util.whichType(item);
-      let realValue;
-      if (type === FieldType.GeoPoint) {
-        realValue = { [key]: Util.encodeGeoPoint(item) };
-      } else if (type === FieldType.Timestamp) {
-        realValue = { [key]: Util.encodeTimestamp(item) };
-      } else if (type === FieldType.ServerDate) {
-        realValue = { [key]: Util.encodeServerDate(item) };
-      } else if (type === FieldType.Object) {
-        if (concatKey) {
-          realValue = getCommandVal({ [key]: item })
-        } else {
-          realValue = { [key]: Util.encodeDocumentDataForReq(item, merge, concatKey) };
-        }
-      } else if (type === FieldType.Command) {
-        realValue = item.parse(key)
-      } else {
-        realValue = { [key]: item };
-      }
-
-      if (UpdateOperatorList.indexOf(Object.keys(realValue)[0]) === -1 && merge === true) {
-        realValue = { $set: realValue }
-      }
-
-      if (Array.isArray(params)) {
-        params.push(realValue);
-      } else {
-        // params[key] = realValue;
-        params = lodashMerge({}, params, realValue);
-      }
-    });
-
-
-    // 修复嵌套operator
-    if (params.$set) {
-      for (let concatKey in params.$set) {
-        for (let key in params.$set[concatKey]) {
-          if (UpdateOperatorList.indexOf(key) > -1) {
-            if (params[key] === undefined) {
-              params[key] = {
-                ...params.$set[concatKey][key]
-              }
-            } else {
-              params[key] = {
-                ...params[key],
-                ...params.$set[concatKey][key]
-              }
-            }
-            delete params.$set[concatKey]
-          }
-        }
-      }
-
-      // 嵌套的operator提升到顶层后，$set可能为空，所以要删掉
-      if (Object.keys(params.$set).length === 0) {
-        delete params.$set
-      }
-    }
-
-
-    return params;
-  };
 
   /**
    * 格式化后端返回的文档数据
@@ -226,9 +90,9 @@ export class Util {
         return FieldType.GeoPoint;
       } else if (obj instanceof Date) {
         return FieldType.Timestamp;
-      } else if (obj instanceof Command) {
+      }/* else if (obj instanceof Command) {
         return FieldType.Command;
-      } else if (obj instanceof ServerDate) {
+      } */else if (obj instanceof ServerDate) {
         return FieldType.ServerDate
       }
 

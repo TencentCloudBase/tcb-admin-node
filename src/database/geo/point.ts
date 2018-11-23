@@ -1,4 +1,5 @@
 import { Validate } from "../validate";
+import { SYMBOL_GEO_POINT } from '../helper/symbol'
 
 /**
  * 地址位置
@@ -41,4 +42,17 @@ export class Point {
     }
   }
 
+  toJSON(): object {
+    return {
+      type: 'Point',
+      coordinates: [
+        this.longitude,
+        this.latitude,
+      ],
+    }
+  }
+
+  get _internalType() {
+    return SYMBOL_GEO_POINT
+  }
 }

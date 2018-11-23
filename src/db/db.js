@@ -10,7 +10,7 @@ class Db {
     constructor(config) {
         this.config = config;
         this.Geo = Geo;
-        this.command = new command_1.Command();
+        this.command = command_1.Command;
         this.RegExp = regexp_1.RegExpConstructor;
     }
     serverDate({ offset = 0 } = {}) {

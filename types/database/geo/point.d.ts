@@ -8,4 +8,6 @@ export declare class Point {
             coordinates: number[];
         };
     };
+    toJSON(): object;
+    readonly _internalType: import("../../../../../../../Users/jimmyzhang/repo/tcb-admin-node/src/database/utils/symbol").InternalSymbol;
 }
