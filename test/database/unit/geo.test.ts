@@ -49,7 +49,7 @@ describe("GEO类型", async () => {
                 point: db.command.eq(point)
             })
             .get();
-        console.log(result);
+        console.log(point, result);
         assert(result.data.length > 0);
 
         result = await collection
@@ -57,7 +57,7 @@ describe("GEO类型", async () => {
                 point: db.command.or(db.command.eq(point))
             })
             .get();
-        console.log(result);
+        console.log(point, result);
         assert(result.data.length > 0);
 
         result = await collection

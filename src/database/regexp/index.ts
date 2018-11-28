@@ -1,23 +1,21 @@
 import { SYMBOL_REGEXP } from '../helper/symbol'
 
 export class RegExp {
-  regexp: string;
-  options: string;
+  $regex: string;
+  $options: string;
   constructor({ regexp, options }) {
     if (!regexp) {
       throw new TypeError("regexp must be a string");
     }
-    this.regexp = regexp;
-    this.options = options;
+    this.$regex = regexp;
+    this.$options = options;
   }
 
   parse(key) {
     return {
-      [key]: {
-        $regex: this.regexp,
-        $options: this.options
-      }
-    };
+      $regex: this.$regex,
+      $options: this.$options
+    }
   }
 
   get _internalType() {

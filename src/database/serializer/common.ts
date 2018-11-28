@@ -16,7 +16,7 @@ function flatten(
 ): Record<string, any> {
 
   const cloned = { ...query }
-
+  
   for (const key in query) {
     if (/^\$/.test(key)) continue
 
