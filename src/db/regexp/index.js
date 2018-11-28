@@ -6,15 +6,13 @@ class RegExp {
         if (!regexp) {
             throw new TypeError("regexp must be a string");
         }
-        this.regexp = regexp;
-        this.options = options;
+        this.$regex = regexp;
+        this.$options = options;
     }
     parse(key) {
         return {
-            [key]: {
-                $regex: this.regexp,
-                $options: this.options
-            }
+            $regex: this.$regex,
+            $options: this.$options
         };
     }
     get _internalType() {

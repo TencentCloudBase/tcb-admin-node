@@ -82,17 +82,22 @@ describe("正则表达式查询", async () => {
     console.log(result);
     assert(result.data.length > 0);
 
-    // db.command.regex
+    // db.regex
     result = await collection
       .where({
-        name: db.command.regex({
-          regex: "^abcdef.*\\d+结尾$",
+        name: db.RegExp({
+          regexp: "^abcdef.*\\d+结尾$",
           options: "i"
         })
       })
       .get();
     console.log(result);
     assert(result.data.length > 0);
+
+    console.log(db.RegExp({
+      regexp: "^fffffff$",
+      options: "i"
+    }))
 
     // // Update(TODO)
     result = await collection
@@ -112,7 +117,7 @@ describe("正则表达式查询", async () => {
     // Update(TODO)
     result = await collection
       .where({
-        name: db.command.or(new db.RegExp({
+        name: db.command.or(db.RegExp({
           regexp: "^abcdef.*\\d+结尾$",
           options: "i"
         }), db.RegExp({
