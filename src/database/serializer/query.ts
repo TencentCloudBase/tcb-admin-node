@@ -131,7 +131,7 @@ class QueryEncoder {
         const condition = this.encodeComparisonCommand(flattened[key])
         this.mergeConditionAfterEncode(flattened, condition, key)
       } else if (isConversionRequired(val)) {
-        flattened[key] = encodeInternalDataType(val, key)
+        flattened[key] = encodeInternalDataType(val)
       }
     }
     return flattened

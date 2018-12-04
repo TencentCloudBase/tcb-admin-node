@@ -12,14 +12,13 @@ export type AnyObject = {
   [x: string]: any
 }
 
-export function serialize(val: any, key?: any): IQueryCondition {
-  return serializeHelper(val, [val], key)
+export function serialize(val: any): IQueryCondition {
+  return serializeHelper(val, [val])
 }
 
 function serializeHelper(
   val: any,
-  visited: object[],
-  key?: any
+  visited: object[]
 ): Record<string, any> {
   if (isInternalObject(val)) {
     switch (val._internalType) {
@@ -32,7 +31,7 @@ function serializeHelper(
         }
       }
       case SYMBOL_REGEXP: {
-        return (val as RegExp).parse(key)
+        return (val as RegExp).parse()
       }
       default: {
         return val.toJSON ? val.toJSON() : val

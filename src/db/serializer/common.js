@@ -82,8 +82,8 @@ function isConversionRequired(val) {
     return type_1.isInternalObject(val) || type_1.isDate(val) || type_1.isRegExp(val);
 }
 exports.isConversionRequired = isConversionRequired;
-function encodeInternalDataType(val, key) {
-    return datatype_1.serialize(val, key);
+function encodeInternalDataType(val) {
+    return datatype_1.serialize(val);
 }
 exports.encodeInternalDataType = encodeInternalDataType;
 function decodeInternalDataType(object) {

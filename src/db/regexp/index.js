@@ -9,7 +9,7 @@ class RegExp {
         this.$regex = regexp;
         this.$options = options;
     }
-    parse(key) {
+    parse() {
         return {
             $regex: this.$regex,
             $options: this.$options

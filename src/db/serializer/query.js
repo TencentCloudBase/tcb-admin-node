@@ -122,7 +122,7 @@ class QueryEncoder {
                 this.mergeConditionAfterEncode(flattened, condition, key);
             }
             else if (common_1.isConversionRequired(val)) {
-                flattened[key] = common_1.encodeInternalDataType(val, key);
+                flattened[key] = common_1.encodeInternalDataType(val);
             }
         }
         return flattened;

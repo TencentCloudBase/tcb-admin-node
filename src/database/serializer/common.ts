@@ -9,14 +9,14 @@ export type AnyObject = {
 }
 
 function flatten(
-  query: Record<string, any>, 
-  shouldPreserverObject: (object: object) => boolean, 
-  parents: string[], 
+  query: Record<string, any>,
+  shouldPreserverObject: (object: object) => boolean,
+  parents: string[],
   visited: object[],
 ): Record<string, any> {
 
   const cloned = { ...query }
-  
+
   for (const key in query) {
     if (/^\$/.test(key)) continue
 
@@ -27,7 +27,7 @@ function flatten(
     if (isObject(value) && !shouldPreserverObject(value)) {
 
       if (visited.indexOf(value) > -1) {
-        throw new Error(`Cannot convert circular structure to JSON`)        
+        throw new Error(`Cannot convert circular structure to JSON`)
       }
 
       const newParents = [
@@ -102,8 +102,8 @@ export function isConversionRequired(val: any): boolean {
   return isInternalObject(val) || isDate(val) || isRegExp(val)
 }
 
-export function encodeInternalDataType(val: any, key?: any): IQueryCondition {
-  return serializeInternalDataType(val, key)
+export function encodeInternalDataType(val: any): IQueryCondition {
+  return serializeInternalDataType(val)
 }
 
 export function decodeInternalDataType(object: AnyObject): any {
