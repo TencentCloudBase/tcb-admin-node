@@ -55,12 +55,12 @@ module.exports = function (args) {
   config.sessionToken && (params.sessionToken = config.sessionToken);
   params.sdk_version = version
 
-  // console.log(params);
   var opts = {
     // url: 'http://localhost:8002/admin',
     url: "http://tcb-admin.tencentcloudapi.com/admin",
     method: args.method || "get",
-    timeout: args.timeout || 50000,
+    // 先取模块的timeout，没有则取sdk的timeout，还没有就使用默认值
+    timeout: args.timeout || config.timeout || 15000,
     headers: authObj.Headers,
     proxy: config.proxy
   };

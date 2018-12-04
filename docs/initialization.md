@@ -5,8 +5,10 @@
 | 字段 | 类型 | 必填 | 说明|
 | --- | --- | --- | --- |
 | secretId | string | 否 | 腾讯云 API 固定密钥对，在云函数内执行可不填。[前往获取](https://console.cloud.tencent.com/cam/capi)|
-| SecretKey | string | 否 |  同上|
+| secretKey | string | 否 |  同上|
 | env | string | 否 | TCB 环境 ID，不填使用默认环境|
+| proxy | string | 否 | 调用接口时使用的 http 代理 url |
+| timeout | number | 否 | 调用接口的超时时间（ms），默认为 15000，即 15 秒 |
 
 ```javascript
 // 初始化示例
@@ -27,6 +29,11 @@ tcb.init()
 //云函数下指定环境
 tcb.init({
   env: 'xxx'
+})
+
+//修改请求超时时间
+tcb.init({
+  timeout: 5000
 })
 
 //使用多个环境

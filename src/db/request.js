@@ -10,6 +10,7 @@ class Request {
             action: `database.${api}`
         });
         return requestHandler({
+            timeout: this.db.config.timeout,
             config: this.db.config.config,
             params,
             method: "post",
