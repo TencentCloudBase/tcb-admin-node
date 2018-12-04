@@ -13,7 +13,8 @@ Tcb.prototype.init = function ({
   secretKey,
   sessionToken,
   env,
-  proxy
+  proxy,
+  timeout
 } = {}) {
   if ((secretId && !secretKey) || (!secretId && secretKey)) {
     throw Error("secretId and secretKey must be a pair");
@@ -57,13 +58,14 @@ Tcb.prototype.init = function ({
 
   this.config.secretId = secretId;
   this.config.secretKey = secretKey;
+  this.config.timeout = timeout || 15000
   this.config.sessionToken = sessionToken ? sessionToken : (secretId && secretKey ? false : undefined);
 
   return new Tcb(this.config);
 };
 
-Tcb.prototype.database = function () {
-  return new database(this);
+Tcb.prototype.database = function (dbConfig) {
+  return new database({ ...this, ...dbConfig });
 };
 
 function each(obj, fn) {
