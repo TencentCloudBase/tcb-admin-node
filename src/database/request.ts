@@ -31,19 +31,26 @@ export class Request {
    * @param api   - 接口
    * @param data  - 参数
    */
-  send(api?: string, data?: Object): Promise<any> {
+  async send(api?: string, data?: Object): Promise<any> {
     const params = Object.assign({}, data, {
       action: `database.${api}`
     });
-    // console.log(this.db.config);
-    return requestHandler({
-      timeout: this.db.config.timeout,
-      config: this.db.config.config,
-      params,
-      method: "post",
-      headers: {
-        "content-type": "application/json"
-      }
-    });
+    // console.log(this.db.config.config);
+    const slowQueryWarning = setTimeout(() => {
+      console.warn('Database operation is longer than 3s. Please check query performance and your network environment.')
+    }, 3000)
+    try {
+      return await requestHandler({
+        timeout: this.db.config.timeout,
+        config: this.db.config.config,
+        params,
+        method: "post",
+        headers: {
+          "content-type": "application/json"
+        }
+      });
+    } finally {
+      clearTimeout(slowQueryWarning)
+    }
   }
 }
