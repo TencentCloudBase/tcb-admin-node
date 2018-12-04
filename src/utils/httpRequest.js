@@ -1,12 +1,13 @@
 var request = require("request");
 var auth = require("./auth.js");
+const version = require('../../package.json').version
 
 module.exports = function (args) {
   var config = args.config,
     params = args.params,
     method = args.method || "get";
 
-  const eventId = (new Date()).valueOf() + '_' + Math.random().toString().substr(2,5)
+  const eventId = (new Date()).valueOf() + '_' + Math.random().toString().substr(2, 5)
 
   params = Object.assign({}, params, {
     envName: config.envName,
@@ -41,7 +42,7 @@ module.exports = function (args) {
     Query: params,
     Headers: Object.assign(
       {
-        "user-agent": "tcb-admin-sdk"
+        "user-agent": `tcb-admin-sdk/${version}`
       },
       args.headers || {}
     )
@@ -52,6 +53,7 @@ module.exports = function (args) {
   params.authorization = authorization;
   file && (params.file = file);
   config.sessionToken && (params.sessionToken = config.sessionToken);
+  params.sdk_version = version
 
   // console.log(params);
   var opts = {
