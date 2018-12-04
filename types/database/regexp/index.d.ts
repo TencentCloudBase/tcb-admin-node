@@ -5,7 +5,7 @@ export declare class RegExp {
         regexp: any;
         options: any;
     });
-    parse(key: any): {
+    parse(): {
         $regex: string;
         $options: string;
     };

@@ -4,11 +4,11 @@ const symbol_1 = require("../helper/symbol");
 const type_1 = require("../utils/type");
 const geo_1 = require("../geo");
 const serverDate_1 = require("../serverDate");
-function serialize(val, key) {
-    return serializeHelper(val, [val], key);
+function serialize(val) {
+    return serializeHelper(val, [val]);
 }
 exports.serialize = serialize;
-function serializeHelper(val, visited, key) {
+function serializeHelper(val, visited) {
     if (type_1.isInternalObject(val)) {
         switch (val._internalType) {
             case symbol_1.SYMBOL_GEO_POINT: {
@@ -20,7 +20,7 @@ function serializeHelper(val, visited, key) {
                 };
             }
             case symbol_1.SYMBOL_REGEXP: {
-                return val.parse(key);
+                return val.parse();
             }
             default: {
                 return val.toJSON ? val.toJSON() : val;

@@ -11,7 +11,7 @@ export class RegExp {
     this.$options = options;
   }
 
-  parse(key) {
+  parse() {
     return {
       $regex: this.$regex,
       $options: this.$options
