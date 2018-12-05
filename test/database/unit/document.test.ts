@@ -34,7 +34,7 @@ describe("test/unit/document.test.ts", () => {
 
   it("API - set data in document existed", async () => {
     const documents = await db.collection(collName).limit(1).get();
-    const docId = documents.data[0].id;
+    const docId = documents.data[0]._id;
     let data = await db.collection(collName).doc(docId).set({
       data: { type: "set" }
     });
