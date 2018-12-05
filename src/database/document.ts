@@ -137,7 +137,7 @@ export class DocumentReference {
       })
     }
 
-    console.log(data, JSON.stringify(data))
+    // console.log(data, JSON.stringify(data))
     const merge = false; //data不能带有操作符
     let param = {
       collectionName: this._coll,
