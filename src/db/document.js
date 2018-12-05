@@ -66,7 +66,6 @@ class DocumentReference {
                 message: 'update operator complicit'
             });
         }
-        console.log(data, JSON.stringify(data));
         const merge = false;
         let param = {
             collectionName: this._coll,
