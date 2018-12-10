@@ -1,4 +1,9 @@
-#1.3.0
+# v1.4.0
+- [add] 接口加入默认超时时间（15秒）
+- [add] 对超过3秒的数据库慢查询，加入console.warn
+- [fixed] 修复serverDate存取的问题
+
+# v1.3.0
 - [upgrade] 重构了command的实现
 
 # v1.2.2
