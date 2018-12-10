@@ -15,9 +15,7 @@ function serializeHelper(val, visited) {
                 return val.toJSON();
             }
             case symbol_1.SYMBOL_SERVER_DATE: {
-                return {
-                    $date: val.offset,
-                };
+                return val.parse();
             }
             case symbol_1.SYMBOL_REGEXP: {
                 return val.parse();
