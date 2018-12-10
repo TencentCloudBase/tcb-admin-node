@@ -75,7 +75,23 @@ describe("Date类型", async () => {
         console.log(result)
         assert(result.data.length > 0)
 
-        // Update(TODO)
+        // Update
+        const newDate = new Date()
+        const newServerDate = db.serverDate({ offset: 1000 * 60 * 60 }) // offset一小时
+        result = await collection.where({
+            date: db.command.lte(date).and(db.command.gte(date))
+        }).update({
+            date: newDate,
+            serverDate2: newServerDate
+        })
+        console.log(result)
+        assert.strictEqual(result.updated, 1)
+        result = await collection.where({
+            _id: id
+        }).get()
+        console.log(result)
+        assert.strictEqual(result.data[0].date.getTime(), newDate.getTime())
+        assert(result.data[0].serverDate2.getTime() - result.data[0].serverDate1.getTime() > 1000 * 60 * 60)
 
 
         // Delete
