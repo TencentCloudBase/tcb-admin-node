@@ -4,4 +4,9 @@ export declare class ServerDate {
         offset: any;
     });
     readonly _internalType: import("../utils/symbol").InternalSymbol;
+    parse(): {
+        $date: {
+            offset: number;
+        };
+    };
 }

@@ -3,6 +3,7 @@ import * as Mock from "../unit/mock";
 import * as app from "../../../index";
 import * as Config from "../../config.local";
 import * as common from '../../common/index';
+import * as util from 'util'
 // import { process } from "ts-jest/dist/preprocessor";
 // import { __exportStar } from "tslib";
 
@@ -28,12 +29,15 @@ describe("Date类型", async () => {
     })
 
     const date = new Date()
+    const offset = 60 * 1000
     const initialData = {
         name: 'test',
         date,
-        serverDate: db.serverDate({
-            offset: 1000 * 60
-        })
+        serverDate1: db.serverDate(),
+        serverDate2: db.serverDate({ offset }),
+        foo: {
+            bar: db.serverDate({ offset })
+        }
     }
     it("Document - CRUD", async () => {
         // Create
@@ -47,8 +51,11 @@ describe("Date类型", async () => {
         let result = await collection.where({
             _id: id
         }).get()
-        console.log(result)
+        console.log(result.data[0])
         assert.strictEqual(result.data[0].date.getTime(), date.getTime())
+        assert(util.isDate(result.data[0].foo.bar))
+        assert.strictEqual(assert.strictEqual(result.data[0].serverDate1.getDate(), date.getDate()))
+        assert.strictEqual(result.data[0].serverDate1.getTime() + offset, result.data[0].serverDate2.getTime())
 
         result = await collection.where({
             date: db.command.eq(date)

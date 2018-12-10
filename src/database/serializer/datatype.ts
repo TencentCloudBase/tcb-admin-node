@@ -26,9 +26,7 @@ function serializeHelper(
         return (val as Point).toJSON()
       }
       case SYMBOL_SERVER_DATE: {
-        return {
-          $date: (val as ServerDate).offset,
-        }
+        return (val as ServerDate).parse()
       }
       case SYMBOL_REGEXP: {
         return (val as RegExp).parse()

@@ -8,5 +8,12 @@ class ServerDate {
     get _internalType() {
         return symbol_1.SYMBOL_SERVER_DATE;
     }
+    parse() {
+        return {
+            $date: {
+                offset: this.offset
+            }
+        };
+    }
 }
 exports.ServerDate = ServerDate;

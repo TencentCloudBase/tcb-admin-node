@@ -10,4 +10,12 @@ export class ServerDate {
     get _internalType() {
         return SYMBOL_SERVER_DATE
     }
+
+    parse() {
+        return {
+            $date: {
+                offset: this.offset
+            }
+        }
+    }
 }
