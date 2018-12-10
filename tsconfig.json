@@ -23,7 +23,12 @@
     "skipDefaultLibCheck": true,
     "skipLibCheck": true,
     "target": "es6",
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "types": [
+      "node",
+      "jest",
+      "mocha"
+    ]
   },
   "include": [
     "src/**/*"

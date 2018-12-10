@@ -29,6 +29,7 @@
     "request": "^2.87.0"
   },
   "devDependencies": {
+    "@types/node": "^10.12.12",
     "@types/jest": "^23.1.4",
     "@types/mocha": "^5.2.4",
     "espower-typescript": "^8.1.4",
