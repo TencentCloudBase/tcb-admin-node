@@ -69,10 +69,26 @@ describe("test/index.test.ts", async () => {
     result = await collection.where({
       _id: id
     }).update({
-      name: 'bbb'
+      name: 'bbb',
+      array: [{ a: 1, b: 2, c: 3 }]
     })
+    console.log(result)
     assert(result.updated > 0)
 
+    // 数组变为对象，mongo会报错
+    result = await collection.where({
+      _id: id
+    }).update({
+      array: { foo: 'bar' }
+    })
+    console.log(result)
+    assert.strictEqual(result.code, 'DATABASE_REQUEST_FAILED')
+
+    result = await collection.where({
+      _id: id
+    }).get()
+    console.log(result)
+    assert.deepStrictEqual(result.data[0].array, [{ a: 1, b: 2, c: 3 }])
 
     // Delete
     const deleteRes = await collection.doc(id).remove()
