@@ -170,6 +170,7 @@ async function downloadFile({ fileID, tempFilePath }) {
     }
 
     tmpUrl = res.tempFileURL;
+    tmpUrl = encodeURI(tmpUrl);
   } catch (e) {
     throw e
   }
