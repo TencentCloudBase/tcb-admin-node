@@ -31,6 +31,11 @@ describe("test/index.test.ts", async () => {
   const initialData = {
     name: 'aaa',
     array: [1, 2, 3, [4, 5, 6], { a: 1, b: { c: 'fjasklfljkas', d: false } }],
+    data: {
+      a: 'a',
+      b: 'b',
+      c: 'c'
+    },
     deepObject: {
       'l-02-01': {
         'l-03-01': {
@@ -74,6 +79,19 @@ describe("test/index.test.ts", async () => {
     })
     console.log(result)
     assert(result.updated > 0)
+
+    result = await collection.where({
+      _id: id
+    }).update({
+      data: { a: null, b: null, c: null }
+    })
+    console.log(result)
+    assert(result.updated > 0)
+
+    result = await collection.where({ _id: id }).get()
+    console.log(result)
+    assert(result.data[0])
+    assert.deepStrictEqual(result.data[0].data, { a: null, b: null, c: null })
 
     // 数组变为对象，mongo会报错
     result = await collection.where({
