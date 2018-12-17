@@ -4,6 +4,8 @@
 [![NPM Version](https://img.shields.io/npm/v/tcb-admin-node.svg?style=flat)](https://www.npmjs.com/package/tcb-admin-node)
 [![Deps](https://david-dm.org/TencentCloudBase/tcb-admin-node.svg)](https://david-dm.org/TencentCloudBase/tcb-admin-node)
 [![Build Status](https://travis-ci.org/TencentCloudBase/tcb-admin-node.svg?branch=master)](https://travis-ci.org/TencentCloudBase/tcb-admin-node)
+[![](https://img.shields.io/npm/dt/tcb-admin-node.svg)](https://www.npmjs.com/package/tcb-admin-node)
+
 
 ## 目录
 * [介绍](#介绍)
