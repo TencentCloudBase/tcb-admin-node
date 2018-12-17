@@ -36,6 +36,7 @@ describe("test/index.test.ts", async () => {
       b: 'b',
       c: 'c'
     },
+    null: null,
     deepObject: {
       'l-02-01': {
         'l-03-01': {
@@ -57,7 +58,15 @@ describe("test/index.test.ts", async () => {
     // Read
     const { id } = res
     let result = await collection.where({
-      _id: id
+      _id: id,
+    }).get()
+    console.log(result)
+    assert.deepStrictEqual(result.data[0].name, initialData.name)
+    assert.deepStrictEqual(result.data[0].array, initialData.array)
+    assert.deepStrictEqual(result.data[0].deepObject, initialData.deepObject)
+
+    result = await collection.where({
+      null: _.or(_.eq(null))
     }).get()
     console.log(result)
     assert.deepStrictEqual(result.data[0].name, initialData.name)
