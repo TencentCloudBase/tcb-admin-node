@@ -57,7 +57,7 @@ module.exports = function (args) {
 
   var opts = {
     // url: 'http://localhost:8002/admin',
-    url: "http://tcb-admin.tencentcloudapi.com/admin",
+    url: config.serviceUrl || "http://tcb-admin.tencentcloudapi.com/admin",
     method: args.method || "get",
     // 先取模块的timeout，没有则取sdk的timeout，还没有就使用默认值
     timeout: args.timeout || config.timeout || 15000,
