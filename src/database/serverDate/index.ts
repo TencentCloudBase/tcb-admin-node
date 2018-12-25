@@ -3,7 +3,7 @@ import { SYMBOL_SERVER_DATE } from '../helper/symbol'
 export class ServerDate {
     readonly offset: number;
 
-    constructor({ offset }) {
+    constructor({ offset = 0 } = {}) {
         this.offset = offset
     }
 
@@ -18,4 +18,8 @@ export class ServerDate {
             }
         }
     }
+}
+
+export function ServerDateConstructor(opt) {
+    return new ServerDate(opt)
 }
