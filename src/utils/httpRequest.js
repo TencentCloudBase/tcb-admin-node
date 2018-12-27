@@ -55,9 +55,15 @@ module.exports = function (args) {
   config.sessionToken && (params.sessionToken = config.sessionToken);
   params.sdk_version = version
 
+  let url = 'http://tcb-admin.tencentcloudapi.com/admin'
+  // url = 'http://localhost:8002/admin'
+
+  if (process.env.TENCENTCLOUD_RUNENV === 'SCF') {
+    url = 'http://tcb-admin.tencentyun.com/admin'
+  }
+
   var opts = {
-    // url: 'http://localhost:8002/admin',
-    url: "http://tcb-admin.tencentcloudapi.com/admin",
+    url,
     method: args.method || "get",
     // 先取模块的timeout，没有则取sdk的timeout，还没有就使用默认值
     timeout: args.timeout || config.timeout || 15000,
