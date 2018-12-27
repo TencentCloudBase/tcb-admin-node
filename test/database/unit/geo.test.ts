@@ -29,13 +29,36 @@ describe("GEO类型", async () => {
     const latitude = 20
     const point = new db.Geo.Point(longitude, latitude)
     const initialData = {
-        point
+        point,
+        pointArr: [point, point, point],
+        uuid: '416a4700-e0d3-11e8-911a-8888888888',
+        string: '新增单个string字段1。新增单个string字段1。',
+        due: new Date("2018-09-01"),
+        int: 100,
+        geo: new db.Geo.Point(90, 23),
+        array: [
+            {
+                string: '99999999',
+                due: new Date("2018-09-01"),
+                geo: new db.Geo.Point(90, 23),
+            },
+            {
+                string: '0000000',
+                geo: new db.Geo.Point(90, 23),
+                null: null,
+            }
+        ],
     };
     it("GEO Point - CRUD", async () => {
         // Create
-        const res = await collection.add(initialData);
+        let res = await collection.add(initialData);
         assert(res.id);
         assert(res.requestId);
+
+        const res2 = await collection.doc(res.id).set(initialData)
+        console.log(res2)
+        assert.strictEqual(res2.updated, 1)
+        assert(res2.requestId);
 
         // Read
         let result = await collection
@@ -43,7 +66,7 @@ describe("GEO类型", async () => {
                 _id: res.id
             })
             .get();
-        console.log(result.data[0].point);
+        console.log(result.data);
         assert(result.data.length > 0);
         assert.deepEqual(result.data[0].point, { longitude, latitude })
 

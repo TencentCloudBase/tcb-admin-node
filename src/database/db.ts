@@ -2,7 +2,7 @@ import { Point } from "./geo/point";
 import * as Geo from "./geo";
 import { CollectionReference } from "./collection";
 import { Command } from "./command";
-import { ServerDate } from "./serverDate";
+import { ServerDateConstructor } from "./serverDate";
 import { Request } from "./request";
 import { RegExpConstructor } from "./regexp";
 
@@ -31,6 +31,8 @@ export class Db {
 
   RegExp: any;
 
+  serverDate: any
+
   /**
    * 初始化
    *
@@ -43,13 +45,11 @@ export class Db {
   constructor(config?: any) {
     this.config = config;
     this.Geo = Geo;
+    this.serverDate = ServerDateConstructor
     this.command = Command;
     this.RegExp = RegExpConstructor;
   }
 
-  serverDate({ offset = 0 } = {}) {
-    return new ServerDate({ offset });
-  }
 
   /**
    * 获取集合的引用
