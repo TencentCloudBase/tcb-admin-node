@@ -1,7 +1,7 @@
 export declare class ServerDate {
     readonly offset: number;
-    constructor({ offset }: {
-        offset: any;
+    constructor({ offset }?: {
+        offset?: number;
     });
     readonly _internalType: import("../utils/symbol").InternalSymbol;
     parse(): {
@@ -10,3 +10,4 @@ export declare class ServerDate {
         };
     };
 }
+export declare function ServerDateConstructor(opt: any): ServerDate;

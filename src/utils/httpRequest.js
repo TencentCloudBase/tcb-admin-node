@@ -63,7 +63,7 @@ module.exports = function (args) {
   }
 
   var opts = {
-    url,
+    url: config.serviceUrl || url,
     method: args.method || "get",
     // 先取模块的timeout，没有则取sdk的timeout，还没有就使用默认值
     timeout: args.timeout || config.timeout || 15000,

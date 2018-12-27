@@ -142,7 +142,7 @@ export class DocumentReference {
     let param = {
       collectionName: this._coll,
       // data: Util.encodeDocumentDataForReq(data, merge, false),
-      data,
+      data: serialize(data),
       multi: false,
       merge,
       upsert: true

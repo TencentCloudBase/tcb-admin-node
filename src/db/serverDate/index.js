@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const symbol_1 = require("../helper/symbol");
 class ServerDate {
-    constructor({ offset }) {
+    constructor({ offset = 0 } = {}) {
         this.offset = offset;
     }
     get _internalType() {
@@ -17,3 +17,7 @@ class ServerDate {
     }
 }
 exports.ServerDate = ServerDate;
+function ServerDateConstructor(opt) {
+    return new ServerDate(opt);
+}
+exports.ServerDateConstructor = ServerDateConstructor;

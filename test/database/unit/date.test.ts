@@ -33,7 +33,7 @@ describe("Date类型", async () => {
     const initialData = {
         name: 'test',
         date,
-        serverDate1: db.serverDate(),
+        serverDate1: new db.serverDate(),
         serverDate2: db.serverDate({ offset }),
         foo: {
             bar: db.serverDate({ offset })
@@ -77,7 +77,7 @@ describe("Date类型", async () => {
 
         // Update
         const newDate = new Date()
-        const newServerDate = db.serverDate({ offset: 1000 * 60 * 60 }) // offset一小时
+        const newServerDate = new db.serverDate({ offset: 1000 * 60 * 60 }) // offset一小时
         result = await collection.where({
             date: db.command.lte(date).and(db.command.gte(date))
         }).update({

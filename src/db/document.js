@@ -69,7 +69,7 @@ class DocumentReference {
         const merge = false;
         let param = {
             collectionName: this._coll,
-            data,
+            data: datatype_1.serialize(data),
             multi: false,
             merge,
             upsert: true
