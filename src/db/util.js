@@ -25,7 +25,7 @@ Util.formatField = document => {
                 realValue = new point_1.Point(item.coordinates[0], item.coordinates[1]);
                 break;
             case constant_1.FieldType.Timestamp:
-                realValue = new Date(item.$date);
+                realValue = new Date(item.$timestamp * 1000);
                 break;
             case constant_1.FieldType.Object:
             case constant_1.FieldType.Array:

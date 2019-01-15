@@ -30,11 +30,15 @@ describe("Date类型", async () => {
 
     const date = new Date()
     const offset = 60 * 1000
+    const timestamp = Math.floor(+new Date() / 1000)
     const initialData = {
         name: 'test',
         date,
         serverDate1: new db.serverDate(),
         serverDate2: db.serverDate({ offset }),
+        timestamp: {
+            $timestamp: timestamp
+        },
         foo: {
             bar: db.serverDate({ offset })
         }
@@ -56,6 +60,7 @@ describe("Date类型", async () => {
         assert(util.isDate(result.data[0].foo.bar))
         assert.strictEqual(assert.strictEqual(result.data[0].serverDate1.getDate(), date.getDate()))
         assert.strictEqual(result.data[0].serverDate1.getTime() + offset, result.data[0].serverDate2.getTime())
+        assert.strictEqual(result.data[0].timestamp.getTime(), timestamp * 1000)
 
         result = await collection.where({
             date: db.command.eq(date)
