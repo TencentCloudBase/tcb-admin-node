@@ -52,7 +52,7 @@ export class Util {
           realValue = new Point(item.coordinates[0], item.coordinates[1]);
           break;
         case FieldType.Timestamp:
-          realValue = new Date(item.$date);
+          realValue = new Date(item.$timestamp * 1000);
           break;
         case FieldType.Object:
         case FieldType.Array:
