@@ -161,6 +161,12 @@ class Query {
         return new Query(this._db, this._coll, this._fieldFilters, this._fieldOrders, option);
     }
     remove() {
+        if (Object.keys(this._queryOptions).length > 0) {
+            console.warn('`offset`, `limit` and `projection` are not supported in remove() operation');
+        }
+        if (this._fieldOrders.length > 0) {
+            console.warn('`orderBy` is not supported in remove() operation');
+        }
         const param = {
             collectionName: this._coll,
             query: query_1.QuerySerializer.encode(this._fieldFilters),
