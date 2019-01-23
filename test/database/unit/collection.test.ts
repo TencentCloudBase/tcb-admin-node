@@ -85,4 +85,32 @@ describe("test/unit/collection.test.ts", async () => {
     assert(Array.isArray(res.data))
   })
 
+  it('API - add and remove with skip', async () => {
+    const text = 'test for add and remove with skip'
+    let i = 0
+    while (i++ < 10) {
+      await collection.add({
+        text
+      })
+    }
+
+    let result = await collection.where({
+      text
+    }).get()
+
+    assert(result.data.length > 0)
+
+    await collection.where({
+      text
+    }).orderBy('text', 'asc').skip(3).remove()
+
+    result = await collection.where({
+      text
+    }).get()
+
+    console.log(result)
+    assert(result.data.length === 0)
+
+  })
+
 });

@@ -296,7 +296,7 @@ export class Query {
         message: "不能更新_id的值"
       });
     }
-    
+
     let param = {
       collectionName: this._coll,
       query: this._fieldFilters,
@@ -354,6 +354,12 @@ export class Query {
    * 条件删除文档
    */
   remove() {
+    if (Object.keys(this._queryOptions).length > 0) {
+      console.warn('`offset`, `limit` and `projection` are not supported in remove() operation')
+    }
+    if (this._fieldOrders.length > 0) {
+      console.warn('`orderBy` is not supported in remove() operation')
+    }
     const param = {
       collectionName: this._coll,
       query: QuerySerializer.encode(this._fieldFilters),
