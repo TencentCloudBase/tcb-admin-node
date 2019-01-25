@@ -8,6 +8,7 @@ export const SYMBOL_QUERY_COMMAND = InternalSymbol.for('QUERY_COMMAND')
 export const SYMBOL_LOGIC_COMMAND = InternalSymbol.for('LOGIC_COMMAND')
 
 export const SYMBOL_GEO_POINT = InternalSymbol.for('GEO_POINT')
+export const SYMBOL_GEO_LINE_STRING = InternalSymbol.for('SYMBOL_GEO_LINE_STRING')
 
 export const SYMBOL_SERVER_DATE = InternalSymbol.for('SERVER_DATE')
 
