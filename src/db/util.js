@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const constant_1 = require("./constant");
-const point_1 = require("./geo/point");
+const geo_1 = require("./geo");
 const serverDate_1 = require("./serverDate");
 class Util {
 }
@@ -22,7 +22,10 @@ Util.formatField = document => {
         let realValue;
         switch (type) {
             case constant_1.FieldType.GeoPoint:
-                realValue = new point_1.Point(item.coordinates[0], item.coordinates[1]);
+                realValue = new geo_1.Point(item.coordinates[0], item.coordinates[1]);
+                break;
+            case constant_1.FieldType.GeoLineString:
+                realValue = new geo_1.LineString(item.coordinates.map(point => new geo_1.Point(point[0], point[1])));
                 break;
             case constant_1.FieldType.Timestamp:
                 realValue = new Date(item.$timestamp * 1000);
@@ -49,7 +52,7 @@ Util.formatField = document => {
 Util.whichType = (obj) => {
     let type = Object.prototype.toString.call(obj).slice(8, -1);
     if (type === constant_1.FieldType.Object) {
-        if (obj instanceof point_1.Point) {
+        if (obj instanceof geo_1.Point) {
             return constant_1.FieldType.GeoPoint;
         }
         else if (obj instanceof Date) {
@@ -64,8 +67,11 @@ Util.whichType = (obj) => {
         else if (obj.$date) {
             type = constant_1.FieldType.ServerDate;
         }
-        else if (Array.isArray(obj.coordinates) && obj.type === "Point") {
+        else if (geo_1.Point.validate(obj)) {
             type = constant_1.FieldType.GeoPoint;
+        }
+        else if (geo_1.LineString.validate(obj)) {
+            type = constant_1.FieldType.GeoLineString;
         }
     }
     return type;

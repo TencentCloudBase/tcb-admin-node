@@ -1,6 +1,6 @@
 // transpile internal data type
 import { SYMBOL_GEO_POINT, SYMBOL_SERVER_DATE, SYMBOL_REGEXP } from '../helper/symbol'
-import { getType, isObject, isArray, isDate, isNumber, isInternalObject, isRegExp } from '../utils/type'
+import { getType, isObject, isArray, isDate, isInternalObject, isRegExp } from '../utils/type'
 import { Point } from '../geo'
 import { ServerDate } from '../serverDate'
 import { RegExp } from '../regexp'
@@ -94,7 +94,7 @@ export function deserialize(object: AnyObject): any {
         switch (ret.type) {
           case 'Point': {
             // GeoPoint
-            if (isArray(ret.coordinates) && isNumber(ret.coordinates[0]) && isNumber(ret.coordinates[1])) {
+            if (Point.validate(ret)) {
               return new Point(ret.coordinates[0], ret.coordinates[1])
             }
             break

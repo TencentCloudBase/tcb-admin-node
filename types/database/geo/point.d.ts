@@ -8,6 +8,10 @@ export declare class Point {
             coordinates: number[];
         };
     };
-    toJSON(): object;
+    toJSON(): {
+        type: string;
+        coordinates: number[];
+    };
+    static validate(point: any): boolean;
     readonly _internalType: import("../utils/symbol").InternalSymbol;
 }

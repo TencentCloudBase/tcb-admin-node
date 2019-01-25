@@ -82,7 +82,7 @@ function deserialize(object) {
             case 'type': {
                 switch (ret.type) {
                     case 'Point': {
-                        if (type_1.isArray(ret.coordinates) && type_1.isNumber(ret.coordinates[0]) && type_1.isNumber(ret.coordinates[1])) {
+                        if (geo_1.Point.validate(ret)) {
                             return new geo_1.Point(ret.coordinates[0], ret.coordinates[1]);
                         }
                         break;

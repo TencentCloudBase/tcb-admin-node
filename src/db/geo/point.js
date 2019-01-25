@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const validate_1 = require("../validate");
 const symbol_1 = require("../helper/symbol");
+const type_1 = require("../utils/type");
 class Point {
     constructor(longitude, latitude) {
         validate_1.Validate.isGeopoint("longitude", longitude);
@@ -25,6 +26,9 @@ class Point {
                 this.latitude,
             ],
         };
+    }
+    static validate(point) {
+        return point.type === 'Point' && type_1.isArray(point.coordinates) && type_1.isNumber(point.coordinates[0]) && type_1.isNumber(point.coordinates[1]);
     }
     get _internalType() {
         return symbol_1.SYMBOL_GEO_POINT;

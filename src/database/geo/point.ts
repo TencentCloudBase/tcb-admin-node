@@ -1,5 +1,6 @@
 import { Validate } from "../validate";
 import { SYMBOL_GEO_POINT } from '../helper/symbol'
+import { isArray, isNumber } from '../utils/type'
 
 /**
  * 地址位置
@@ -42,7 +43,7 @@ export class Point {
     }
   }
 
-  toJSON(): object {
+  toJSON() {
     return {
       type: 'Point',
       coordinates: [
@@ -50,6 +51,10 @@ export class Point {
         this.latitude,
       ],
     }
+  }
+
+  static validate(point) {
+    return point.type === 'Point' && isArray(point.coordinates) && isNumber(point.coordinates[0]) && isNumber(point.coordinates[1])
   }
 
   get _internalType() {

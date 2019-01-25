@@ -13,6 +13,7 @@ declare const FieldType: {
     Boolean: string;
     Null: string;
     GeoPoint: string;
+    GeoLineString: string;
     Timestamp: string;
     Command: string;
     ServerDate: string;
