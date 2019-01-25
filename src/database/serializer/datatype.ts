@@ -1,6 +1,6 @@
 // transpile internal data type
 import { SYMBOL_GEO_POINT, SYMBOL_SERVER_DATE, SYMBOL_REGEXP } from '../helper/symbol'
-import { getType, isObject, isArray, isDate, isInternalObject, isRegExp } from '../utils/type'
+import { isObject, isArray, isDate, isInternalObject, isRegExp } from '../utils/type'
 import { Point } from '../geo'
 import { ServerDate } from '../serverDate'
 import { RegExp } from '../regexp'
@@ -71,38 +71,4 @@ function serializeHelper(
   } else {
     return val
   }
-}
-
-export function deserialize(object: AnyObject): any {
-  const ret = { ...object }
-  for (const key in ret) {
-    switch (key) {
-      case '$date': {
-        switch (getType(ret[key])) {
-          case 'number': {
-            // normal timestamp
-            return new Date(ret[key])
-          }
-          case 'object': {
-            // serverDate
-            return new ServerDate(ret[key])
-          }
-        }
-        break
-      }
-      case 'type': {
-        switch (ret.type) {
-          case 'Point': {
-            // GeoPoint
-            if (Point.validate(ret)) {
-              return new Point(ret.coordinates[0], ret.coordinates[1])
-            }
-            break
-          }
-        }
-        break
-      }
-    }
-  }
-  return object
 }

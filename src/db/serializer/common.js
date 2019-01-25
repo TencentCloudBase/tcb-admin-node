@@ -86,7 +86,3 @@ function encodeInternalDataType(val) {
     return datatype_1.serialize(val);
 }
 exports.encodeInternalDataType = encodeInternalDataType;
-function decodeInternalDataType(object) {
-    return datatype_1.deserialize(object);
-}
-exports.decodeInternalDataType = decodeInternalDataType;
