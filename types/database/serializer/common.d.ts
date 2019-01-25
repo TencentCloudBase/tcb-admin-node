@@ -8,4 +8,3 @@ export declare function flattenObject(object: AnyObject): AnyObject;
 export declare function mergeConditionAfterEncode(query: Record<string, any>, condition: Record<string, any>, key: string): void;
 export declare function isConversionRequired(val: any): boolean;
 export declare function encodeInternalDataType(val: any): IQueryCondition;
-export declare function decodeInternalDataType(object: AnyObject): any;

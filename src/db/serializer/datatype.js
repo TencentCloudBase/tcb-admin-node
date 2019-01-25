@@ -2,8 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const symbol_1 = require("../helper/symbol");
 const type_1 = require("../utils/type");
-const geo_1 = require("../geo");
-const serverDate_1 = require("../serverDate");
 function serialize(val) {
     return serializeHelper(val, [val]);
 }
@@ -64,34 +62,3 @@ function serializeHelper(val, visited) {
         return val;
     }
 }
-function deserialize(object) {
-    const ret = Object.assign({}, object);
-    for (const key in ret) {
-        switch (key) {
-            case '$date': {
-                switch (type_1.getType(ret[key])) {
-                    case 'number': {
-                        return new Date(ret[key]);
-                    }
-                    case 'object': {
-                        return new serverDate_1.ServerDate(ret[key]);
-                    }
-                }
-                break;
-            }
-            case 'type': {
-                switch (ret.type) {
-                    case 'Point': {
-                        if (geo_1.Point.validate(ret)) {
-                            return new geo_1.Point(ret.coordinates[0], ret.coordinates[1]);
-                        }
-                        break;
-                    }
-                }
-                break;
-            }
-        }
-    }
-    return object;
-}
-exports.deserialize = deserialize;
