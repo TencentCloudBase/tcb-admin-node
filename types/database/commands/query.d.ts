@@ -1,5 +1,6 @@
 import { LogicCommand } from './logic';
 import { InternalSymbol } from '../helper/symbol';
+import { Point } from '../geo';
 export declare const EQ = "eq";
 export declare const NEQ = "neq";
 export declare const GT = "gt";
@@ -16,7 +17,8 @@ export declare enum QUERY_COMMANDS_LITERAL {
     LT = "lt",
     LTE = "lte",
     IN = "in",
-    NIN = "nin"
+    NIN = "nin",
+    GEO_NEAR = "geoNear"
 }
 export declare class QueryCommand extends LogicCommand {
     operator: QUERY_COMMANDS_LITERAL;
@@ -30,8 +32,14 @@ export declare class QueryCommand extends LogicCommand {
     lte(val: any): LogicCommand;
     in(list: any[]): LogicCommand;
     nin(list: any[]): LogicCommand;
+    geoNear(val: IGeoNearOptions): LogicCommand;
 }
 export declare function isQueryCommand(object: any): object is QueryCommand;
 export declare function isKnownQueryCommand(object: any): object is QueryCommand;
 export declare function isComparisonCommand(object: any): object is QueryCommand;
 export default QueryCommand;
+export interface IGeoNearOptions {
+    geometry: Point;
+    maxDistance?: number;
+    minDistance?: number;
+}

@@ -1,5 +1,6 @@
 import { LogicCommand } from './logic'
 import { InternalSymbol, SYMBOL_QUERY_COMMAND } from '../helper/symbol'
+import { Point } from '../geo'
 
 
 export const EQ = 'eq'
@@ -20,6 +21,7 @@ export enum QUERY_COMMANDS_LITERAL {
   LTE = 'lte',
   IN = 'in',
   NIN = 'nin',
+  GEO_NEAR = 'geoNear'
 }
 
 export class QueryCommand extends LogicCommand {
@@ -41,32 +43,32 @@ export class QueryCommand extends LogicCommand {
     const command = new QueryCommand(QUERY_COMMANDS_LITERAL.EQ, [val], this.fieldName)
     return this.and(command)
   }
-  
+
   neq(val: any) {
     const command = new QueryCommand(QUERY_COMMANDS_LITERAL.NEQ, [val], this.fieldName)
     return this.and(command)
   }
-  
+
   gt(val: any) {
     const command = new QueryCommand(QUERY_COMMANDS_LITERAL.GT, [val], this.fieldName)
     return this.and(command)
   }
-  
+
   gte(val: any) {
     const command = new QueryCommand(QUERY_COMMANDS_LITERAL.GTE, [val], this.fieldName)
     return this.and(command)
   }
-  
+
   lt(val: any) {
     const command = new QueryCommand(QUERY_COMMANDS_LITERAL.LT, [val], this.fieldName)
     return this.and(command)
   }
-  
+
   lte(val: any) {
     const command = new QueryCommand(QUERY_COMMANDS_LITERAL.LTE, [val], this.fieldName)
     return this.and(command)
   }
-  
+
   in(list: any[]) {
     const command = new QueryCommand(QUERY_COMMANDS_LITERAL.IN, list, this.fieldName)
     return this.and(command)
@@ -74,6 +76,11 @@ export class QueryCommand extends LogicCommand {
 
   nin(list: any[]) {
     const command = new QueryCommand(QUERY_COMMANDS_LITERAL.NIN, list, this.fieldName)
+    return this.and(command)
+  }
+
+  geoNear(val: IGeoNearOptions) {
+    const command = new QueryCommand(QUERY_COMMANDS_LITERAL.GEO_NEAR, [val], this.fieldName)
     return this.and(command)
   }
 }
@@ -91,3 +98,9 @@ export function isComparisonCommand(object: any): object is QueryCommand {
 }
 
 export default QueryCommand
+
+export interface IGeoNearOptions {
+  geometry: Point,
+  maxDistance?: number,
+  minDistance?: number
+}
