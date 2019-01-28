@@ -20,6 +20,7 @@ var QUERY_COMMANDS_LITERAL;
     QUERY_COMMANDS_LITERAL["LTE"] = "lte";
     QUERY_COMMANDS_LITERAL["IN"] = "in";
     QUERY_COMMANDS_LITERAL["NIN"] = "nin";
+    QUERY_COMMANDS_LITERAL["GEO_NEAR"] = "geoNear";
 })(QUERY_COMMANDS_LITERAL = exports.QUERY_COMMANDS_LITERAL || (exports.QUERY_COMMANDS_LITERAL = {}));
 class QueryCommand extends logic_1.LogicCommand {
     constructor(operator, operands, fieldName) {
@@ -61,6 +62,10 @@ class QueryCommand extends logic_1.LogicCommand {
     }
     nin(list) {
         const command = new QueryCommand(QUERY_COMMANDS_LITERAL.NIN, list, this.fieldName);
+        return this.and(command);
+    }
+    geoNear(val) {
+        const command = new QueryCommand(QUERY_COMMANDS_LITERAL.GEO_NEAR, [val], this.fieldName);
         return this.and(command);
     }
 }

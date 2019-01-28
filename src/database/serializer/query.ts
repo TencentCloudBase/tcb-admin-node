@@ -5,6 +5,7 @@ import { SYMBOL_UNSET_FIELD_NAME } from '../helper/symbol'
 import { getType, isObject, isArray } from '../utils/type'
 import { operatorToString } from '../operator-map'
 import { flattenQueryObject, isConversionRequired, encodeInternalDataType } from './common'
+import { IGeoNearOptions } from '../commands/query'
 
 
 export type IQueryCondition = Record<string, any> | LogicCommand
@@ -106,6 +107,21 @@ class QueryEncoder {
           [query.fieldName as string]: {
             [$op]: encodeInternalDataType(query.operands),
           },
+        }
+      }
+      case QUERY_COMMANDS_LITERAL.GEO_NEAR: {
+        const options: IGeoNearOptions = query.operands[0]
+        return {
+          [query.fieldName as string]: {
+            $nearSphere: {
+              $geometry: {
+                type: 'Point',
+                coordinates: [options.geometry.longitude, options.geometry.latitude]
+              },
+              $maxDistance: options.maxDistance,
+              $minDistance: options.minDistance
+            }
+          }
         }
       }
       default: {

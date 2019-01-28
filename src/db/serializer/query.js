@@ -98,6 +98,21 @@ class QueryEncoder {
                     },
                 };
             }
+            case query_1.QUERY_COMMANDS_LITERAL.GEO_NEAR: {
+                const options = query.operands[0];
+                return {
+                    [query.fieldName]: {
+                        $nearSphere: {
+                            $geometry: {
+                                type: 'Point',
+                                coordinates: [options.geometry.longitude, options.geometry.latitude]
+                            },
+                            $maxDistance: options.maxDistance,
+                            $minDistance: options.minDistance
+                        }
+                    }
+                };
+            }
             default: {
                 return {
                     [query.fieldName]: {
