@@ -29,9 +29,10 @@
     "request": "^2.87.0"
   },
   "devDependencies": {
-    "@types/node": "^10.12.12",
     "@types/jest": "^23.1.4",
     "@types/mocha": "^5.2.4",
+    "@types/node": "^10.12.12",
+    "dumper.js": "^1.3.0",
     "espower-typescript": "^8.1.4",
     "jest": "^23.3.0",
     "mocha": "^5.2.0",
