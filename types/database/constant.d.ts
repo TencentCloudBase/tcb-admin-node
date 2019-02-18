@@ -14,6 +14,7 @@ declare const FieldType: {
     Null: string;
     GeoPoint: string;
     GeoLineString: string;
+    GeoPolygon: string;
     Timestamp: string;
     Command: string;
     ServerDate: string;

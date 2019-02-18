@@ -6,5 +6,6 @@ export declare const SYMBOL_QUERY_COMMAND: InternalSymbol;
 export declare const SYMBOL_LOGIC_COMMAND: InternalSymbol;
 export declare const SYMBOL_GEO_POINT: InternalSymbol;
 export declare const SYMBOL_GEO_LINE_STRING: InternalSymbol;
+export declare const SYMBOL_GEO_POLYGON: InternalSymbol;
 export declare const SYMBOL_SERVER_DATE: InternalSymbol;
 export declare const SYMBOL_REGEXP: InternalSymbol;

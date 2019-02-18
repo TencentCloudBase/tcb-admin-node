@@ -27,6 +27,9 @@ Util.formatField = document => {
             case constant_1.FieldType.GeoLineString:
                 realValue = new geo_1.LineString(item.coordinates.map(point => new geo_1.Point(point[0], point[1])));
                 break;
+            case constant_1.FieldType.GeoPolygon:
+                realValue = new geo_1.Polygon(item.coordinates.map(line => new geo_1.LineString(line.map(([lng, lat]) => new geo_1.Point(lng, lat)))));
+                break;
             case constant_1.FieldType.Timestamp:
                 realValue = new Date(item.$timestamp * 1000);
                 break;
@@ -72,6 +75,9 @@ Util.whichType = (obj) => {
         }
         else if (geo_1.LineString.validate(obj)) {
             type = constant_1.FieldType.GeoLineString;
+        }
+        else if (geo_1.Polygon.validate(obj)) {
+            type = constant_1.FieldType.GeoPolygon;
         }
     }
     return type;
