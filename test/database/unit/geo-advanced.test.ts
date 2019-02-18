@@ -48,13 +48,32 @@ describe("GEO高级功能", async () => {
         new db.Geo.LineString([point5, point6, point7, point8, point5]),
     ])
 
+    const multiPoint = new db.Geo.MultiPoint([randomPoint(), randomPoint(), randomPoint(), randomPoint()])
+    const multiLineString = new db.Geo.MultiLineString([
+        new db.Geo.LineString([randomPoint(), randomPoint()]),
+        new db.Geo.LineString([randomPoint(), randomPoint()]),
+        new db.Geo.LineString([randomPoint(), randomPoint()]),
+        new db.Geo.LineString([randomPoint(), randomPoint()])
+    ])
+    const multiPolygon = new db.Geo.MultiPolygon([
+        new db.Geo.Polygon([
+            new db.Geo.LineString([point1, point2, point3, point4, point1])
+        ]),
+        new db.Geo.Polygon([
+            new db.Geo.LineString([point5, point6, point7, point8, point5])
+        ])
+    ])
+
     const initialData = {
         point,
         line,
-        polygon
+        polygon,
+        multiPoint,
+        multiLineString,
+        multiPolygon
     };
 
-    it("GEO LineString - CRUD", async () => {
+    it("GEO Advanced - CRUD", async () => {
         // Create
         const res = await collection.add(initialData);
         assert(res.id);
@@ -68,8 +87,21 @@ describe("GEO高级功能", async () => {
             .get();
         console.log(readRes.data);
         assert(readRes.data.length > 0);
-        assert.deepEqual(readRes.data[0].point, point)
-        assert.deepEqual(readRes.data[0].line, line)
+        const data = readRes.data[0]
+
+        assert(data.point instanceof db.Geo.Point)
+        assert(data.line instanceof db.Geo.LineString)
+        assert(data.polygon instanceof db.Geo.Polygon)
+        assert(data.multiPoint instanceof db.Geo.MultiPoint)
+        assert(data.multiLineString instanceof db.Geo.MultiLineString)
+        assert(data.multiPolygon instanceof db.Geo.MultiPolygon)
+
+        assert.deepEqual(data.point, point)
+        assert.deepEqual(data.line, line)
+        assert.deepEqual(data.polygon, polygon)
+        assert.deepEqual(data.multiPoint, multiPoint)
+        assert.deepEqual(data.multiLineString, multiLineString)
+        assert.deepEqual(data.multiPolygon, multiPolygon)
 
         // Update
         let result = await collection.doc(res.id).set(initialData)
@@ -94,41 +126,6 @@ describe("GEO高级功能", async () => {
             ])
         )
     })
-
-    it("GEO Polygon - CRUD", async () => {
-        // Create
-        const res = await collection.add(initialData);
-        assert(res.id);
-        assert(res.requestId);
-
-        // Read
-        const readRes = await collection
-            .where({
-                _id: res.id
-            })
-            .get();
-        console.log(readRes.data);
-        assert(readRes.data.length > 0);
-        assert.deepEqual(readRes.data[0].point, point)
-        assert.deepEqual(readRes.data[0].line, line)
-        assert.deepEqual(readRes.data[0].polygon, polygon)
-
-        // Update
-        let result = await collection.doc(res.id).set(initialData)
-        console.log(result)
-        assert.strictEqual(result.updated, 1)
-        assert(result.requestId);
-
-        // Delete
-        const deleteRes = await collection
-            .where({
-                _id: res.id
-            })
-            .remove();
-        console.log(deleteRes);
-        assert.strictEqual(deleteRes.deleted, 1);
-    });
-
 
     it("GEO - geoNear", async () => {
         // Create

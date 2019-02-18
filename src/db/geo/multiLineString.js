@@ -3,20 +3,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const symbol_1 = require("../helper/symbol");
 const type_1 = require("../utils/type");
 const lineString_1 = require("./lineString");
-class Polygon {
+class MultiLineString {
     constructor(lines) {
         lines.forEach(line => {
             lineString_1.LineString.validate(line);
-            if (!lineString_1.LineString.isClosed(line)) {
-                throw new Error(`LineString ${line.points.map(p => p.toReadableString())} is not a closed cycle`);
-            }
         });
         this.lines = lines;
     }
     parse(key) {
         return {
             [key]: {
-                type: 'Polygon',
+                type: 'MultiLineString',
                 coordinates: this.lines.map(line => {
                     return line.points.map(point => [point.longitude, point.latitude]);
                 })
@@ -25,20 +22,17 @@ class Polygon {
     }
     toJSON() {
         return {
-            type: 'Polygon',
+            type: 'MultiLineString',
             coordinates: this.lines.map(line => {
                 return line.points.map(point => [point.longitude, point.latitude]);
             })
         };
     }
-    static validate(polygon) {
-        if (polygon.type !== 'Polygon' || !type_1.isArray(polygon.coordinates)) {
+    static validate(multiLineString) {
+        if (multiLineString.type !== 'MultiLineString' || !type_1.isArray(multiLineString.coordinates)) {
             return false;
         }
-        for (let line of polygon.coordinates) {
-            if (!this.isCloseLineString(line)) {
-                return false;
-            }
+        for (let line of multiLineString.coordinates) {
             for (let point of line) {
                 if (!type_1.isNumber(point[0]) || !type_1.isNumber(point[1])) {
                     return false;
@@ -47,16 +41,8 @@ class Polygon {
         }
         return true;
     }
-    static isCloseLineString(lineString) {
-        const firstPoint = lineString[0];
-        const lastPoint = lineString[lineString.length - 1];
-        if (firstPoint[0] !== lastPoint[0] || firstPoint[1] !== lastPoint[1]) {
-            return false;
-        }
-        return true;
-    }
     get _internalType() {
-        return symbol_1.SYMBOL_GEO_MULTI_POLYGON;
+        return symbol_1.SYMBOL_GEO_MULTI_LINE_STRING;
     }
 }
-exports.Polygon = Polygon;
+exports.MultiLineString = MultiLineString;
