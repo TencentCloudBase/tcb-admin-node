@@ -46,13 +46,21 @@ export class LineString {
         if (lineString.type !== 'LineString' || !isArray(lineString.coordinates)) {
             return false
         }
-        for (let i = 0; i < lineString.coordinates.length; i++) {
-            const point = lineString.coordinates[i]
+        for (let point of lineString.coordinates) {
             if (!isNumber(point[0]) || !isNumber(point[1])) {
                 return false
             }
         }
         return true
+    }
+
+    static isClosed(lineString: LineString) {
+        const firstPoint = lineString.points[0]
+        const lastPoint = lineString.points[lineString.points.length - 1]
+
+        if (firstPoint.latitude === lastPoint.longitude && firstPoint.longitude === lastPoint.longitude) {
+            return true
+        }
     }
 
     get _internalType() {

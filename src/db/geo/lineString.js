@@ -29,13 +29,19 @@ class LineString {
         if (lineString.type !== 'LineString' || !type_1.isArray(lineString.coordinates)) {
             return false;
         }
-        for (let i = 0; i < lineString.coordinates.length; i++) {
-            const point = lineString.coordinates[i];
+        for (let point of lineString.coordinates) {
             if (!type_1.isNumber(point[0]) || !type_1.isNumber(point[1])) {
                 return false;
             }
         }
         return true;
+    }
+    static isClosed(lineString) {
+        const firstPoint = lineString.points[0];
+        const lastPoint = lineString.points[lineString.points.length - 1];
+        if (firstPoint.latitude === lastPoint.longitude && firstPoint.longitude === lastPoint.longitude) {
+            return true;
+        }
     }
     get _internalType() {
         return symbol_1.SYMBOL_GEO_LINE_STRING;

@@ -32,15 +32,20 @@ describe("GEO高级功能", async () => {
 
     const point = randomPoint()
     const line = new db.Geo.LineString([randomPoint(), randomPoint()])
-    const point1 = new db.Geo.Point(0, 0)
-    const point2 = new db.Geo.Point(1, 0)
-    const point3 = new db.Geo.Point(1, 1)
-    const point4 = new db.Geo.Point(0, 1);
+
+    // “回”字的外环
+    const point1 = new db.Geo.Point(-2, -2)
+    const point2 = new db.Geo.Point(2, -2)
+    const point3 = new db.Geo.Point(2, 2)
+    const point4 = new db.Geo.Point(-2, 2);
+    // “回”字的内环
+    const point5 = new db.Geo.Point(-1, -1)
+    const point6 = new db.Geo.Point(1, -1)
+    const point7 = new db.Geo.Point(1, 1)
+    const point8 = new db.Geo.Point(-1, 1);
     const polygon = new db.Geo.Polygon([
-        new db.Geo.LineString([point1, point2]),
-        new db.Geo.LineString([point2, point3]),
-        new db.Geo.LineString([point3, point4]),
-        new db.Geo.LineString([point4, point1]),
+        new db.Geo.LineString([point1, point2, point3, point4, point1]),
+        new db.Geo.LineString([point5, point6, point7, point8, point5]),
     ])
 
     const initialData = {
@@ -81,6 +86,14 @@ describe("GEO高级功能", async () => {
         console.log(deleteRes);
         assert.strictEqual(deleteRes.deleted, 1);
     });
+
+    it("GEO Polygon - bad create", () => {
+        assert.throws(
+            () => new db.Geo.Polygon([
+                new db.Geo.LineString([point1, point2, point3, point4, point8])
+            ])
+        )
+    })
 
     it("GEO Polygon - CRUD", async () => {
         // Create

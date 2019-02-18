@@ -27,6 +27,9 @@ class Point {
             ],
         };
     }
+    toReadableString() {
+        return `[${this.longitude},${this.latitude}]`;
+    }
     static validate(point) {
         return point.type === 'Point' && type_1.isArray(point.coordinates) && type_1.isNumber(point.coordinates[0]) && type_1.isNumber(point.coordinates[1]);
     }

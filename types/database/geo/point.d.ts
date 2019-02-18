@@ -12,6 +12,7 @@ export declare class Point {
         type: string;
         coordinates: number[];
     };
+    toReadableString(): string;
     static validate(point: any): boolean;
     readonly _internalType: import("../utils/symbol").InternalSymbol;
 }
