@@ -13,5 +13,6 @@ export declare class Polygon {
         coordinates: number[][][];
     };
     static validate(polygon: any): boolean;
+    static isCloseLineString(lineString: any): boolean;
     readonly _internalType: import("../utils/symbol").InternalSymbol;
 }

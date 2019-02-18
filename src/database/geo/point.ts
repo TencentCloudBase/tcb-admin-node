@@ -53,6 +53,10 @@ export class Point {
     }
   }
 
+  toReadableString() {
+    return `[${this.longitude},${this.latitude}]`
+  }
+
   static validate(point) {
     return point.type === 'Point' && isArray(point.coordinates) && isNumber(point.coordinates[0]) && isNumber(point.coordinates[1])
   }

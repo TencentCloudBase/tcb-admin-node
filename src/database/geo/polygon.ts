@@ -19,6 +19,9 @@ export class Polygon {
     constructor(lines: LineString[]) {
         lines.forEach(line => {
             LineString.validate(line)
+            if (!LineString.isClosed(line)) {
+                throw new Error(`LineString ${line.points.map(p => p.toReadableString())} is not a closed cycle`)
+            }
         })
 
         this.lines = lines;
@@ -49,12 +52,26 @@ export class Polygon {
             return false
         }
         for (let line of polygon.coordinates) {
+            if (!this.isCloseLineString(line)) {
+                return false
+            }
             for (let point of line) {
                 if (!isNumber(point[0]) || !isNumber(point[1])) {
                     return false
                 }
             }
         }
+        return true
+    }
+
+    static isCloseLineString(lineString) {
+        const firstPoint = lineString[0]
+        const lastPoint = lineString[lineString.length - 1]
+
+        if (firstPoint[0] !== lastPoint[0] || firstPoint[1] !== lastPoint[1]) {
+            return false
+        }
+
         return true
     }
 

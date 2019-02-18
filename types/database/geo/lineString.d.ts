@@ -13,5 +13,6 @@ export declare class LineString {
         coordinates: number[][];
     };
     static validate(lineString: any): boolean;
+    static isClosed(lineString: LineString): boolean;
     readonly _internalType: import("../utils/symbol").InternalSymbol;
 }
