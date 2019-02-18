@@ -32,9 +32,21 @@ describe("GEO高级功能", async () => {
 
     const point = randomPoint()
     const line = new db.Geo.LineString([randomPoint(), randomPoint()])
+    const point1 = new db.Geo.Point(0, 0)
+    const point2 = new db.Geo.Point(1, 0)
+    const point3 = new db.Geo.Point(1, 1)
+    const point4 = new db.Geo.Point(0, 1);
+    const polygon = new db.Geo.Polygon([
+        new db.Geo.LineString([point1, point2]),
+        new db.Geo.LineString([point2, point3]),
+        new db.Geo.LineString([point3, point4]),
+        new db.Geo.LineString([point4, point1]),
+    ])
+
     const initialData = {
         point,
-        line
+        line,
+        polygon
     };
 
     it("GEO LineString - CRUD", async () => {
@@ -53,6 +65,40 @@ describe("GEO高级功能", async () => {
         assert(readRes.data.length > 0);
         assert.deepEqual(readRes.data[0].point, point)
         assert.deepEqual(readRes.data[0].line, line)
+
+        // Update
+        let result = await collection.doc(res.id).set(initialData)
+        console.log(result)
+        assert.strictEqual(result.updated, 1)
+        assert(result.requestId);
+
+        // Delete
+        const deleteRes = await collection
+            .where({
+                _id: res.id
+            })
+            .remove();
+        console.log(deleteRes);
+        assert.strictEqual(deleteRes.deleted, 1);
+    });
+
+    it("GEO Polygon - CRUD", async () => {
+        // Create
+        const res = await collection.add(initialData);
+        assert(res.id);
+        assert(res.requestId);
+
+        // Read
+        const readRes = await collection
+            .where({
+                _id: res.id
+            })
+            .get();
+        console.log(readRes.data);
+        assert(readRes.data.length > 0);
+        assert.deepEqual(readRes.data[0].point, point)
+        assert.deepEqual(readRes.data[0].line, line)
+        assert.deepEqual(readRes.data[0].polygon, polygon)
 
         // Update
         let result = await collection.doc(res.id).set(initialData)

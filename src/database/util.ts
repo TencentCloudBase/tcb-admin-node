@@ -1,5 +1,5 @@
 import { FieldType } from "./constant";
-import { Point, LineString } from "./geo";
+import { Point, LineString, Polygon } from "./geo";
 import { ServerDate } from "./serverDate";
 
 interface DocumentModel {
@@ -54,6 +54,15 @@ export class Util {
         case FieldType.GeoLineString:
           realValue = new LineString(item.coordinates.map(point => new Point(point[0], point[1])))
           break;
+        case FieldType.GeoPolygon:
+          realValue = new Polygon(
+            item.coordinates.map(
+              line => new LineString(
+                line.map(([lng, lat]) => new Point(lng, lat))
+              )
+            )
+          )
+          break;
         case FieldType.Timestamp:
           realValue = new Date(item.$timestamp * 1000);
           break;
@@ -107,6 +116,8 @@ export class Util {
         type = FieldType.GeoPoint;
       } else if (LineString.validate(obj)) {
         type = FieldType.GeoLineString;
+      } else if (Polygon.validate(obj)) {
+        type = FieldType.GeoPolygon;
       }
     }
     return type;

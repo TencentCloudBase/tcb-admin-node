@@ -27,6 +27,7 @@ const FieldType = {
   Null: "Null",
   GeoPoint: "GeoPoint",
   GeoLineString: "GeoLineString",
+  GeoPolygon: "GeoPolygon",
   Timestamp: "Date",
   Command: "Command",
   ServerDate: "ServerDate"
