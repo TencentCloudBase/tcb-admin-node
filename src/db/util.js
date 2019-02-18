@@ -30,6 +30,15 @@ Util.formatField = document => {
             case constant_1.FieldType.GeoPolygon:
                 realValue = new geo_1.Polygon(item.coordinates.map(line => new geo_1.LineString(line.map(([lng, lat]) => new geo_1.Point(lng, lat)))));
                 break;
+            case constant_1.FieldType.GeoMultiPoint:
+                realValue = new geo_1.MultiPoint(item.coordinates.map(point => new geo_1.Point(point[0], point[1])));
+                break;
+            case constant_1.FieldType.GeoMultiLineString:
+                realValue = new geo_1.MultiLineString(item.coordinates.map(line => new geo_1.LineString(line.map(([lng, lat]) => new geo_1.Point(lng, lat)))));
+                break;
+            case constant_1.FieldType.GeoMultiPolygon:
+                realValue = new geo_1.MultiPolygon(item.coordinates.map(polygon => new geo_1.Polygon(polygon.map(line => new geo_1.LineString(line.map(([lng, lat]) => new geo_1.Point(lng, lat)))))));
+                break;
             case constant_1.FieldType.Timestamp:
                 realValue = new Date(item.$timestamp * 1000);
                 break;
@@ -78,6 +87,15 @@ Util.whichType = (obj) => {
         }
         else if (geo_1.Polygon.validate(obj)) {
             type = constant_1.FieldType.GeoPolygon;
+        }
+        else if (geo_1.MultiPoint.validate(obj)) {
+            type = constant_1.FieldType.GeoMultiPoint;
+        }
+        else if (geo_1.MultiLineString.validate(obj)) {
+            type = constant_1.FieldType.GeoMultiLineString;
+        }
+        else if (geo_1.MultiPolygon.validate(obj)) {
+            type = constant_1.FieldType.GeoMultiPolygon;
         }
     }
     return type;

@@ -1,5 +1,5 @@
 import { FieldType } from "./constant";
-import { Point, LineString, Polygon } from "./geo";
+import { Point, LineString, Polygon, MultiPoint, MultiLineString, MultiPolygon } from "./geo";
 import { ServerDate } from "./serverDate";
 
 interface DocumentModel {
@@ -63,6 +63,31 @@ export class Util {
             )
           )
           break;
+        case FieldType.GeoMultiPoint:
+          realValue = new MultiPoint(item.coordinates.map(point => new Point(point[0], point[1])))
+          break;
+        case FieldType.GeoMultiLineString:
+          realValue = new MultiLineString(
+            item.coordinates.map(
+              line => new LineString(
+                line.map(([lng, lat]) => new Point(lng, lat))
+              )
+            )
+          )
+          break;
+        case FieldType.GeoMultiPolygon:
+          realValue = new MultiPolygon(
+            item.coordinates.map(
+              polygon => new Polygon(
+                polygon.map(
+                  line => new LineString(
+                    line.map(([lng, lat]) => new Point(lng, lat))
+                  )
+                )
+              )
+            )
+          )
+          break;
         case FieldType.Timestamp:
           realValue = new Date(item.$timestamp * 1000);
           break;
@@ -118,6 +143,12 @@ export class Util {
         type = FieldType.GeoLineString;
       } else if (Polygon.validate(obj)) {
         type = FieldType.GeoPolygon;
+      } else if (MultiPoint.validate(obj)) {
+        type = FieldType.GeoMultiPoint
+      } else if (MultiLineString.validate(obj)) {
+        type = FieldType.GeoMultiLineString
+      } else if (MultiPolygon.validate(obj)) {
+        type = FieldType.GeoMultiPolygon
       }
     }
     return type;

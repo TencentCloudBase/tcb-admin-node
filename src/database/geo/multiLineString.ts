@@ -1,13 +1,13 @@
-import { SYMBOL_GEO_MULTI_POLYGON } from '../helper/symbol'
+import { SYMBOL_GEO_MULTI_LINE_STRING } from '../helper/symbol'
 import { isArray, isNumber } from '../utils/type'
 import { LineString } from "./lineString";
 
 /**
- * 面
+ * 多个 LineString
  *
  * @author starkewang
  */
-export class Polygon {
+export class MultiLineString {
 
     readonly lines: LineString[]
 
@@ -19,9 +19,6 @@ export class Polygon {
     constructor(lines: LineString[]) {
         lines.forEach(line => {
             LineString.validate(line)
-            if (!LineString.isClosed(line)) {
-                throw new Error(`LineString ${line.points.map(p => p.toReadableString())} is not a closed cycle`)
-            }
         })
 
         this.lines = lines;
@@ -30,7 +27,7 @@ export class Polygon {
     parse(key) {
         return {
             [key]: {
-                type: 'Polygon',
+                type: 'MultiLineString',
                 coordinates: this.lines.map(line => {
                     return line.points.map(point => [point.longitude, point.latitude])
                 })
@@ -40,21 +37,18 @@ export class Polygon {
 
     toJSON() {
         return {
-            type: 'Polygon',
+            type: 'MultiLineString',
             coordinates: this.lines.map(line => {
                 return line.points.map(point => [point.longitude, point.latitude])
             })
         }
     }
 
-    static validate(polygon) {
-        if (polygon.type !== 'Polygon' || !isArray(polygon.coordinates)) {
+    static validate(multiLineString) {
+        if (multiLineString.type !== 'MultiLineString' || !isArray(multiLineString.coordinates)) {
             return false
         }
-        for (let line of polygon.coordinates) {
-            if (!this.isCloseLineString(line)) {
-                return false
-            }
+        for (let line of multiLineString.coordinates) {
             for (let point of line) {
                 if (!isNumber(point[0]) || !isNumber(point[1])) {
                     return false
@@ -64,18 +58,7 @@ export class Polygon {
         return true
     }
 
-    static isCloseLineString(lineString) {
-        const firstPoint = lineString[0]
-        const lastPoint = lineString[lineString.length - 1]
-
-        if (firstPoint[0] !== lastPoint[0] || firstPoint[1] !== lastPoint[1]) {
-            return false
-        }
-
-        return true
-    }
-
     get _internalType() {
-        return SYMBOL_GEO_MULTI_POLYGON
+        return SYMBOL_GEO_MULTI_LINE_STRING
     }
 }
