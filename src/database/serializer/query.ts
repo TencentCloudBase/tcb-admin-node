@@ -5,7 +5,7 @@ import { SYMBOL_UNSET_FIELD_NAME } from '../helper/symbol'
 import { getType, isObject, isArray } from '../utils/type'
 import { operatorToString } from '../operator-map'
 import { flattenQueryObject, isConversionRequired, encodeInternalDataType } from './common'
-import { IGeoNearOptions } from '../commands/query'
+import { IGeoNearOptions, IGeoWithinOptions, IGeoIntersectsOptions } from '../commands/query'
 
 
 export type IQueryCondition = Record<string, any> | LogicCommand
@@ -114,12 +114,29 @@ class QueryEncoder {
         return {
           [query.fieldName as string]: {
             $nearSphere: {
-              $geometry: {
-                type: 'Point',
-                coordinates: [options.geometry.longitude, options.geometry.latitude]
-              },
+              $geometry: options.geometry.toJSON(),
               $maxDistance: options.maxDistance,
               $minDistance: options.minDistance
+            }
+          }
+        }
+      }
+      case QUERY_COMMANDS_LITERAL.GEO_WITHIN: {
+        const options: IGeoWithinOptions = query.operands[0]
+        return {
+          [query.fieldName as string]: {
+            $geoWithin: {
+              $geometry: options.geometry.toJSON()
+            }
+          }
+        }
+      }
+      case QUERY_COMMANDS_LITERAL.GEO_INTERSECTS: {
+        const options: IGeoIntersectsOptions = query.operands[0]
+        return {
+          [query.fieldName as string]: {
+            $geoIntersects: {
+              $geometry: options.geometry.toJSON()
             }
           }
         }
