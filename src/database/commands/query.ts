@@ -1,6 +1,7 @@
 import { LogicCommand } from './logic'
 import { InternalSymbol, SYMBOL_QUERY_COMMAND } from '../helper/symbol'
-import { Point } from '../geo'
+import { Point, LineString, Polygon, MultiPoint, MultiLineString, MultiPolygon } from '../geo'
+import { isNumber } from '../utils/type'
 
 
 export const EQ = 'eq'
@@ -21,7 +22,9 @@ export enum QUERY_COMMANDS_LITERAL {
   LTE = 'lte',
   IN = 'in',
   NIN = 'nin',
-  GEO_NEAR = 'geoNear'
+  GEO_NEAR = 'geoNear',
+  GEO_WITHIN = 'geoWithin',
+  GEO_INTERSECTS = 'geoIntersects'
 }
 
 export class QueryCommand extends LogicCommand {
@@ -80,7 +83,39 @@ export class QueryCommand extends LogicCommand {
   }
 
   geoNear(val: IGeoNearOptions) {
+    if (!(val.geometry instanceof Point)) {
+      throw new TypeError(`"geometry" must be of type Point. Received type ${typeof val.geometry}`)
+    }
+    if (val.maxDistance !== undefined && !isNumber(val.maxDistance)) {
+      throw new TypeError(`"maxDistance" must be of type Number. Received type ${typeof val.maxDistance}`)
+    }
+    if (val.minDistance !== undefined && !isNumber(val.minDistance)) {
+      throw new TypeError(`"minDistance" must be of type Number. Received type ${typeof val.minDistance}`)
+    }
     const command = new QueryCommand(QUERY_COMMANDS_LITERAL.GEO_NEAR, [val], this.fieldName)
+    return this.and(command)
+  }
+
+  geoWithin(val: IGeoWithinOptions) {
+    if (!(val.geometry instanceof MultiPolygon) && !(val.geometry instanceof Polygon)) {
+      throw new TypeError(`"geometry" must be of type Polygon or MultiPolygon. Received type ${typeof val.geometry}`)
+    }
+    const command = new QueryCommand(QUERY_COMMANDS_LITERAL.GEO_WITHIN, [val], this.fieldName)
+    return this.and(command)
+  }
+
+  geoIntersects(val: IGeoIntersectsOptions) {
+    if (
+      !(val.geometry instanceof Point) &&
+      !(val.geometry instanceof LineString) &&
+      !(val.geometry instanceof Polygon) &&
+      !(val.geometry instanceof MultiPoint) &&
+      !(val.geometry instanceof MultiLineString) &&
+      !(val.geometry instanceof MultiPolygon)
+    ) {
+      throw new TypeError(`"geometry" must be of type Point, LineString, Polygon, MultiPoint, MultiLineString or MultiPolygon. Received type ${typeof val.geometry}`)
+    }
+    const command = new QueryCommand(QUERY_COMMANDS_LITERAL.GEO_INTERSECTS, [val], this.fieldName)
     return this.and(command)
   }
 }
@@ -103,4 +138,12 @@ export interface IGeoNearOptions {
   geometry: Point,
   maxDistance?: number,
   minDistance?: number
+}
+
+export interface IGeoWithinOptions {
+  geometry: Polygon | MultiPolygon
+}
+
+export interface IGeoIntersectsOptions {
+  geometry: Point | LineString | Polygon | MultiPoint | MultiLineString | MultiPolygon
 }

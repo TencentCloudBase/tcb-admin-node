@@ -103,12 +103,29 @@ class QueryEncoder {
                 return {
                     [query.fieldName]: {
                         $nearSphere: {
-                            $geometry: {
-                                type: 'Point',
-                                coordinates: [options.geometry.longitude, options.geometry.latitude]
-                            },
+                            $geometry: options.geometry.toJSON(),
                             $maxDistance: options.maxDistance,
                             $minDistance: options.minDistance
+                        }
+                    }
+                };
+            }
+            case query_1.QUERY_COMMANDS_LITERAL.GEO_WITHIN: {
+                const options = query.operands[0];
+                return {
+                    [query.fieldName]: {
+                        $geoWithin: {
+                            $geometry: options.geometry.toJSON()
+                        }
+                    }
+                };
+            }
+            case query_1.QUERY_COMMANDS_LITERAL.GEO_INTERSECTS: {
+                const options = query.operands[0];
+                return {
+                    [query.fieldName]: {
+                        $geoIntersects: {
+                            $geometry: options.geometry.toJSON()
                         }
                     }
                 };
