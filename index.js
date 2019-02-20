@@ -4,7 +4,6 @@ const functions = require("./src/functions");
 const wx = require("./src/wx");
 
 function Tcb(config) {
-  // console.log(config)
   this.config = config ? config : this.config
 }
 
