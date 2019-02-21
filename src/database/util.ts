@@ -1,5 +1,5 @@
 import { FieldType } from "./constant";
-import { Point } from "./geo/point";
+import { Point, LineString, Polygon, MultiPoint, MultiLineString, MultiPolygon } from "./geo";
 import { ServerDate } from "./serverDate";
 
 interface DocumentModel {
@@ -51,6 +51,43 @@ export class Util {
         case FieldType.GeoPoint:
           realValue = new Point(item.coordinates[0], item.coordinates[1]);
           break;
+        case FieldType.GeoLineString:
+          realValue = new LineString(item.coordinates.map(point => new Point(point[0], point[1])))
+          break;
+        case FieldType.GeoPolygon:
+          realValue = new Polygon(
+            item.coordinates.map(
+              line => new LineString(
+                line.map(([lng, lat]) => new Point(lng, lat))
+              )
+            )
+          )
+          break;
+        case FieldType.GeoMultiPoint:
+          realValue = new MultiPoint(item.coordinates.map(point => new Point(point[0], point[1])))
+          break;
+        case FieldType.GeoMultiLineString:
+          realValue = new MultiLineString(
+            item.coordinates.map(
+              line => new LineString(
+                line.map(([lng, lat]) => new Point(lng, lat))
+              )
+            )
+          )
+          break;
+        case FieldType.GeoMultiPolygon:
+          realValue = new MultiPolygon(
+            item.coordinates.map(
+              polygon => new Polygon(
+                polygon.map(
+                  line => new LineString(
+                    line.map(([lng, lat]) => new Point(lng, lat))
+                  )
+                )
+              )
+            )
+          )
+          break;
         case FieldType.Timestamp:
           realValue = new Date(item.$timestamp * 1000);
           break;
@@ -100,8 +137,18 @@ export class Util {
         type = FieldType.Timestamp;
       } else if (obj.$date) {
         type = FieldType.ServerDate;
-      } else if (Array.isArray(obj.coordinates) && obj.type === "Point") {
+      } else if (Point.validate(obj)) {
         type = FieldType.GeoPoint;
+      } else if (LineString.validate(obj)) {
+        type = FieldType.GeoLineString;
+      } else if (Polygon.validate(obj)) {
+        type = FieldType.GeoPolygon;
+      } else if (MultiPoint.validate(obj)) {
+        type = FieldType.GeoMultiPoint
+      } else if (MultiLineString.validate(obj)) {
+        type = FieldType.GeoMultiLineString
+      } else if (MultiPolygon.validate(obj)) {
+        type = FieldType.GeoMultiPolygon
       }
     }
     return type;

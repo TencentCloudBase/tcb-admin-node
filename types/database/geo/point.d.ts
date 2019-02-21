@@ -1,3 +1,4 @@
+import { ISerializedPoint } from './interface';
 export declare class Point {
     readonly latitude: number;
     readonly longitude: number;
@@ -8,6 +9,11 @@ export declare class Point {
             coordinates: number[];
         };
     };
-    toJSON(): object;
+    toJSON(): {
+        type: string;
+        coordinates: number[];
+    };
+    toReadableString(): string;
+    static validate(point: ISerializedPoint): boolean;
     readonly _internalType: import("../utils/symbol").InternalSymbol;
 }

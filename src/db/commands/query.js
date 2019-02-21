@@ -2,6 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const logic_1 = require("./logic");
 const symbol_1 = require("../helper/symbol");
+const geo_1 = require("../geo");
+const type_1 = require("../utils/type");
 exports.EQ = 'eq';
 exports.NEQ = 'neq';
 exports.GT = 'gt';
@@ -20,6 +22,9 @@ var QUERY_COMMANDS_LITERAL;
     QUERY_COMMANDS_LITERAL["LTE"] = "lte";
     QUERY_COMMANDS_LITERAL["IN"] = "in";
     QUERY_COMMANDS_LITERAL["NIN"] = "nin";
+    QUERY_COMMANDS_LITERAL["GEO_NEAR"] = "geoNear";
+    QUERY_COMMANDS_LITERAL["GEO_WITHIN"] = "geoWithin";
+    QUERY_COMMANDS_LITERAL["GEO_INTERSECTS"] = "geoIntersects";
 })(QUERY_COMMANDS_LITERAL = exports.QUERY_COMMANDS_LITERAL || (exports.QUERY_COMMANDS_LITERAL = {}));
 class QueryCommand extends logic_1.LogicCommand {
     constructor(operator, operands, fieldName) {
@@ -61,6 +66,38 @@ class QueryCommand extends logic_1.LogicCommand {
     }
     nin(list) {
         const command = new QueryCommand(QUERY_COMMANDS_LITERAL.NIN, list, this.fieldName);
+        return this.and(command);
+    }
+    geoNear(val) {
+        if (!(val.geometry instanceof geo_1.Point)) {
+            throw new TypeError(`"geometry" must be of type Point. Received type ${typeof val.geometry}`);
+        }
+        if (val.maxDistance !== undefined && !type_1.isNumber(val.maxDistance)) {
+            throw new TypeError(`"maxDistance" must be of type Number. Received type ${typeof val.maxDistance}`);
+        }
+        if (val.minDistance !== undefined && !type_1.isNumber(val.minDistance)) {
+            throw new TypeError(`"minDistance" must be of type Number. Received type ${typeof val.minDistance}`);
+        }
+        const command = new QueryCommand(QUERY_COMMANDS_LITERAL.GEO_NEAR, [val], this.fieldName);
+        return this.and(command);
+    }
+    geoWithin(val) {
+        if (!(val.geometry instanceof geo_1.MultiPolygon) && !(val.geometry instanceof geo_1.Polygon)) {
+            throw new TypeError(`"geometry" must be of type Polygon or MultiPolygon. Received type ${typeof val.geometry}`);
+        }
+        const command = new QueryCommand(QUERY_COMMANDS_LITERAL.GEO_WITHIN, [val], this.fieldName);
+        return this.and(command);
+    }
+    geoIntersects(val) {
+        if (!(val.geometry instanceof geo_1.Point) &&
+            !(val.geometry instanceof geo_1.LineString) &&
+            !(val.geometry instanceof geo_1.Polygon) &&
+            !(val.geometry instanceof geo_1.MultiPoint) &&
+            !(val.geometry instanceof geo_1.MultiLineString) &&
+            !(val.geometry instanceof geo_1.MultiPolygon)) {
+            throw new TypeError(`"geometry" must be of type Point, LineString, Polygon, MultiPoint, MultiLineString or MultiPolygon. Received type ${typeof val.geometry}`);
+        }
+        const command = new QueryCommand(QUERY_COMMANDS_LITERAL.GEO_INTERSECTS, [val], this.fieldName);
         return this.and(command);
     }
 }
