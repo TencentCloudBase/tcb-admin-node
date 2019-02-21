@@ -1,4 +1,5 @@
 import { LineString } from "./lineString";
+import { ISerializedMultiLineString } from './interface';
 export declare class MultiLineString {
     readonly lines: LineString[];
     constructor(lines: LineString[]);
@@ -12,6 +13,6 @@ export declare class MultiLineString {
         type: string;
         coordinates: number[][][];
     };
-    static validate(multiLineString: any): boolean;
+    static validate(multiLineString: ISerializedMultiLineString): boolean;
     readonly _internalType: import("../utils/symbol").InternalSymbol;
 }

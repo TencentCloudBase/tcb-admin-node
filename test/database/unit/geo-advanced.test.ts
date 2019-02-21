@@ -119,11 +119,74 @@ describe("GEO高级功能", async () => {
         assert.strictEqual(deleteRes.deleted, 1);
     });
 
-    it("GEO Polygon - bad create", () => {
+    it("GEO - bad create", () => {
+
+        // bad Point
+        assert.throws(
+            () => new db.Geo.Point()
+        )
+        assert.throws(
+            () => new db.Geo.Point([], {})
+        )
+
+        // bad LineString
+        assert.throws(
+            () => new db.Geo.LineString({})
+        )
+        assert.throws(
+            () => new db.Geo.LineString([])
+        )
+        assert.throws(
+            () => new db.Geo.LineString([123, []])
+        )
+
+        // bad Polygon
+        assert.throws(
+            () => new db.Geo.Polygon(null)
+        )
+        assert.throws(
+            () => new db.Geo.Polygon([])
+        )
+        assert.throws(
+            () => new db.Geo.Polygon([666, 789])
+        )
         assert.throws(
             () => new db.Geo.Polygon([
                 new db.Geo.LineString([point1, point2, point3, point4, point8])
             ])
+        )
+
+        // bad MultiPoint
+        assert.throws(
+            () => new db.Geo.MultiPoint({})
+        )
+        assert.throws(
+            () => new db.Geo.MultiPoint([])
+        )
+        assert.throws(
+            () => new db.Geo.MultiPoint([{}, {}])
+        )
+
+        // bad MultiLineString
+        assert.throws(
+            () => new db.Geo.MultiLineString({})
+        )
+        assert.throws(
+            () => new db.Geo.MultiLineString([])
+        )
+        assert.throws(
+            () => new db.Geo.MultiLineString([123, null])
+        )
+
+        // bad MultiPolygon
+        assert.throws(
+            () => new db.Geo.MultiPolygon(123)
+        )
+        assert.throws(
+            () => new db.Geo.MultiPolygon([])
+        )
+        assert.throws(
+            () => new db.Geo.MultiPolygon([666, 666])
         )
     })
 
@@ -156,4 +219,6 @@ describe("GEO高级功能", async () => {
         console.log(deleteRes);
         assert.strictEqual(deleteRes.deleted, 1);
     });
+
+
 });

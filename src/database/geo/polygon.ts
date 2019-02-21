@@ -1,6 +1,7 @@
 import { SYMBOL_GEO_MULTI_POLYGON } from '../helper/symbol'
 import { isArray, isNumber } from '../utils/type'
 import { LineString } from "./lineString";
+import { ISerializedPolygon } from './interface'
 
 /**
  * 面
@@ -17,8 +18,16 @@ export class Polygon {
      * @param lines    - LineString
      */
     constructor(lines: LineString[]) {
+        if (!isArray(lines)) {
+            throw new TypeError(`"lines" must be of type LineString[]. Received type ${typeof lines}`)
+        }
+        if (lines.length === 0) {
+            throw new Error("Polygon must contain 1 linestring at least")
+        }
         lines.forEach(line => {
-            LineString.validate(line)
+            if (!(line instanceof LineString)) {
+                throw new TypeError(`"lines" must be of type LineString[]. Received type ${typeof line}[]`)
+            }
             if (!LineString.isClosed(line)) {
                 throw new Error(`LineString ${line.points.map(p => p.toReadableString())} is not a closed cycle`)
             }
@@ -47,7 +56,7 @@ export class Polygon {
         }
     }
 
-    static validate(polygon) {
+    static validate(polygon: ISerializedPolygon) {
         if (polygon.type !== 'Polygon' || !isArray(polygon.coordinates)) {
             return false
         }

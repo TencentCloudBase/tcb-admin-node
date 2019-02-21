@@ -1,4 +1,5 @@
 import { Point } from './point';
+import { ISerializedLineString } from './interface';
 export declare class LineString {
     readonly points: Point[];
     constructor(points: Point[]);
@@ -12,7 +13,7 @@ export declare class LineString {
         type: string;
         coordinates: number[][];
     };
-    static validate(lineString: any): boolean;
+    static validate(lineString: ISerializedLineString): boolean;
     static isClosed(lineString: LineString): boolean;
     readonly _internalType: import("../utils/symbol").InternalSymbol;
 }

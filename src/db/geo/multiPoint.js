@@ -1,13 +1,20 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const validate_1 = require("../validate");
 const symbol_1 = require("../helper/symbol");
+const point_1 = require("./point");
 const type_1 = require("../utils/type");
 class MultiPoint {
     constructor(points) {
+        if (!type_1.isArray(points)) {
+            throw new TypeError(`"points" must be of type Point[]. Received type ${typeof points}`);
+        }
+        if (points.length === 0) {
+            throw new Error(`"points" must contain 1 point at least`);
+        }
         points.forEach(point => {
-            validate_1.Validate.isGeopoint("longitude", point.longitude);
-            validate_1.Validate.isGeopoint("latitude", point.latitude);
+            if (!(point instanceof point_1.Point)) {
+                throw new TypeError(`"points" must be of type Point[]. Received type ${typeof point}[]`);
+            }
         });
         this.points = points;
     }

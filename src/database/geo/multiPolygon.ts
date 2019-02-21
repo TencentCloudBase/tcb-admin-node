@@ -1,6 +1,7 @@
 import { SYMBOL_GEO_POLYGON } from '../helper/symbol'
 import { isArray, isNumber } from '../utils/type'
 import { Polygon } from './polygon';
+import { ISerializedMultiPolygon } from './interface'
 
 
 /**
@@ -18,9 +19,15 @@ export class MultiPolygon {
      * @param polygons    - Polygon[]
      */
     constructor(polygons: Polygon[]) {
+        if (!isArray(polygons)) {
+            throw new TypeError(`"polygons" must be of type Polygon[]. Received type ${typeof polygons}`)
+        }
+        if (polygons.length === 0) {
+            throw new Error("MultiPolygon must contain 1 polygon at least")
+        }
         for (let polygon of polygons) {
             if (!(polygon instanceof Polygon)) {
-                throw new TypeError(`"polygon" must be of type Polygon. Received ${typeof polygon}`)
+                throw new TypeError(`"polygon" must be of type Polygon[]. Received type ${typeof polygon}[]`)
             }
         }
 
@@ -51,7 +58,7 @@ export class MultiPolygon {
         }
     }
 
-    static validate(multiPolygon) {
+    static validate(multiPolygon: ISerializedMultiPolygon) {
         if (multiPolygon.type !== 'MultiPolygon' || !isArray(multiPolygon.coordinates)) {
             return false
         }

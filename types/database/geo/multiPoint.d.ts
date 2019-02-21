@@ -1,4 +1,5 @@
 import { Point } from './point';
+import { ISerializedMultiPoint } from './interface';
 export declare class MultiPoint {
     readonly points: Point[];
     constructor(points: Point[]);
@@ -12,6 +13,6 @@ export declare class MultiPoint {
         type: string;
         coordinates: number[][];
     };
-    static validate(multiPoint: any): boolean;
+    static validate(multiPoint: ISerializedMultiPoint): boolean;
     readonly _internalType: import("../utils/symbol").InternalSymbol;
 }
