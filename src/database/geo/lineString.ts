@@ -1,7 +1,7 @@
-import { Validate } from "../validate";
 import { SYMBOL_GEO_LINE_STRING } from '../helper/symbol'
 import { Point } from './point'
 import { isArray, isNumber } from '../utils/type'
+import { ISerializedLineString } from './interface'
 
 /**
  * 线段
@@ -18,9 +18,16 @@ export class LineString {
      * @param points    - GeoPoint
      */
     constructor(points: Point[]) {
+        if (!isArray(points)) {
+            throw new TypeError(`"points" must be of type Point[]. Received type ${typeof points}`)
+        }
+        if (points.length < 2) {
+            throw new Error(`"points" must contain 2 points at least`)
+        }
         points.forEach(point => {
-            Validate.isGeopoint("longitude", point.longitude)
-            Validate.isGeopoint("latitude", point.latitude)
+            if (!(point instanceof Point)) {
+                throw new TypeError(`"points" must be of type Point[]. Received type ${typeof point}[]`)
+            }
         })
 
         this.points = points;
@@ -42,7 +49,7 @@ export class LineString {
         }
     }
 
-    static validate(lineString) {
+    static validate(lineString: ISerializedLineString) {
         if (lineString.type !== 'LineString' || !isArray(lineString.coordinates)) {
             return false
         }

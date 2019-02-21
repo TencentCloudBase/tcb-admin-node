@@ -1,4 +1,5 @@
 import { LineString } from "./lineString";
+import { ISerializedPolygon } from './interface';
 export declare class Polygon {
     readonly lines: LineString[];
     constructor(lines: LineString[]);
@@ -12,7 +13,7 @@ export declare class Polygon {
         type: string;
         coordinates: number[][][];
     };
-    static validate(polygon: any): boolean;
+    static validate(polygon: ISerializedPolygon): boolean;
     static isCloseLineString(lineString: any): boolean;
     readonly _internalType: import("../utils/symbol").InternalSymbol;
 }

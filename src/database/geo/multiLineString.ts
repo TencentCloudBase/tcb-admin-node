@@ -1,6 +1,8 @@
 import { SYMBOL_GEO_MULTI_LINE_STRING } from '../helper/symbol'
 import { isArray, isNumber } from '../utils/type'
 import { LineString } from "./lineString";
+import { ISerializedMultiLineString } from './interface'
+
 
 /**
  * 多个 LineString
@@ -17,8 +19,16 @@ export class MultiLineString {
      * @param lines    - LineString
      */
     constructor(lines: LineString[]) {
+        if (!isArray(lines)) {
+            throw new TypeError(`"lines" must be of type LineString[]. Received type ${typeof lines}`)
+        }
+        if (lines.length === 0) {
+            throw new Error("Polygon must contain 1 linestring at least")
+        }
         lines.forEach(line => {
-            LineString.validate(line)
+            if (!(line instanceof LineString)) {
+                throw new TypeError(`"lines" must be of type LineString[]. Received type ${typeof line}[]`)
+            }
         })
 
         this.lines = lines;
@@ -44,7 +54,7 @@ export class MultiLineString {
         }
     }
 
-    static validate(multiLineString) {
+    static validate(multiLineString: ISerializedMultiLineString) {
         if (multiLineString.type !== 'MultiLineString' || !isArray(multiLineString.coordinates)) {
             return false
         }

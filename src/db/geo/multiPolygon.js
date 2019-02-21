@@ -5,9 +5,15 @@ const type_1 = require("../utils/type");
 const polygon_1 = require("./polygon");
 class MultiPolygon {
     constructor(polygons) {
+        if (!type_1.isArray(polygons)) {
+            throw new TypeError(`"polygons" must be of type Polygon[]. Received type ${typeof polygons}`);
+        }
+        if (polygons.length === 0) {
+            throw new Error("MultiPolygon must contain 1 polygon at least");
+        }
         for (let polygon of polygons) {
             if (!(polygon instanceof polygon_1.Polygon)) {
-                throw new TypeError(`"polygon" must be of type Polygon. Received ${typeof polygon}`);
+                throw new TypeError(`"polygon" must be of type Polygon[]. Received type ${typeof polygon}[]`);
             }
         }
         this.polygons = polygons;

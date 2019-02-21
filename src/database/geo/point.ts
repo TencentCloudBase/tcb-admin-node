@@ -1,6 +1,7 @@
 import { Validate } from "../validate";
 import { SYMBOL_GEO_POINT } from '../helper/symbol'
-import { isArray, isNumber } from '../utils/type'
+import { isArray } from '../utils/type'
+import { ISerializedPoint } from './interface'
 
 /**
  * 地址位置
@@ -57,8 +58,11 @@ export class Point {
     return `[${this.longitude},${this.latitude}]`
   }
 
-  static validate(point) {
-    return point.type === 'Point' && isArray(point.coordinates) && isNumber(point.coordinates[0]) && isNumber(point.coordinates[1])
+  static validate(point: ISerializedPoint) {
+    return point.type === 'Point' &&
+      isArray(point.coordinates) &&
+      Validate.isGeopoint('longitude', point.coordinates[0]) &&
+      Validate.isGeopoint('latitude', point.coordinates[1])
   }
 
   get _internalType() {

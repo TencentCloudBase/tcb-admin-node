@@ -5,8 +5,16 @@ const type_1 = require("../utils/type");
 const lineString_1 = require("./lineString");
 class MultiLineString {
     constructor(lines) {
+        if (!type_1.isArray(lines)) {
+            throw new TypeError(`"lines" must be of type LineString[]. Received type ${typeof lines}`);
+        }
+        if (lines.length === 0) {
+            throw new Error("Polygon must contain 1 linestring at least");
+        }
         lines.forEach(line => {
-            lineString_1.LineString.validate(line);
+            if (!(line instanceof lineString_1.LineString)) {
+                throw new TypeError(`"lines" must be of type LineString[]. Received type ${typeof line}[]`);
+            }
         });
         this.lines = lines;
     }

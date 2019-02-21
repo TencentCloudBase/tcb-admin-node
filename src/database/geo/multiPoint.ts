@@ -1,7 +1,7 @@
-import { Validate } from "../validate";
 import { SYMBOL_GEO_MULTI_POINT } from '../helper/symbol'
 import { Point } from './point'
 import { isArray, isNumber } from '../utils/type'
+import { ISerializedMultiPoint } from './interface'
 
 /**
  * 多个 Point
@@ -18,9 +18,16 @@ export class MultiPoint {
      * @param points    - GeoPoint
      */
     constructor(points: Point[]) {
+        if (!isArray(points)) {
+            throw new TypeError(`"points" must be of type Point[]. Received type ${typeof points}`)
+        }
+        if (points.length === 0) {
+            throw new Error(`"points" must contain 1 point at least`)
+        }
         points.forEach(point => {
-            Validate.isGeopoint("longitude", point.longitude)
-            Validate.isGeopoint("latitude", point.latitude)
+            if (!(point instanceof Point)) {
+                throw new TypeError(`"points" must be of type Point[]. Received type ${typeof point}[]`)
+            }
         })
 
         this.points = points;
@@ -42,7 +49,7 @@ export class MultiPoint {
         }
     }
 
-    static validate(multiPoint) {
+    static validate(multiPoint: ISerializedMultiPoint) {
         if (multiPoint.type !== 'MultiPoint' || !isArray(multiPoint.coordinates)) {
             return false
         }

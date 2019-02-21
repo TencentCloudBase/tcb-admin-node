@@ -1,4 +1,5 @@
 import { Polygon } from './polygon';
+import { ISerializedMultiPolygon } from './interface';
 export declare class MultiPolygon {
     readonly polygons: Polygon[];
     constructor(polygons: Polygon[]);
@@ -12,6 +13,6 @@ export declare class MultiPolygon {
         type: string;
         coordinates: number[][][][];
     };
-    static validate(multiPolygon: any): boolean;
+    static validate(multiPolygon: ISerializedMultiPolygon): boolean;
     readonly _internalType: import("../utils/symbol").InternalSymbol;
 }
