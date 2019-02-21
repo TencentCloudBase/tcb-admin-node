@@ -65,13 +65,15 @@ describe("test/index.test.ts", async () => {
     assert.deepStrictEqual(result.data[0].array, initialData.array)
     assert.deepStrictEqual(result.data[0].deepObject, initialData.deepObject)
 
+    // 搜索某个字段为 null 时，应该复合下面条件的都应该返回：
+    // 1. 这个字段严格等于 null
+    // 2. 这个字段不存在
+    // docs: https://docs.mongodb.com/manual/tutorial/query-for-null-fields/
     result = await collection.where({
-      null: _.or(_.eq(null))
+      fakeFields: _.or(_.eq(null))
     }).get()
     console.log(result)
-    assert.deepStrictEqual(result.data[0].name, initialData.name)
-    assert.deepStrictEqual(result.data[0].array, initialData.array)
-    assert.deepStrictEqual(result.data[0].deepObject, initialData.deepObject)
+    assert(result.data.length > 0)
 
     const doc = await collection.doc(id).get()
     assert.deepStrictEqual(doc.data[0].name, initialData.name)
@@ -79,7 +81,7 @@ describe("test/index.test.ts", async () => {
     assert.deepStrictEqual(doc.data[0].deepObject, initialData.deepObject)
 
 
-    // Update(TODO)
+    // // Update(TODO)
     result = await collection.where({
       _id: id
     }).update({

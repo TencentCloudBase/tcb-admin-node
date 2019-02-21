@@ -14,8 +14,8 @@ export declare const Command: {
     geoNear(val: any): QueryCommand;
     geoWithin(val: any): QueryCommand;
     geoIntersects(val: any): QueryCommand;
-    and(...__expressions__: import("./serializer/query").IQueryCondition[]): LogicCommand;
-    or(...__expressions__: import("./serializer/query").IQueryCondition[]): LogicCommand;
+    and(...__expressions__: IQueryCondition[]): LogicCommand;
+    or(...__expressions__: IQueryCondition[]): LogicCommand;
     set(val: any): UpdateCommand;
     remove(): UpdateCommand;
     inc(val: number): UpdateCommand;
