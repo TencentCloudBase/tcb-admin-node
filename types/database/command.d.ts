@@ -11,6 +11,9 @@ export declare const Command: {
     gte(val: any): QueryCommand;
     in(val: any): QueryCommand;
     nin(val: any): QueryCommand;
+    geoNear(val: any): QueryCommand;
+    geoWithin(val: any): QueryCommand;
+    geoIntersects(val: any): QueryCommand;
     and(...__expressions__: IQueryCondition[]): LogicCommand;
     or(...__expressions__: IQueryCondition[]): LogicCommand;
     set(val: any): UpdateCommand;

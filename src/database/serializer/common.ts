@@ -1,5 +1,5 @@
 import { getType, isObject, isArray, isDate, isRegExp, isInternalObject } from '../utils/type'
-import { serialize as serializeInternalDataType, deserialize as deserializeInternalDataType } from './datatype'
+import { serialize as serializeInternalDataType } from './datatype'
 import { LogicCommand } from '../commands/logic'
 
 export type IQueryCondition = Record<string, any> | LogicCommand
@@ -104,8 +104,4 @@ export function isConversionRequired(val: any): boolean {
 
 export function encodeInternalDataType(val: any): IQueryCondition {
   return serializeInternalDataType(val)
-}
-
-export function decodeInternalDataType(object: AnyObject): any {
-  return deserializeInternalDataType(object)
 }

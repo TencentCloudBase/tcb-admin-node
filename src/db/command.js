@@ -29,6 +29,15 @@ exports.Command = {
     nin(val) {
         return new query_1.QueryCommand(query_1.QUERY_COMMANDS_LITERAL.NIN, val);
     },
+    geoNear(val) {
+        return new query_1.QueryCommand(query_1.QUERY_COMMANDS_LITERAL.GEO_NEAR, [val]);
+    },
+    geoWithin(val) {
+        return new query_1.QueryCommand(query_1.QUERY_COMMANDS_LITERAL.GEO_WITHIN, [val]);
+    },
+    geoIntersects(val) {
+        return new query_1.QueryCommand(query_1.QUERY_COMMANDS_LITERAL.GEO_INTERSECTS, [val]);
+    },
     and(...__expressions__) {
         const expressions = type_1.isArray(arguments[0]) ? arguments[0] : Array.from(arguments);
         return new logic_1.LogicCommand(logic_1.LOGIC_COMMANDS_LITERAL.AND, expressions);

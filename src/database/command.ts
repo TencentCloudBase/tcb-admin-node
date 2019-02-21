@@ -41,6 +41,18 @@ export const Command = {
     return new QueryCommand(QUERY_COMMANDS_LITERAL.NIN, val)
   },
 
+  geoNear(val: any) {
+    return new QueryCommand(QUERY_COMMANDS_LITERAL.GEO_NEAR, [val])
+  },
+
+  geoWithin(val: any) {
+    return new QueryCommand(QUERY_COMMANDS_LITERAL.GEO_WITHIN, [val])
+  },
+
+  geoIntersects(val: any) {
+    return new QueryCommand(QUERY_COMMANDS_LITERAL.GEO_INTERSECTS, [val])
+  },
+
   and(...__expressions__: IQueryCondition[]) {
     const expressions = isArray(arguments[0]) ? arguments[0] : Array.from(arguments)
     return new LogicCommand(LOGIC_COMMANDS_LITERAL.AND, expressions)
