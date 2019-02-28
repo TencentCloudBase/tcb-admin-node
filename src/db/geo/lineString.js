@@ -46,7 +46,7 @@ class LineString {
     static isClosed(lineString) {
         const firstPoint = lineString.points[0];
         const lastPoint = lineString.points[lineString.points.length - 1];
-        if (firstPoint.latitude === lastPoint.longitude && firstPoint.longitude === lastPoint.longitude) {
+        if (firstPoint.latitude === lastPoint.latitude && firstPoint.longitude === lastPoint.longitude) {
             return true;
         }
     }
