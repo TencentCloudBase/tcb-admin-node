@@ -16,51 +16,53 @@ describe("GEO高级功能", async () => {
 
     app.init(config);
     const db = app.database();
+    const { Point, LineString, Polygon, MultiPoint, MultiLineString, MultiPolygon } = db.Geo
 
     const collName = "coll-1";
     const collection = db.collection(collName);
     function randomPoint() {
-        return new db.Geo.Point(
+        return new Point(
             180 - 360 * Math.random(),
             90 - 180 * Math.random()
         )
     }
 
+
     it("Document - createCollection()", async () => {
         await common.safeCreateCollection(db, collName);
     });
 
-    const point = randomPoint()
-    const line = new db.Geo.LineString([randomPoint(), randomPoint()])
+    const point = new Point(0, 0)
+    const line = new LineString([randomPoint(), randomPoint()])
 
     // “回”字的外环
-    const point1 = new db.Geo.Point(-2, -2)
-    const point2 = new db.Geo.Point(2, -2)
-    const point3 = new db.Geo.Point(2, 2)
-    const point4 = new db.Geo.Point(-2, 2);
+    const point1 = new Point(-2, -2)
+    const point2 = new Point(2, -2)
+    const point3 = new Point(2, 2)
+    const point4 = new Point(-2, 2);
     // “回”字的内环
-    const point5 = new db.Geo.Point(-1, -1)
-    const point6 = new db.Geo.Point(1, -1)
-    const point7 = new db.Geo.Point(1, 1)
-    const point8 = new db.Geo.Point(-1, 1);
-    const polygon = new db.Geo.Polygon([
-        new db.Geo.LineString([point1, point2, point3, point4, point1]),
-        new db.Geo.LineString([point5, point6, point7, point8, point5]),
+    const point5 = new Point(-1, -1)
+    const point6 = new Point(1, -1)
+    const point7 = new Point(1, 1)
+    const point8 = new Point(-1, 1);
+    const polygon = new Polygon([
+        new LineString([point1, point2, point3, point4, point1]),
+        new LineString([point5, point6, point7, point8, point5]),
     ])
 
-    const multiPoint = new db.Geo.MultiPoint([randomPoint(), randomPoint(), randomPoint(), randomPoint()])
-    const multiLineString = new db.Geo.MultiLineString([
-        new db.Geo.LineString([randomPoint(), randomPoint()]),
-        new db.Geo.LineString([randomPoint(), randomPoint()]),
-        new db.Geo.LineString([randomPoint(), randomPoint()]),
-        new db.Geo.LineString([randomPoint(), randomPoint()])
+    const multiPoint = new MultiPoint([randomPoint(), randomPoint(), randomPoint(), randomPoint()])
+    const multiLineString = new MultiLineString([
+        new LineString([randomPoint(), randomPoint()]),
+        new LineString([randomPoint(), randomPoint()]),
+        new LineString([randomPoint(), randomPoint()]),
+        new LineString([randomPoint(), randomPoint()])
     ])
-    const multiPolygon = new db.Geo.MultiPolygon([
-        new db.Geo.Polygon([
-            new db.Geo.LineString([point1, point2, point3, point4, point1])
+    const multiPolygon = new MultiPolygon([
+        new Polygon([
+            new LineString([point1, point2, point3, point4, point1])
         ]),
-        new db.Geo.Polygon([
-            new db.Geo.LineString([point5, point6, point7, point8, point5])
+        new Polygon([
+            new LineString([point5, point6, point7, point8, point5])
         ])
     ])
 
@@ -89,19 +91,19 @@ describe("GEO高级功能", async () => {
         assert(readRes.data.length > 0);
         const data = readRes.data[0]
 
-        assert(data.point instanceof db.Geo.Point)
-        assert(data.line instanceof db.Geo.LineString)
-        assert(data.polygon instanceof db.Geo.Polygon)
-        assert(data.multiPoint instanceof db.Geo.MultiPoint)
-        assert(data.multiLineString instanceof db.Geo.MultiLineString)
-        assert(data.multiPolygon instanceof db.Geo.MultiPolygon)
+        assert(data.point instanceof Point)
+        assert(data.line instanceof LineString)
+        assert(data.polygon instanceof Polygon)
+        assert(data.multiPoint instanceof MultiPoint)
+        assert(data.multiLineString instanceof MultiLineString)
+        assert(data.multiPolygon instanceof MultiPolygon)
 
-        assert.deepEqual(data.point, point)
-        assert.deepEqual(data.line, line)
-        assert.deepEqual(data.polygon, polygon)
-        assert.deepEqual(data.multiPoint, multiPoint)
-        assert.deepEqual(data.multiLineString, multiLineString)
-        assert.deepEqual(data.multiPolygon, multiPolygon)
+        assert.deepStrictEqual(data.point, point)
+        assert.deepStrictEqual(data.line, line)
+        assert.deepStrictEqual(data.polygon, polygon)
+        assert.deepStrictEqual(data.multiPoint, multiPoint)
+        assert.deepStrictEqual(data.multiLineString, multiLineString)
+        assert.deepStrictEqual(data.multiPolygon, multiPolygon)
 
         // Update
         let result = await collection.doc(res.id).set(initialData)
@@ -123,70 +125,70 @@ describe("GEO高级功能", async () => {
 
         // bad Point
         assert.throws(
-            () => new db.Geo.Point()
+            () => new Point()
         )
         assert.throws(
-            () => new db.Geo.Point([], {})
+            () => new Point([], {})
         )
 
         // bad LineString
         assert.throws(
-            () => new db.Geo.LineString({})
+            () => new LineString({})
         )
         assert.throws(
-            () => new db.Geo.LineString([])
+            () => new LineString([])
         )
         assert.throws(
-            () => new db.Geo.LineString([123, []])
+            () => new LineString([123, []])
         )
 
         // bad Polygon
         assert.throws(
-            () => new db.Geo.Polygon(null)
+            () => new Polygon(null)
         )
         assert.throws(
-            () => new db.Geo.Polygon([])
+            () => new Polygon([])
         )
         assert.throws(
-            () => new db.Geo.Polygon([666, 789])
+            () => new Polygon([666, 789])
         )
         assert.throws(
-            () => new db.Geo.Polygon([
-                new db.Geo.LineString([point1, point2, point3, point4, point8])
+            () => new Polygon([
+                new LineString([point1, point2, point3, point4, point8])
             ])
         )
 
         // bad MultiPoint
         assert.throws(
-            () => new db.Geo.MultiPoint({})
+            () => new MultiPoint({})
         )
         assert.throws(
-            () => new db.Geo.MultiPoint([])
+            () => new MultiPoint([])
         )
         assert.throws(
-            () => new db.Geo.MultiPoint([{}, {}])
+            () => new MultiPoint([{}, {}])
         )
 
         // bad MultiLineString
         assert.throws(
-            () => new db.Geo.MultiLineString({})
+            () => new MultiLineString({})
         )
         assert.throws(
-            () => new db.Geo.MultiLineString([])
+            () => new MultiLineString([])
         )
         assert.throws(
-            () => new db.Geo.MultiLineString([123, null])
+            () => new MultiLineString([123, null])
         )
 
         // bad MultiPolygon
         assert.throws(
-            () => new db.Geo.MultiPolygon(123)
+            () => new MultiPolygon(123)
         )
         assert.throws(
-            () => new db.Geo.MultiPolygon([])
+            () => new MultiPolygon([])
         )
         assert.throws(
-            () => new db.Geo.MultiPolygon([666, 666])
+            () => new MultiPolygon([666, 666])
         )
     })
 
@@ -207,8 +209,8 @@ describe("GEO高级功能", async () => {
             }).get()
         console.log(readRes.data);
         assert(readRes.data.length > 0);
-        assert.deepEqual(readRes.data[0].point, point)
-        assert.deepEqual(readRes.data[0].line, line)
+        assert.deepStrictEqual(readRes.data[0].point, point)
+        assert.deepStrictEqual(readRes.data[0].line, line)
 
         // Delete
         const deleteRes = await collection
@@ -220,5 +222,34 @@ describe("GEO高级功能", async () => {
         assert.strictEqual(deleteRes.deleted, 1);
     });
 
+    it("GEO - geoWithin", async () => {
+        const res = await collection.add({
+            ...initialData,
+            point: new Point(0, 0)
+        });
+        assert(res.id);
+        assert(res.requestId);
 
+        // Read
+        const readRes = await collection
+            .where({
+                point: db.command.geoWithin({
+                    geometry: new Polygon([
+                        new LineString([point1, point2, point3, point4, point1])
+                    ])
+                })
+            }).get()
+        console.log(readRes);
+        assert(readRes.data.length > 0);
+        assert.deepStrictEqual(readRes.data[0].point, new Point(0, 0))
+
+        // Delete
+        const deleteRes = await collection
+            .where({
+                _id: res.id
+            })
+            .remove();
+        console.log(deleteRes);
+        assert.strictEqual(deleteRes.deleted, 1);
+    })
 });
