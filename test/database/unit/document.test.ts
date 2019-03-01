@@ -22,10 +22,11 @@ describe("test/unit/document.test.ts", () => {
 
   it("API - set data in empty document", async () => {
     const _ = db.command;
-    const document = db.collection(collName).doc();
-    await document.set({
+    const document = await db.collection(collName).doc().set({
       name: "jude"
     });
+    console.log(document)
+    assert(document.upsertedId)
     const documents = await db.collection(collName).where({
       name: _.eq('jude')
     }).get();
