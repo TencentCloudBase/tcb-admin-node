@@ -1,13 +1,18 @@
 var request = require("request");
 var auth = require("./auth.js");
-const version = require('../../package.json').version
+const version = require("../../package.json").version;
 
-module.exports = function (args) {
+module.exports = function(args) {
   var config = args.config,
     params = args.params,
     method = args.method || "get";
 
-  const eventId = (new Date()).valueOf() + '_' + Math.random().toString().substr(2, 5)
+  const eventId =
+    new Date().valueOf() +
+    "_" +
+    Math.random()
+      .toString()
+      .substr(2, 5);
 
   params = Object.assign({}, params, {
     envName: config.envName,
@@ -20,16 +25,22 @@ module.exports = function (args) {
       delete params[key];
     }
   }
-
+  // file 和 wx.openApi带的requestData 需避开签名
   let file = null;
   if (params.action === "storage.uploadFile") {
     file = params["file"];
     delete params["file"];
   }
 
+  let requestData = null;
+  if (params.action === "wx.openApi") {
+    requestData = params["requestData"];
+    delete params["requestData"];
+  }
+
   if (!config.secretId || !config.secretKey) {
-    if (process.env.TENCENTCLOUD_RUNENV === 'SCF') {
-      throw Error("missing authoration key, redeploy the function")
+    if (process.env.TENCENTCLOUD_RUNENV === "SCF") {
+      throw Error("missing authoration key, redeploy the function");
     }
     throw Error("missing secretId or secretKey of tencent cloud");
   }
@@ -51,15 +62,23 @@ module.exports = function (args) {
   var authorization = auth.getAuth(authObj);
 
   params.authorization = authorization;
-  file && (params.file = file);
-  config.sessionToken && (params.sessionToken = config.sessionToken);
-  params.sdk_version = version
 
-  let url = 'http://tcb-admin.tencentcloudapi.com/admin'
+  file && (params.file = file);
+  requestData && (params.requestData = requestData);
+  config.sessionToken && (params.sessionToken = config.sessionToken);
+  params.sdk_version = version;
+
+  let url = "http://tcb-admin.tencentcloudapi.com/admin";
   // url = 'http://localhost:8002/admin'
 
-  if (process.env.TENCENTCLOUD_RUNENV === 'SCF') {
-    url = 'http://tcb-admin.tencentyun.com/admin'
+  if (process.env.TENCENTCLOUD_RUNENV === "SCF") {
+    url = "http://tcb-admin.tencentyun.com/admin";
+  }
+
+  if (params.action === "wx.api" || params.action === "wx.openApi") {
+    url = "https://tcb-open.tencentcloudapi.com/admin";
+    // url = "http://localhost:8002/admin";
+    // url = "http://118.126.68.63/admin";
   }
 
   var opts = {
@@ -71,6 +90,8 @@ module.exports = function (args) {
     proxy: config.proxy
   };
 
+  opts.url = `${opts.url}?eventId=${eventId}`;
+
   if (params.action === "storage.uploadFile") {
     opts.formData = params;
     opts.formData.file = {
@@ -80,27 +101,26 @@ module.exports = function (args) {
       }
     };
   } else if (args.method == "post") {
-    opts.body = params;
-    opts.json = true;
+    if (params.action === "wx.openApi") {
+      opts.formData = params;
+    } else {
+      opts.body = params;
+      opts.json = true;
+    }
   } else {
     opts.qs = params;
-  }
-
-  if (params.action === 'wx.api') {
-    opts.url = 'https://tcb-open.tencentcloudapi.com/admin'
   }
 
   if (args.proxy) {
     opts.proxy = args.proxy;
   }
-
-  opts.url = `${opts.url}?eventId=${eventId}`
+  // opts.proxy = "http://web-proxy.tencent.com:8080";
 
   // console.log(JSON.stringify(opts));
-  return new Promise(function (resolve, reject) {
-    request(opts, function (err, response, body) {
+  return new Promise(function(resolve, reject) {
+    request(opts, function(err, response, body) {
       // console.log(err, body);
-      args && args.callback && args.callback(response)
+      args && args.callback && args.callback(response);
 
       if (err === null && response.statusCode == 200) {
         let res;
