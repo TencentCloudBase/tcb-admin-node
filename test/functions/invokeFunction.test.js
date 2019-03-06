@@ -10,13 +10,13 @@ describe("functions.invokeFunction: 执行云函数", () => {
   it(
     "执行云函数",
     async () => {
-      await app1.callFunction({
+      const result = await app1.callFunction({
         name: "test",
         data: { a: 1 }
       });
-      // console.log(result);
+      console.log(result);
       // assert(result.result, "执行云函数失败");
-      expect.objectContaining({result: expect.anything()})
+      expect.objectContaining({ result: expect.anything() })
     },
     10000
   );

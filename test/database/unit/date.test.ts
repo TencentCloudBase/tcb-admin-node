@@ -9,11 +9,9 @@ import * as util from 'util'
 
 describe("Date类型", async () => {
     const config = {
-        secretId: Config.secretId,
-        secretKey: Config.secretKey,
+        ...Config,
         env: Mock.env,
         mpAppId: Mock.appId,
-        proxy: Config.proxy,
         sessionToken: undefined
     };
 
@@ -36,6 +34,8 @@ describe("Date类型", async () => {
         date,
         serverDate1: new db.serverDate(),
         serverDate2: db.serverDate({ offset }),
+        emptyArray: [],
+        emptyObject: {},
         timestamp: {
             $timestamp: timestamp
         },
@@ -61,6 +61,8 @@ describe("Date类型", async () => {
         assert.strictEqual(assert.strictEqual(result.data[0].serverDate1.getDate(), date.getDate()))
         assert.strictEqual(result.data[0].serverDate1.getTime() + offset, result.data[0].serverDate2.getTime())
         assert.strictEqual(result.data[0].timestamp.getTime(), timestamp * 1000)
+        assert.deepStrictEqual(result.data[0].emptyArray, [])
+        assert.deepStrictEqual(result.data[0].emptyObject, {})
 
         result = await collection.where({
             date: db.command.eq(date)
