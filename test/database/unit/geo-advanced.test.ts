@@ -32,7 +32,7 @@ describe("GEO高级功能", async () => {
         await common.safeCreateCollection(db, collName);
     });
 
-    const point = new Point(0, 0)
+    const geoNearPoint = new Point(0, 0)
     const line = new LineString([randomPoint(), randomPoint()])
 
     // “回”字的外环
@@ -67,7 +67,8 @@ describe("GEO高级功能", async () => {
     ])
 
     const initialData = {
-        point,
+        point: randomPoint(),
+        geoNearPoint,
         line,
         polygon,
         multiPoint,
@@ -98,7 +99,7 @@ describe("GEO高级功能", async () => {
         assert(data.multiLineString instanceof MultiLineString)
         assert(data.multiPolygon instanceof MultiPolygon)
 
-        assert.deepStrictEqual(data.point, point)
+        assert.deepStrictEqual(data.point, initialData.point)
         assert.deepStrictEqual(data.line, line)
         assert.deepStrictEqual(data.polygon, polygon)
         assert.deepStrictEqual(data.multiPoint, multiPoint)
@@ -194,7 +195,11 @@ describe("GEO高级功能", async () => {
 
     it("GEO - geoNear", async () => {
         // Create
-        const res = await collection.add(initialData);
+        const geoPoint = new Point(22, 33)
+        const res = await collection.add({
+            ...initialData,
+            point: geoPoint
+        });
         assert(res.id);
         assert(res.requestId);
 
@@ -202,14 +207,14 @@ describe("GEO高级功能", async () => {
         const readRes = await collection
             .where({
                 point: db.command.geoNear({
-                    geometry: point,
-                    maxDistance: 100,
+                    geometry: geoPoint,
+                    maxDistance: 1,
                     minDistance: 0
                 })
             }).get()
-        console.log(readRes.data);
+        console.log(readRes);
         assert(readRes.data.length > 0);
-        assert.deepStrictEqual(readRes.data[0].point, point)
+        assert.deepStrictEqual(readRes.data[0].point, geoPoint)
         assert.deepStrictEqual(readRes.data[0].line, line)
 
         // Delete
@@ -246,10 +251,14 @@ describe("GEO高级功能", async () => {
         // Delete
         const deleteRes = await collection
             .where({
-                _id: res.id
+                point: db.command.geoWithin({
+                    geometry: new Polygon([
+                        new LineString([point1, point2, point3, point4, point1])
+                    ])
+                })
             })
             .remove();
         console.log(deleteRes);
-        assert.strictEqual(deleteRes.deleted, 1);
+        assert(deleteRes.deleted >= 1);
     })
 });
