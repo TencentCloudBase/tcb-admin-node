@@ -25,11 +25,14 @@ class DocumentReference {
             this.request.send("addDocument", params).then(res => {
                 if (res.code) {
                     resolve(res);
+                    return;
                 }
-                resolve({
-                    id: res.data._id,
-                    requestId: res.requestId
-                });
+                else {
+                    resolve({
+                        id: res.data._id,
+                        requestId: res.requestId
+                    });
+                }
             });
         });
     }

@@ -81,11 +81,13 @@ export class DocumentReference {
       this.request.send("addDocument", params).then(res => {
         if (res.code) {
           resolve(res);
+          return;
+        } else {
+          resolve({
+            id: res.data._id,
+            requestId: res.requestId
+          });
         }
-        resolve({
-          id: res.data._id,
-          requestId: res.requestId
-        });
       });
     });
   }
