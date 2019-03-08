@@ -119,7 +119,6 @@ module.exports = function(args) {
   // console.log(JSON.stringify(opts));
   return new Promise(function(resolve, reject) {
     request(opts, function(err, response, body) {
-      // console.log(err, body);
       args && args.callback && args.callback(response);
 
       if (err === null && response.statusCode == 200) {

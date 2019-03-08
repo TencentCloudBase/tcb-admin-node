@@ -39,6 +39,12 @@ exports.callWxOpenApi = function({ apiName, requestData } = {}) {
   });
 };
 
+/**
+ * 调用wxopenAPi
+ * @param {String} apiName  接口名
+ * @param {Buffer} requestData
+ * @return {Promise} 正常内容为buffer，报错为json {code:'', message:'', resquestId:''}
+ */
 exports.callCompatibleWxOpenApi = function({ apiName, requestData } = {}) {
   const wxCloudApiToken = process.env.WX_API_TOKEN || "";
 
@@ -55,17 +61,6 @@ exports.callCompatibleWxOpenApi = function({ apiName, requestData } = {}) {
     method: "post",
     headers: {}
   }).then(res => {
-    if (res.code) {
-      return res;
-    } else {
-      let result = res.data.responseData;
-      try {
-        result = JSON.parse(res.data.responseData);
-      } catch (e) {}
-      return {
-        result,
-        requestId: res.requestId
-      };
-    }
+    return res;
   });
 };
