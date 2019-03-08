@@ -78,7 +78,6 @@ module.exports = function(args) {
   if (params.action === "wx.api" || params.action === "wx.openApi") {
     url = "https://tcb-open.tencentcloudapi.com/admin";
     // url = "http://localhost:8002/admin";
-    // url = "http://118.126.68.63/admin";
   }
 
   var opts = {
