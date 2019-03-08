@@ -215,7 +215,6 @@ describe("GEO高级功能", async () => {
         console.log(readRes);
         assert(readRes.data.length > 0);
         assert.deepStrictEqual(readRes.data[0].point, geoPoint)
-        assert.deepStrictEqual(readRes.data[0].line, line)
 
         // Delete
         const deleteRes = await collection
