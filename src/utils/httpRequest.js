@@ -102,6 +102,7 @@ module.exports = function(args) {
   } else if (args.method == "post") {
     if (params.action === "wx.openApi") {
       opts.formData = params;
+      opts.encoding = null;
     } else {
       opts.body = params;
       opts.json = true;
@@ -124,6 +125,13 @@ module.exports = function(args) {
         let res;
         try {
           res = typeof body === "string" ? JSON.parse(body) : body;
+          // wx.openApi 调用时，需用content-type区分buffer or JSON
+          if (params.action === "wx.openApi") {
+            const { headers } = response;
+            if (headers["content-type"] === "application/json; charset=utf-8") {
+              res = JSON.parse(res.toString()); // JSON错误时buffer转JSON
+            }
+          }
         } catch (e) {
           res = body;
         }
