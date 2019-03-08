@@ -21,17 +21,17 @@ describe("wx.openApi: 微信openapi", () => {
     // assert(result.result, "微信openapi失败");
   }, 10000);
 
-  it("微信new openapi", async () => {
-    let result = await Tcb.callCompatibleWxOpenApi({
-      apiName: "/AAA/BBB/sample",
-      // requestData: "helloworld",
-      requestData: Buffer.from(JSON.stringify({ name: "jamespeng" })),
-      event: {
-        wxCloudApiToken:
-          "eyJWZXJzaW9uIjoxLCJLZXlWZXJzaW9uIjo0MCwiZXZlbnRJZCI6IkhIMVlEZEE0NUtzMlNVZW1MMVBLLWs5cVFlRmxzaXNMZWFpQUhQb2NuUENkRHRLSERaUE9qNHo2THJXZ1l5Vlo2SS1TRUM4aDlwcXJZZEJqTEpTQlhiOEM1S3lvclhYOS10TmsiLCJ0aWNrZXQiOiJDQnNTZ0FLL1ZrcWMva1ovTUpzYVMvTkxZMWFjY3JyTnN3QlRCU3hNTjM0WnMxODdqWm5JN1Zlc055VXZKNVliNmNodWRtSUQwMXpNVi9BRnJlTVJMRCtRWXBDYyswb1E5aXRmREdBamVLYTltcHgzN2Q1YWQxWFVlbFZDcDA2cWhaZ1ZKdFJvTFMwMm9iRmlLejdtMXJyNldGbXVOQzFTbXVUOGVXQ2N2WXZmNWpPVnpxZElUd2JYTCtWcVRKWEdPL1ZWNWtiZnowUzVJWmdaMmV2U0VzRnhmVE1iV3JuQ0RYU1JpOGc0b0Rwalo3TFRUNTNRcnNOaEFKUGN6T0pna3o5dGd2QUR6cnJKM2FOd3NaTS81dWlHSmVNczMrVUZSdHFtZDN1am5hd2JPRUYwMEZ4NDNWaDZySTZUL3gxM01lMmZaNzZmVG5zWi83WWlJaGo0d3MvSk1LbEIifQ=="
-      }
-    });
-    console.log(result);
-    // assert(result.result, "微信openapi失败");
-  }, 10000);
+  // it("微信new openapi", async () => {
+  //   let result = await Tcb.callCompatibleWxOpenApi({
+  //     apiName: "/AAA/BBB/sample",
+  //     // requestData: "helloworld",
+  //     requestData: Buffer.from(JSON.stringify({ name: "jamespeng" })),
+  //     event: {
+  //       wxCloudApiToken:
+  //         "eyJWZXJzaW9uIjoxLCJLZXlWZXJzaW9uIjo0MCwiZXZlbnRJZCI6IkhIMVlEZEE0NUtzMlNVZW1MMVBLLWs5cVFlRmxzaXNMZWFpQUhQb2NuUENkRHRLSERaUE9qNHo2THJXZ1l5Vlo2SS1TRUM4aDlwcXJZZEJqTEpTQlhiOEM1S3lvclhYOS10TmsiLCJ0aWNrZXQiOiJDQnNTZ0FLL1ZrcWMva1ovTUpzYVMvTkxZMWFjY3JyTnN3QlRCU3hNTjM0WnMxODdqWm5JN1Zlc055VXZKNVliNmNodWRtSUQwMXpNVi9BRnJlTVJMRCtRWXBDYyswb1E5aXRmREdBamVLYTltcHgzN2Q1YWQxWFVlbFZDcDA2cWhaZ1ZKdFJvTFMwMm9iRmlLejdtMXJyNldGbXVOQzFTbXVUOGVXQ2N2WXZmNWpPVnpxZElUd2JYTCtWcVRKWEdPL1ZWNWtiZnowUzVJWmdaMmV2U0VzRnhmVE1iV3JuQ0RYU1JpOGc0b0Rwalo3TFRUNTNRcnNOaEFKUGN6T0pna3o5dGd2QUR6cnJKM2FOd3NaTS81dWlHSmVNczMrVUZSdHFtZDN1am5hd2JPRUYwMEZ4NDNWaDZySTZUL3gxM01lMmZaNzZmVG5zWi83WWlJaGo0d3MvSk1LbEIifQ=="
+  //     }
+  //   });
+  //   console.log(result);
+  //   // assert(result.result, "微信openapi失败");
+  // }, 10000);
 });
