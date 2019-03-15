@@ -4,6 +4,7 @@ const functions = require('./src/functions')
 const auth = require('./src/auth')
 const wx = require('./src/wx')
 const Request = require('./src/utils/dbRequest')
+const logger = require("./src/log")
 
 function Tcb(config) {
   this.config = config ? config : this.config
@@ -111,5 +112,7 @@ extend(Tcb.prototype, functions)
 extend(Tcb.prototype, storage)
 extend(Tcb.prototype, wx)
 extend(Tcb.prototype, auth)
+extend(Tcb.prototype, logger);
+
 
 module.exports = new Tcb()
