@@ -1,4 +1,4 @@
-// const httpRequest = require("../utils/httpRequest");
+const fs = require("fs");
 
 /**
  * 调用日志上报函数
@@ -6,40 +6,6 @@
  * @param {Object} functionParam 函数参数
  * @return {Promise}
  */
-
- // 写入fd的偏移量
-let offset = 0
-
-// envId换取topicId信息
-// async function getTopicId(envId) {
-//   let params = {
-//     envId,
-//     action: ""
-//   };
-//   return httpRequest({
-//     config: this.config,
-//     params,
-//     method: "post",
-//     headers: {
-//       "content-type": "application/json"
-//     }
-//   }).then(res => {
-//     // console.log(res);
-//     if (res.code) {
-//       return res;
-//     } else {
-//       let result = res.data.response_data;
-//       try {
-//         result = JSON.parse(res.data.response_data);
-//       } catch (e) {}
-//       return {
-//         result,
-//         requestId: res.requestId
-//       };
-//     }
-//   });
-// }
-
 //
 function transformMsg(logMsg) {
   return JSON.stringify({
@@ -49,35 +15,21 @@ function transformMsg(logMsg) {
   });
 }
 
-async function fileWrite(fd, string, position, encoding) {
-  return new Promise((resolve, reject) => {
-      fs.write(fd, string, position, encoding, function(err, written, string) {
-          // fs.closeSync(fd)
-          if (err) {
-              reject({err})
-          }
-          resolve({
-              written,
-              string
-          })
-      });
-  })
+function fileWrite(fd, string) {
+  let writeStream = fs.createWriteStream("", {
+    flags: "r+",
+    fd,
+    autoClose: false
+  });
+
+  writeStream.write(string);
+  // close the stream
+  writeStream.end();
 }
 
 function logger(logMsg) {
-  // 获取topicId
-  // const topicId = await getTopicId(this.config.env);
-
-  // 写入fd
-  const fd = process.env.fd
-
-  const writeResult = await fileWrite(fd, transformMsg(logMsg), offset, 'utf8')
-
-  if(writeResult.err) {
-    console.log(writeResult.err)
-  }else{
-    offset += written
-  }
+  const fd = parseInt(process.env._SCF_TCB_SOCK);
+  fileWrite(fd, transformMsg(logMsg), offset, "utf8");
 }
 
 exports.logger = logger;
