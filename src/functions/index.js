@@ -20,10 +20,13 @@ function callFunction({ name, data }) {
     );
   }
 
+  const wxCloudApiToken = process.env.WX_API_TOKEN || "";
+
   let params = {
     action: "functions.invokeFunction",
     function_name: name,
-    request_data: data
+    request_data: data,
+    wxCloudApiToken
   };
 
   return httpRequest({
@@ -38,10 +41,10 @@ function callFunction({ name, data }) {
     if (res.code) {
       return res;
     } else {
-      let result = res.data.response_data
+      let result = res.data.response_data;
       try {
-        result = JSON.parse(res.data.response_data)
-      } catch (e) { }
+        result = JSON.parse(res.data.response_data);
+      } catch (e) {}
       return {
         result,
         requestId: res.requestId
