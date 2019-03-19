@@ -60,7 +60,5 @@ exports.callCompatibleWxOpenApi = function({ apiName, requestData } = {}) {
     params,
     method: "post",
     headers: {}
-  }).then(res => {
-    return res;
-  });
+  }).then(res => res);
 };
