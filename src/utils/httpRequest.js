@@ -5,7 +5,8 @@ const version = require("../../package.json").version;
 module.exports = function(args) {
   var config = args.config,
     params = args.params,
-    method = args.method || "get";
+    method = args.method || "get",
+    proctol = config.isHttp === true ? "http" : "https";
 
   const eventId =
     new Date().valueOf() +
@@ -68,15 +69,16 @@ module.exports = function(args) {
   config.sessionToken && (params.sessionToken = config.sessionToken);
   params.sdk_version = version;
 
-  let url = "http://tcb-admin.tencentcloudapi.com/admin";
+  let url = proctol + "://tcb-admin.tencentcloudapi.com/admin";
   // url = 'http://localhost:8002/admin'
 
   if (process.env.TENCENTCLOUD_RUNENV === "SCF") {
-    url = "http://tcb-admin.tencentyun.com/admin";
+    proctol = "http";
+    url = proctol + "://tcb-admin.tencentyun.com/admin";
   }
 
   if (params.action === "wx.api" || params.action === "wx.openApi") {
-    url = "https://tcb-open.tencentcloudapi.com/admin";
+    url = proctol + "://tcb-open.tencentcloudapi.com/admin";
     // url = "http://localhost:8002/admin";
   }
 
@@ -115,7 +117,6 @@ module.exports = function(args) {
     opts.proxy = args.proxy;
   }
   // opts.proxy = "http://web-proxy.tencent.com:8080";
-
   // console.log(JSON.stringify(opts));
   return new Promise(function(resolve, reject) {
     request(opts, function(err, response, body) {

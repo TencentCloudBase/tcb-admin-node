@@ -9,7 +9,7 @@ describe("wx.openApi: 微信openapi", () => {
 
   it("微信openapi", async () => {
     let result = await Tcb.callWxOpenApi({
-      apiName: "/AAA/BBB/sample",
+      apiName: "/inner/svrkitclientcall",
       // requestData: Buffer.from(JSON.stringify({ name: "jamespeng" })),
       requestData: { name: "jamespeng" },
       event: {
