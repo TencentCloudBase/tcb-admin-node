@@ -4,17 +4,18 @@ const functions = require("./src/functions");
 const wx = require("./src/wx");
 
 function Tcb(config) {
-  this.config = config ? config : this.config
+  this.config = config ? config : this.config;
 }
 
-Tcb.prototype.init = function ({
+Tcb.prototype.init = function({
   secretId,
   secretKey,
   sessionToken,
   env,
   proxy,
   timeout,
-  serviceUrl
+  serviceUrl,
+  isHttp
 } = {}) {
   if ((secretId && !secretKey) || (!secretId && secretKey)) {
     throw Error("secretId and secretKey must be a pair");
@@ -53,19 +54,24 @@ Tcb.prototype.init = function ({
       this._sessionToken = token;
     },
     envName: env,
-    proxy: proxy
+    proxy: proxy,
+    isHttp
   };
 
   this.config.secretId = secretId;
   this.config.secretKey = secretKey;
-  this.config.timeout = timeout || 15000
-  this.config.serviceUrl = serviceUrl
-  this.config.sessionToken = sessionToken ? sessionToken : (secretId && secretKey ? false : undefined);
+  this.config.timeout = timeout || 15000;
+  this.config.serviceUrl = serviceUrl;
+  this.config.sessionToken = sessionToken
+    ? sessionToken
+    : secretId && secretKey
+    ? false
+    : undefined;
 
   return new Tcb(this.config);
 };
 
-Tcb.prototype.database = function (dbConfig) {
+Tcb.prototype.database = function(dbConfig) {
   return new database({ ...this, ...dbConfig });
 };
 
@@ -78,7 +84,7 @@ function each(obj, fn) {
 }
 
 function extend(target, source) {
-  each(source, function (val, key) {
+  each(source, function(val, key) {
     target[key] = source[key];
   });
   return target;
@@ -86,6 +92,6 @@ function extend(target, source) {
 
 extend(Tcb.prototype, functions);
 extend(Tcb.prototype, storage);
-extend(Tcb.prototype, wx)
+extend(Tcb.prototype, wx);
 
 module.exports = new Tcb();
