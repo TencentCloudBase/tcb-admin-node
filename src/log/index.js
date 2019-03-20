@@ -1,4 +1,5 @@
 const fs = require("fs");
+const LOG_SIZE_LIMIT = 512 * 1024;
 
 /**
  * 调用日志上报函数
@@ -28,8 +29,20 @@ function fileWrite(fd, string) {
 }
 
 function logger(logMsg) {
+  // 判断logMsg是否为对象
+  if (logMsg === null || typeof logMsg !== "object") {
+    throw Error("please input correct log msg");
+  }
+
+  const msgContent = transformMsg(logMsg);
+
+  // 检查日志数据量是否超限, 单行512KB
+  if (Buffer.byteLength(msgContent) > LOG_SIZE_LIMIT) {
+    throw Error("single log size beyond 512KB");
+  }
+
   const fd = parseInt(process.env._SCF_TCB_SOCK);
-  fileWrite(fd, transformMsg(logMsg), offset, "utf8");
+  fileWrite(fd, msgContent, offset, "utf8");
 }
 
 exports.logger = logger;
