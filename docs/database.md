@@ -27,6 +27,7 @@
       - [lt](#lt)
       - [lte](#lte)
       - [in](#in)
+      - [nin](#nin)
       - [and](#and)
       - [or](#or)
     - [正则表达式查询](#%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%9F%A5%E8%AF%A2)
@@ -436,6 +437,22 @@ db.collection('goods').where({
   category: 'computer',
   type: {
     memory: _.in([8, 16])
+  }
+})
+```
+
+##### nin
+
+字段值不在给定的数组中。
+
+筛选出内存不是 8g 或 16g 的计算机商品：
+
+```js
+const _ = db.command
+db.collection('goods').where({
+  category: 'computer',
+  type: {
+    memory: _.nin([8, 16])
   }
 })
 ```
