@@ -8,6 +8,8 @@ module.exports = function(args) {
     method = args.method || "get",
     protocol = config.isHttp === true ? "http" : "https";
 
+  let seqId = process.env.TCB_SEQID || "";
+
   const eventId =
     new Date().valueOf() +
     "_" +
@@ -15,6 +17,7 @@ module.exports = function(args) {
       .toString()
       .substr(2, 5);
 
+  seqId = seqId ? `${seqId}${new Date().getTime()}` : eventId;
   params = Object.assign({}, params, {
     envName: config.envName,
     timestamp: new Date().valueOf(),
@@ -70,7 +73,7 @@ module.exports = function(args) {
   params.sdk_version = version;
 
   let url = protocol + "://tcb-admin.tencentcloudapi.com/admin";
-  // url = 'http://localhost:8002/admin'
+  // url = "http://localhost:8002/admin";
 
   if (process.env.TENCENTCLOUD_RUNENV === "SCF") {
     protocol = "http";
@@ -91,7 +94,7 @@ module.exports = function(args) {
     proxy: config.proxy
   };
 
-  opts.url = `${opts.url}?eventId=${eventId}`;
+  opts.url = `${opts.url}?eventId=${eventId}&seqId=${seqId}`;
 
   if (params.action === "storage.uploadFile") {
     opts.formData = params;
