@@ -23,6 +23,10 @@ function fileWrite(fd, string) {
     autoClose: false
   });
 
+  writeStream.on("error", err => {
+    throw err;
+  });
+
   writeStream.write(string);
   // close the stream
   writeStream.end();
