@@ -46,7 +46,7 @@ function logger(logMsg) {
   }
 
   const fd = parseInt(process.env._SCF_TCB_SOCK);
-  fileWrite(fd, msgContent, offset, "utf8");
+  fileWrite(fd, msgContent);
 }
 
 exports.logger = logger;
