@@ -9,11 +9,13 @@ const LOG_SIZE_LIMIT = 512 * 1024;
  */
 //
 function transformMsg(logMsg) {
-  return JSON.stringify({
-    time: new Date().getTime(),
-    contents: logMsg
-    // topicId
-  });
+  return (
+    JSON.stringify({
+      time: new Date().getTime(),
+      contents: logMsg
+      // topicId
+    }) + "\n\t\n"
+  );
 }
 
 function fileWrite(fd, string) {
