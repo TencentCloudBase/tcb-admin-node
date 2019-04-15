@@ -1,6 +1,6 @@
 import * as assert from "power-assert";
-import { Validate } from "../../../src/database/validate";
-import { ErrorCode } from "../../../src/database/constant";
+import { Validate } from "@cloudbase/database/src/validate";
+import { ErrorCode } from "@cloudbase/database/src/constant";
 
 describe("test/unit/validate.test.ts", () => {
   it("isFieldOrder - is valid", () => {
