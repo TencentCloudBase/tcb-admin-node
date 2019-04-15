@@ -1,5 +1,5 @@
 import * as assert from "power-assert";
-import { Util } from "../../../src/database/util";
+import { Util } from "@cloudbase/database/src/util";
 import * as Mock from "./mock";
 
 describe("test/unit/util.test.ts", () => {
