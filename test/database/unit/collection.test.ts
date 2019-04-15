@@ -1,7 +1,6 @@
 import * as assert from "power-assert";
 import * as tcb from '../../../';
-import { ErrorCode } from "../../../src/database/constant";
-// import * as Mock from "./mock";
+import { ErrorCode } from "@cloudbase/database/src/constant";
 import * as Config from '../../config.local'
 import * as common from '../../common'
 

@@ -1,7 +1,8 @@
+const database = require("@cloudbase/database").Db;
 const storage = require("./src/storage");
-const database = require("./src/db").Db;
 const functions = require("./src/functions");
 const wx = require("./src/wx");
+const Request = require('./src/utils/dbRequest');
 
 function Tcb(config) {
   this.config = config ? config : this.config;
@@ -72,6 +73,7 @@ Tcb.prototype.init = function({
 };
 
 Tcb.prototype.database = function(dbConfig) {
+  database.reqClass = Request;
   return new database({ ...this, ...dbConfig });
 };
 
