@@ -9,11 +9,14 @@ exports.callWxOpenApi = function({ apiName, requestData } = {}) {
 
   const wxCloudApiToken = process.env.WX_API_TOKEN || "";
 
+  const tcb_sessionToken = process.env.TCB_SESSIONTOKEN || "";
+
   let params = {
     action: "wx.api",
     apiName,
     requestData,
-    wxCloudApiToken
+    wxCloudApiToken,
+    tcb_sessionToken
   };
 
   return httpRequest({
@@ -47,12 +50,14 @@ exports.callWxOpenApi = function({ apiName, requestData } = {}) {
  */
 exports.callCompatibleWxOpenApi = function({ apiName, requestData } = {}) {
   const wxCloudApiToken = process.env.WX_API_TOKEN || "";
+  const tcb_sessionToken = process.env.TCB_SESSIONTOKEN || "";
 
   let params = {
     action: "wx.openApi",
     apiName,
     requestData,
-    wxCloudApiToken
+    wxCloudApiToken,
+    tcb_sessionToken
   };
 
   return httpRequest({
