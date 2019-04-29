@@ -29,7 +29,8 @@
     "@cloudbase/database": "^0.0.9",
     "is-regex": "^1.0.4",
     "lodash.merge": "^4.6.1",
-    "request": "^2.87.0"
+    "request": "^2.87.0",
+    "xml2js": "^0.4.19"
   },
   "devDependencies": {
     "@types/jest": "^23.1.4",
