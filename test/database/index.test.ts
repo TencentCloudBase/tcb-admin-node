@@ -72,7 +72,6 @@ describe("test/index.test.ts", async () => {
     result = await collection.where({
       fakeFields: _.or(_.eq(null))
     }).get()
-    console.log(result)
     assert(result.data.length > 0)
 
     const doc = await collection.doc(id).get()
