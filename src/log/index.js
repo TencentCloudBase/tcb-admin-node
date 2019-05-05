@@ -47,6 +47,11 @@ function logger(logMsg) {
     throw Error("single log size beyond 512KB");
   }
 
+  // 环境变量里取不到fd
+  if (!process.env._SCF_TCB_SOCK) {
+    throw Error("fd value is not exist");
+  }
+
   const fd = parseInt(process.env._SCF_TCB_SOCK);
   fileWrite(fd, msgContent);
 }
