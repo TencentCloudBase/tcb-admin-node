@@ -85,4 +85,43 @@ describe('聚合搜索', async () => {
     const removeSuccess = await usersCollection.remove()
     assert.strictEqual(removeSuccess, true)
   })
+
+  describe('sortByCount', async () => {
+    let passagesCollection = null
+    const data = [
+      { category: 'Web', tags: [ 'JavaScript', 'C#' ] },
+      { category: 'Web', tags: [ 'Go', 'C#' ] },
+      { category: 'Life', tags: [ 'Go', 'Python', 'JavaScript' ] }
+    ]
+
+    beforeAll(async () => {
+      passagesCollection = await common.safeCollection(db, 'test-passages')
+      const success = await passagesCollection.create(data)
+      assert.strictEqual(success, true)
+    })
+
+    afterAll(async () => {
+      const success = await passagesCollection.remove()
+      assert.strictEqual(success, true)
+    })
+
+    it('统计基础类型', async () => {
+      const result = await db
+        .collection('test-passages')
+        .aggregate()
+        .sortByCount('$category')
+        .end()
+      assert.strictEqual(result.data.length, 2)
+    })
+
+    it('解构数组类型', async () => {
+      const result = await db
+        .collection('test-passages')
+        .aggregate()
+        .unwind(`$tags`)
+        .sortByCount('$tags')
+        .end()
+      assert.strictEqual(result.data.length, 4)
+    })
+  })
 })
