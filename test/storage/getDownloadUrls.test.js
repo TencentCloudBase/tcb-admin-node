@@ -10,7 +10,7 @@ describe('storage.batchDeleteFile: 删除文件', () => {
   it('单环境下上传文件、获取文件链接', async () => {
     let result = await tcb.uploadFile({
       // cloudPath: "test-admin.jpeg",
-      cloudPath: 'a|b.jpeg',
+      cloudPath: 'a|b测试.jpeg',
       fileContent
     })
     expect(result.fileID).not.toBeNull()
