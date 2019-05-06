@@ -62,4 +62,27 @@ describe('聚合搜索', async () => {
     assert.strictEqual(result.data.length, 2)
     assert(result.data[0].newText.endsWith(' - this is a new field'))
   })
+
+  it('sample', async () => {
+    const data = [
+      { name: 'a' },
+      { name: 'b' }
+    ]
+    const usersCollection = await common.safeCollection(db, 'test-users')
+
+    const createSuccess = await usersCollection.create(data)
+    assert.strictEqual(createSuccess, true)
+
+    const result = await db
+      .collection('test-users')
+      .aggregate()
+      .sample({
+        size: 1
+      })
+      .end()
+    assert.strictEqual(result.data.length, 1)
+    
+    const removeSuccess = await usersCollection.remove()
+    assert.strictEqual(removeSuccess, true)
+  })
 })
