@@ -24,7 +24,7 @@ describe('storage.uploadFile: 上传文件', () => {
 
   it('上传文件', async () => {
     let result = await tcb.uploadFile({
-      cloudPath: 'test.png',
+      cloudPath: '测试.png',
       fileContent: fs.createReadStream(
         path.resolve(__dirname, './my-photo.png')
       )
@@ -34,7 +34,7 @@ describe('storage.uploadFile: 上传文件', () => {
     result = await tcb.getTempFileURL({
       fileList: [result.fileID]
     })
-
+    console.log(result)
     assert(result.fileList)
     assert(result.fileList[0].fileID)
   }, 10000)
