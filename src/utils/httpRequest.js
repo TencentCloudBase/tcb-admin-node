@@ -120,8 +120,6 @@ module.exports = function(args) {
     opts.proxy = args.proxy
   }
   // opts.proxy = "http://web-proxy.tencent.com:8080";
-  // console.log((opts))
-  // console.log('='.repeat(10))
   return new Promise(function(resolve, reject) {
     request(opts, function(err, response, body) {
       args && args.callback && args.callback(response)
@@ -137,8 +135,6 @@ module.exports = function(args) {
               res = JSON.parse(res.toString()) // JSON错误时buffer转JSON
             }
           }
-          // console.log((res))
-          // console.log('='.repeat(10))
         } catch (e) {
           res = body
         }

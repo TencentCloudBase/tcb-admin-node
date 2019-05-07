@@ -22,7 +22,7 @@ describe("test/unit/collection.test.ts", () => {
 
 describe('stdDevPop', async () => {
   let studentsCollection = null
-  const colName = 'test-students'
+  const collectionName = 'test-students'
   const data = [
     { "group":"a", "score":84 },
     { "group":"a", "score":96 },
@@ -31,7 +31,7 @@ describe('stdDevPop', async () => {
   ]
 
   beforeAll(async () => {
-    studentsCollection = await common.safeCollection(db, colName)
+    studentsCollection = await common.safeCollection(db, collectionName)
     const success = await studentsCollection.create(data)
     assert.strictEqual(success, true)
   })
@@ -43,7 +43,7 @@ describe('stdDevPop', async () => {
 
   it('计算不同组的标准差', async () => {
     const $ = db.command.aggregate
-    const result = await db.collection(colName).aggregate()
+    const result = await db.collection(collectionName).aggregate()
       .group({
         _id: '$group',
         stdDev: $.stdDevPop('$score')
@@ -62,14 +62,14 @@ describe('stdDevPop', async () => {
 
 describe('stdDevSamp', async () => {
   let studentsCollection = null
-  const colName = 'test-students'
+  const collectionName = 'test-students'
   const data = [
     { "score":80 },
     { "score":100 },
   ]
 
   beforeAll(async () => {
-    studentsCollection = await common.safeCollection(db, colName)
+    studentsCollection = await common.safeCollection(db, collectionName)
     const success = await studentsCollection.create(data)
     assert.strictEqual(success, true)
   })
@@ -81,7 +81,7 @@ describe('stdDevSamp', async () => {
 
   it('计算标准样本偏差', async () => {
     const $ = db.command.aggregate
-    const result = await db.collection(colName).aggregate()
+    const result = await db.collection(collectionName).aggregate()
       .group({
         _id: null,
         ageStdDev: $.stdDevSamp('$score')
@@ -89,5 +89,49 @@ describe('stdDevSamp', async () => {
       .end()
     // data 的标准样本偏差为 14.14
     assert.strictEqual(result.data[0].ageStdDev.toFixed(2), '14.14')
+  })
+})
+
+describe('sum', async () => {
+  let goodsCollection = null
+  const $ = db.command.aggregate
+  const collectionName = 'test-goods'
+  const data = [
+    { "cost": -10, "price": 100 },
+    { "cost": -15, "price": 1 },
+    { "cost": -10, "price": 10 }
+  ]
+
+  beforeAll(async () => {
+    goodsCollection = await common.safeCollection(db, collectionName)
+    const success = await goodsCollection.create(data)
+    assert.strictEqual(success, true)
+  })
+
+  afterAll(async () => {
+    const success = await goodsCollection.remove()
+    assert.strictEqual(success, true)
+  })
+
+  it('参数为单独字段', async () => {
+    const result = await db.collection(collectionName).aggregate()
+      .group({
+        _id: null,
+        totalPrice: $.sum('$price')
+      })
+      .end()
+    assert.strictEqual(result.data[0].totalPrice, 111)
+  })
+
+  it('参数为字段列表', async () => {
+    const result = await db.collection(collectionName).aggregate()
+      .group({
+        _id: null,
+        totalProfit: $.sum(
+          $.sum(['$price', '$cost'])
+        )
+      })
+      .end()
+    assert.strictEqual(result.data[0].totalProfit, 76)
   })
 })
