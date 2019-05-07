@@ -238,7 +238,7 @@ describe('project', async () => {
   })
 })
 
-describe.only('replaceRoot', async () => {
+describe('replaceRoot', async () => {
   it('使用已有字段作为根节点', async () => {
     const data = [
       {
@@ -298,5 +298,41 @@ describe.only('replaceRoot', async () => {
     })
     const removeSuccess = await usersCollection.remove()
     assert.strictEqual(removeSuccess, true)
+  })
+})
+
+describe('skip', async () => {
+  let coll = null
+  const data = [
+    { author: 'stark', score: 80 },
+    { author: 'stark', score: 85 },
+    { author: 'bob', score: 60 },
+    { author: 'li', score: 55 },
+    { author: 'jimmy', score: 60 },
+    { author: 'li', score: 94 },
+    { author: 'justan', score: 95 }
+  ]
+
+  beforeAll(async () => {
+    coll = await common.safeCollection(db, 'articles')
+    const success = await coll.create(data)
+    assert.strictEqual(success, true)
+  })
+
+  afterAll(async () => {
+    const success = await coll.remove()
+    assert.strictEqual(success, true)
+  })
+
+  it('跳过一定数量的文档', async () => {
+    const result = await db
+      .collection('articles')
+      .aggregate()
+      .skip(6)
+      .project({
+        _id: 0
+      })
+      .end()
+    assert.deepStrictEqual(result.data[0], { author: 'justan', score: 95 })
   })
 })
