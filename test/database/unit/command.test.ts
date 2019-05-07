@@ -135,3 +135,39 @@ describe('sum', async () => {
     assert.strictEqual(result.data[0].totalProfit, 76)
   })
 })
+
+describe('let', async () => {
+  let goodsCollection = null
+  const $ = db.command.aggregate
+  const collectionName = 'test-goods'
+  const data = [
+    { "cost": -10, "discount": 0.95, "price": 100 },
+    { "cost": -15, "discount": 0.98, "price": 1 },
+    { "cost": -10, "discount": 1, "price": 10 }
+  ]
+
+  beforeAll(async () => {
+    goodsCollection = await common.safeCollection(db, collectionName)
+    const success = await goodsCollection.create(data)
+    assert.strictEqual(success, true)
+  })
+
+  afterAll(async () => {
+    const success = await goodsCollection.remove()
+    assert.strictEqual(success, true)
+  })
+
+  it('参数为单独字段', async () => {
+    const result = await db.collection(collectionName).aggregate()
+      .project({
+        profit: $.let({
+          vars: {
+            priceTotal: $.multiply(['$price', '$discount'])
+          },
+          in: $.sum(['$$priceTotal', '$cost'])
+        })
+      })
+      .end()
+    assert.strictEqual(result.data.length, 3)
+  })
+})
