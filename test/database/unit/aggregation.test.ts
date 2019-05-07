@@ -237,3 +237,66 @@ describe('project', async () => {
     assert.strictEqual(removeSuccess, true)
   })
 })
+
+describe.only('replaceRoot', async () => {
+  it('使用已有字段作为根节点', async () => {
+    const data = [
+      {
+        name: 'SFLS',
+        teachers: {
+          chinese: 22,
+          math: 18,
+          english: 21,
+          other: 123
+        }
+      }
+    ]
+    const usersCollection = await common.safeCollection(db, 'test-users')
+
+    const createSuccess = await usersCollection.create(data)
+    assert.strictEqual(createSuccess, true)
+
+    const result = await db
+      .collection('test-users')
+      .aggregate()
+      .replaceRoot({
+        newRoot: '$teachers'
+      })
+      .end()
+    assert.deepStrictEqual(result.data[0], {
+      chinese: 22,
+      math: 18,
+      english: 21,
+      other: 123
+    })
+    const removeSuccess = await usersCollection.remove()
+    assert.strictEqual(removeSuccess, true)
+  })
+  it('使用计算出的新字段作为根节点', async () => {
+    const data = [
+      { first_name: '四郎', last_name: '黄' },
+      { first_name: '邦德', last_name: '马' },
+      { first_name: '牧之', last_name: '张' }
+    ]
+    const usersCollection = await common.safeCollection(db, 'test-users')
+
+    const createSuccess = await usersCollection.create(data)
+    assert.strictEqual(createSuccess, true)
+
+    const { concat } = db.command.aggregate
+    const result = await db
+      .collection('test-users')
+      .aggregate()
+      .replaceRoot({
+        newRoot: {
+          full_name: concat(['$last_name', '$first_name'])
+        }
+      })
+      .end()
+    assert.deepStrictEqual(result.data[0], {
+      full_name: '黄四郎'
+    })
+    const removeSuccess = await usersCollection.remove()
+    assert.strictEqual(removeSuccess, true)
+  })
+})
