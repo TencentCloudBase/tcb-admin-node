@@ -382,3 +382,80 @@ describe('sort', async () => {
     })
   })
 })
+
+describe('unwind', async () => {
+  let coll = null
+  const data = [
+    { product: 'tshirt', size: ['S', 'M', 'L'] },
+    { product: 'pants', size: [] },
+    { product: 'socks', size: null },
+    { product: 'trousers', size: ['S'] },
+    { product: 'sweater', size: ['M', 'L'] }
+  ]
+
+  beforeAll(async () => {
+    coll = await common.safeCollection(db, 'articles')
+    const success = await coll.create(data)
+    assert.strictEqual(success, true)
+  })
+
+  afterAll(async () => {
+    const success = await coll.remove()
+    assert.strictEqual(success, true)
+  })
+
+  it('解构', async () => {
+    const result = await db
+      .collection('articles')
+      .aggregate()
+      .unwind('$size')
+      .project({
+        _id: 0
+      })
+      .end()
+    assert.strictEqual(result.data.length, 6)
+    assert.deepStrictEqual(result.data[0], {
+      product: 'tshirt',
+      size: 'S'
+    })
+  })
+
+  it('解构后，保留原数组索引', async () => {
+    const result = await db
+      .collection('articles')
+      .aggregate()
+      .unwind({
+        path: '$size',
+        includeArrayIndex: 'arrayIndex'
+      })
+      .project({
+        _id: 0
+      })
+      .end()
+    assert.strictEqual(result.data.length, 6)
+    assert.deepStrictEqual(result.data[0], {
+      arrayIndex: 0,
+      product: 'tshirt',
+      size: 'S'
+    })
+  })
+
+  it('保留空值', async () => {
+    const result = await db
+      .collection('articles')
+      .aggregate()
+      .unwind({
+        path: '$size',
+        preserveNullAndEmptyArrays: true
+      })
+      .project({
+        _id: 0
+      })
+      .end()
+    assert.strictEqual(result.data.length, 8)
+    assert.deepStrictEqual(result.data[0], {
+      product: 'tshirt',
+      size: 'S'
+    })
+  })
+})
