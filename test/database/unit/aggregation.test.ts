@@ -336,3 +336,49 @@ describe('skip', async () => {
     assert.deepStrictEqual(result.data[0], { author: 'justan', score: 95 })
   })
 })
+
+describe('sort', async () => {
+  let coll = null
+  const data = [
+    { author: 'stark', score: 80, age: 18 },
+    { author: 'bob', score: 60, age: 18 },
+    { author: 'li', score: 55, age: 19 },
+    { author: 'jimmy', score: 60, age: 22 },
+    { author: 'justan', score: 95, age: 33 }
+  ]
+
+  beforeAll(async () => {
+    coll = await common.safeCollection(db, 'articles')
+    const success = await coll.create(data)
+    assert.strictEqual(success, true)
+  })
+
+  afterAll(async () => {
+    const success = await coll.remove()
+    assert.strictEqual(success, true)
+  })
+
+  it('根据已有字段排序', async () => {
+    const result = await db
+      .collection('articles')
+      .aggregate()
+      .sort({
+        age: -1,
+        score: -1
+      })
+      .project({
+        _id: 0
+      })
+      .end()
+    assert.deepStrictEqual(result.data[0], {
+      author: 'justan',
+      score: 95,
+      age: 33
+    })
+    assert.deepStrictEqual(result.data[result.data.length - 1], {
+      author: 'bob',
+      score: 60,
+      age: 18
+    })
+  })
+})
