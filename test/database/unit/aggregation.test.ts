@@ -1,19 +1,9 @@
 import * as assert from 'power-assert'
-import * as Mock from './mock'
 import * as app from '../../../index'
 import * as Config from '../../config.local'
 import * as common from '../../common/index'
 
-const config = {
-  secretId: Config.secretId,
-  secretKey: Config.secretKey,
-  serviceUrl: Config.serviceUrl,
-  env: Mock.env,
-  proxy: Config.proxy,
-  sessionToken: undefined
-}
-
-app.init(config)
+app.init(Config)
 const db = app.database()
 
 const collName = 'test-aggregate'
