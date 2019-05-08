@@ -41,7 +41,7 @@ describe('正则表达式查询', async () => {
 
     // Read
 
-    // // 直接使用正则表达式
+    // 直接使用正则表达式
     let result = await collection
       .where({
         name: /^abcdef.*\d+结尾$/i
@@ -87,7 +87,24 @@ describe('正则表达式查询', async () => {
     console.log(result)
     assert(result.data.length > 0)
 
-    // // Update(TODO)
+    // or
+    result = await collection
+      .where(
+        db.command.or({
+          name: db.RegExp({
+            regexp: '^abcdef.*\\d+结尾$',
+            options: 'i'
+          }),
+          name2: db.RegExp({
+            regexp: 'fffffff',
+            options: 'i'
+          })
+        })
+      )
+      .get()
+    console.log(result)
+    assert(result.data.length > 0)
+
     result = await collection
       .where({
         name: db.command.or(
@@ -105,7 +122,6 @@ describe('正则表达式查询', async () => {
     console.log(result)
     assert(result.data.length > 0)
 
-    // Update(TODO)
     result = await collection
       .where({
         name: db.command.or(
