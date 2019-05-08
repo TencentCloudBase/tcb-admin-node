@@ -1,3 +1,7 @@
+# v1.6.0
+- [add] 新增auth api
+- [add] 文件上传直传
+
 # v1.4.2
 - [fixed] 修复了doc.set()对于复杂错误类型的签名错误问题
 - [fixed] db.serverDate()支持new调用

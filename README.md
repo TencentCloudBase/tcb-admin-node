@@ -38,4 +38,5 @@ import * as admin from "tcb-admin-node";
 * [存储](docs/storage.md)
 * [数据库](docs/database.md)
 * [云函数](docs/functions.md)
+* [鉴权](./docs/auth.md)
 
