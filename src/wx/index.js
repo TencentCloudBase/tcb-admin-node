@@ -1,46 +1,48 @@
-const httpRequest = require("../utils/httpRequest");
+const httpRequest = require('../utils/httpRequest')
 
 exports.callWxOpenApi = function({ apiName, requestData } = {}) {
   try {
-    requestData = requestData ? JSON.stringify(requestData) : "";
+    requestData = requestData ? JSON.stringify(requestData) : ''
   } catch (e) {
-    throw Error(e);
+    throw Error(e)
   }
 
-  const wxCloudApiToken = process.env.WX_API_TOKEN || "";
+  const wxCloudApiToken = process.env.WX_API_TOKEN || ''
 
-  const tcb_sessionToken = process.env.TCB_SESSIONTOKEN || "";
+  const tcb_sessionToken = process.env.TCB_SESSIONTOKEN || ''
 
   let params = {
-    action: "wx.api",
+    action: 'wx.api',
     apiName,
     requestData,
     wxCloudApiToken,
     tcb_sessionToken
-  };
+  }
 
   return httpRequest({
     config: this.config,
     params,
-    method: "post",
+    method: 'post',
     headers: {
-      "content-type": "application/json"
+      'content-type': 'application/json'
     }
   }).then(res => {
     if (res.code) {
-      return res;
+      return res
     } else {
-      let result = res.data.responseData;
+      let result
       try {
-        result = JSON.parse(res.data.responseData);
-      } catch (e) {}
+        result = JSON.parse(res.data.responseData)
+      } catch (e) {
+        result = res.data.responseData
+      }
       return {
         result,
         requestId: res.requestId
-      };
+      }
     }
-  });
-};
+  })
+}
 
 /**
  * 调用wxopenAPi
@@ -49,21 +51,21 @@ exports.callWxOpenApi = function({ apiName, requestData } = {}) {
  * @return {Promise} 正常内容为buffer，报错为json {code:'', message:'', resquestId:''}
  */
 exports.callCompatibleWxOpenApi = function({ apiName, requestData } = {}) {
-  const wxCloudApiToken = process.env.WX_API_TOKEN || "";
-  const tcb_sessionToken = process.env.TCB_SESSIONTOKEN || "";
+  const wxCloudApiToken = process.env.WX_API_TOKEN || ''
+  const tcb_sessionToken = process.env.TCB_SESSIONTOKEN || ''
 
   let params = {
-    action: "wx.openApi",
+    action: 'wx.openApi',
     apiName,
     requestData,
     wxCloudApiToken,
     tcb_sessionToken
-  };
+  }
 
   return httpRequest({
     config: this.config,
     params,
-    method: "post",
+    method: 'post',
     headers: {}
-  }).then(res => res);
-};
+  }).then(res => res)
+}

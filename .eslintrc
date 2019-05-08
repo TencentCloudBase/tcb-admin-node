@@ -18,7 +18,8 @@
       {
         "avoidEscape": true
       }
-    ]
+    ],
+    "no-console": "off"
   },
   "env": {
     "es6": true,
