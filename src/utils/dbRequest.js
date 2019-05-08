@@ -1,4 +1,4 @@
-const requestHandler = require('./httpRequest');
+const requestHandler = require('./httpRequest')
 
 /**
  * 数据库模块的通用请求方法
@@ -14,7 +14,7 @@ class Request {
    * @param config
    */
   constructor(config) {
-    this.config = config;
+    this.config = config
   }
 
   /**
@@ -26,13 +26,13 @@ class Request {
   async send(api, data) {
     const params = Object.assign({}, data, {
       action: api
-    });
+    })
 
     const slowQueryWarning = setTimeout(() => {
       console.warn(
         'Database operation is longer than 3s. Please check query performance and your network environment.'
-      );
-    }, 3000);
+      )
+    }, 3000)
 
     try {
       return await requestHandler({
@@ -43,11 +43,11 @@ class Request {
         headers: {
           'content-type': 'application/json'
         }
-      });
+      })
     } finally {
-      clearTimeout(slowQueryWarning);
+      clearTimeout(slowQueryWarning)
     }
   }
 }
 
-module.exports = Request;
+module.exports = Request
