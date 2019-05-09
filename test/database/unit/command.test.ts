@@ -269,15 +269,15 @@ describe('group操作符', async () => {
 
   const studentsName = 'test-students'
   const studentsData = [
-    { "group": "a", "name": "stu1", "score": 84 },
-    { "group": "a", "name": "stu2", "score": 96 },
-    { "group": "b", "name": "stu3", "score": 80 },
-    { "group": "b", "name": "stu4", "score": 100 }
+    { group: 'a', name: 'stu1', score: 84 },
+    { group: 'a', name: 'stu2', score: 96 },
+    { group: 'b', name: 'stu3', score: 80 },
+    { group: 'b', name: 'stu4', score: 100 }
   ]
   const passagesName = 'test-passages'
   const passagesData = [
-    { "category": "web", "tags": [ "JavaScript", "CSS" ], "title": "title1" },
-    { "category": "System", "tags": [ "C++", "C" ], "title": "title2" }
+    { category: 'web', tags: ['JavaScript', 'CSS'], title: 'title1' },
+    { category: 'System', tags: ['C++', 'C'], title: 'title2' }
   ]
 
   beforeAll(async () => {
@@ -317,7 +317,7 @@ describe('group操作符', async () => {
         maxScore: $.max('$score')
       })
       .end()
-    
+
     assert.strictEqual(result.data.length, 2)
   })
 
@@ -330,10 +330,10 @@ describe('group操作符', async () => {
         minScore: $.min('$score')
       })
       .end()
-    
+
     assert.strictEqual(result.data.length, 2)
   })
-  
+
   it('last', async () => {
     const result = await db
       .collection(studentsName)
@@ -362,7 +362,7 @@ describe('group操作符', async () => {
         min: $.first('$score')
       })
       .end()
-      
+
     assert(result.data[0].min, 80)
   })
 
@@ -375,7 +375,7 @@ describe('group操作符', async () => {
         average: $.avg('$score')
       })
       .end()
-  
+
     assert(result.data[0].average, 90)
   })
 
@@ -389,7 +389,7 @@ describe('group操作符', async () => {
           categories: $.addToSet('$category')
         })
         .end()
-      
+
       assert(result.data[0].categories.length, 2)
     })
 
