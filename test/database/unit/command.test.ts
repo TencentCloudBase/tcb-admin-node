@@ -176,7 +176,7 @@ describe('let', async () => {
   })
 })
 
-describe.only('条件表达式', async () => {
+describe('条件表达式', async () => {
   let goodsCollection = null
   const $ = db.command.aggregate
   const collectionName = 'test-goods'
