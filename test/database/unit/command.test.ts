@@ -261,3 +261,149 @@ describe('条件表达式', async () => {
     ])
   })
 })
+
+describe('group操作符', async () => {
+  let studentsCollection = null,
+    passagesCollection = null
+  const $ = db.command.aggregate
+
+  const studentsName = 'test-students'
+  const studentsData = [
+    { "group": "a", "name": "stu1", "score": 84 },
+    { "group": "a", "name": "stu2", "score": 96 },
+    { "group": "b", "name": "stu3", "score": 80 },
+    { "group": "b", "name": "stu4", "score": 100 }
+  ]
+  const passagesName = 'test-passages'
+  const passagesData = [
+    { "category": "web", "tags": [ "JavaScript", "CSS" ], "title": "title1" },
+    { "category": "System", "tags": [ "C++", "C" ], "title": "title2" }
+  ]
+
+  beforeAll(async () => {
+    studentsCollection = await common.safeCollection(db, studentsName)
+    passagesCollection = await common.safeCollection(db, passagesName)
+    assert.strictEqual(await studentsCollection.create(studentsData), true)
+    assert.strictEqual(await passagesCollection.create(passagesData), true)
+  })
+
+  afterAll(async () => {
+    assert.strictEqual(await studentsCollection.remove(), true)
+    assert.strictEqual(await passagesCollection.remove(), true)
+  })
+
+  it('push', async () => {
+    const result = await db
+      .collection(studentsName)
+      .aggregate()
+      .group({
+        _id: '$group',
+        students: $.push({
+          name: '$name',
+          score: '$score'
+        })
+      })
+      .end()
+    const valid = result.data.every(item => 'students' in item)
+    assert.strictEqual(valid, true)
+  })
+
+  it('max', async () => {
+    const result = await db
+      .collection(studentsName)
+      .aggregate()
+      .group({
+        _id: '$group',
+        maxScore: $.max('$score')
+      })
+      .end()
+    
+    assert.strictEqual(result.data.length, 2)
+  })
+
+  it('min', async () => {
+    const result = await db
+      .collection(studentsName)
+      .aggregate()
+      .group({
+        _id: '$group',
+        minScore: $.min('$score')
+      })
+      .end()
+    
+    assert.strictEqual(result.data.length, 2)
+  })
+  
+  it('last', async () => {
+    const result = await db
+      .collection(studentsName)
+      .aggregate()
+      .sort({
+        score: 1
+      })
+      .group({
+        _id: null,
+        max: $.last('$score')
+      })
+      .end()
+
+    assert(result.data[0].max, 100)
+  })
+
+  it('first', async () => {
+    const result = await db
+      .collection(studentsName)
+      .aggregate()
+      .sort({
+        score: 1
+      })
+      .group({
+        _id: null,
+        min: $.first('$score')
+      })
+      .end()
+      
+    assert(result.data[0].min, 80)
+  })
+
+  it('avg', async () => {
+    const result = await db
+      .collection(studentsName)
+      .aggregate()
+      .group({
+        _id: null,
+        average: $.avg('$score')
+      })
+      .end()
+  
+    assert(result.data[0].average, 90)
+  })
+
+  describe('addToSet', async () => {
+    it('非数组字段', async () => {
+      const result = await db
+        .collection(passagesName)
+        .aggregate()
+        .group({
+          _id: null,
+          categories: $.addToSet('$category')
+        })
+        .end()
+      
+      assert(result.data[0].categories.length, 2)
+    })
+
+    it('数组字段', async () => {
+      const result = await db
+        .collection(passagesName)
+        .aggregate()
+        .group({
+          _id: null,
+          tagsList: $.addToSet('$tags')
+        })
+        .end()
+      const valid = result.data.some(item => Array.isArray(item.tagsList))
+      assert(valid, true)
+    })
+  })
+})
