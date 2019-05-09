@@ -176,7 +176,7 @@ describe('let', async () => {
   })
 })
 
-describe('条件表达式', async () => {
+describe('条件操作符', async () => {
   let goodsCollection = null
   const $ = db.command.aggregate
   const collectionName = 'test-goods'
@@ -237,7 +237,7 @@ describe('条件表达式', async () => {
     ])
   })
 
-  it('ifNull', async () => {
+  it('switch', async () => {
     const $ = db.command.aggregate
     const result = await db
       .collection(collectionName)
@@ -405,5 +405,65 @@ describe('group操作符', async () => {
       const valid = result.data.some(item => Array.isArray(item.tagsList))
       assert(valid, true)
     })
+  })
+})
+
+describe.only('字面量操作符', async () => {
+  let goodsCollection = null
+  const $ = db.command.aggregate
+  const collectionName = 'test-goods'
+  const data = [
+    { price: '$1' },
+    { price: '$2.50' },
+    { price: '$3.60' },
+    { price: '$4.60' }
+  ]
+
+  beforeAll(async () => {
+    goodsCollection = await common.safeCollection(db, collectionName)
+    const success = await goodsCollection.create(data)
+    assert.strictEqual(success, true)
+  })
+
+  afterAll(async () => {
+    const success = await goodsCollection.remove()
+    assert.strictEqual(success, true)
+  })
+
+  it('以字面量的形式使用$', async () => {
+    const $ = db.command.aggregate
+    const result = await db
+      .collection(collectionName)
+      .aggregate()
+      .project({
+        _id: 0,
+        isOneDollar: $.eq(['$price', $.literal('$1')])
+      })
+      .end()
+    assert.deepStrictEqual(result.data, [
+      { isOneDollar: true },
+      { isOneDollar: false },
+      { isOneDollar: false },
+      { isOneDollar: false }
+    ])
+  })
+
+  it('投影一个字段，对应的值为1', async () => {
+    const $ = db.command.aggregate
+    const result = await db
+      .collection(collectionName)
+      .aggregate()
+      .project({
+        _id: 0,
+        price: 1,
+        amount: $.literal(1)
+      })
+      .end()
+    assert.deepStrictEqual(result.data, [
+      { amount: 1, price: '$1' },
+      { amount: 1, price: '$2.50' },
+      { amount: 1, price: '$3.60' },
+      { amount: 1, price: '$4.60' }
+    ])
   })
 })
