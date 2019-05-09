@@ -175,3 +175,89 @@ describe('let', async () => {
     assert.strictEqual(result.data.length, 3)
   })
 })
+
+describe.only('条件表达式', async () => {
+  let goodsCollection = null
+  const $ = db.command.aggregate
+  const collectionName = 'test-goods'
+  const data = [
+    { name: 'a', amount: 100, desc: 'A' },
+    { name: 'b', amount: 200, desc: null },
+    { name: 'c', amount: 300 }
+  ]
+
+  beforeAll(async () => {
+    goodsCollection = await common.safeCollection(db, collectionName)
+    const success = await goodsCollection.create(data)
+    assert.strictEqual(success, true)
+  })
+
+  afterAll(async () => {
+    const success = await goodsCollection.remove()
+    assert.strictEqual(success, true)
+  })
+
+  it('cond', async () => {
+    const $ = db.command.aggregate
+    const result = await db
+      .collection(collectionName)
+      .aggregate()
+      .project({
+        _id: 0,
+        name: 1,
+        discount: $.cond({
+          if: $.gte(['$amount', 200]),
+          then: 0.7,
+          else: 0.9
+        })
+      })
+      .end()
+    assert.deepStrictEqual(result.data, [
+      { name: 'a', discount: 0.9 },
+      { name: 'b', discount: 0.7 },
+      { name: 'c', discount: 0.7 }
+    ])
+  })
+
+  it('ifNull', async () => {
+    const $ = db.command.aggregate
+    const result = await db
+      .collection(collectionName)
+      .aggregate()
+      .project({
+        _id: 0,
+        name: 1,
+        desc: $.ifNull(['$desc', 'Not defined'])
+      })
+      .end()
+    assert.deepStrictEqual(result.data, [
+      { desc: 'A', name: 'a' },
+      { desc: 'Not defined', name: 'b' },
+      { desc: 'Not defined', name: 'c' }
+    ])
+  })
+
+  it('ifNull', async () => {
+    const $ = db.command.aggregate
+    const result = await db
+      .collection(collectionName)
+      .aggregate()
+      .project({
+        _id: 0,
+        name: 1,
+        discount: $.switch({
+          branches: [
+            { case: $.gt(['$amount', 250]), then: 0.8 },
+            { case: $.gt(['$amount', 150]), then: 0.9 }
+          ],
+          default: 1
+        })
+      })
+      .end()
+    assert.deepStrictEqual(result.data, [
+      { name: 'a', discount: 1 },
+      { name: 'b', discount: 0.9 },
+      { name: 'c', discount: 0.8 }
+    ])
+  })
+})
