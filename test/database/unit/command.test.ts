@@ -468,7 +468,7 @@ describe('字面量操作符', async () => {
   })
 })
 
-describe.only('字符串操作符', async () => {
+describe('字符串操作符', async () => {
   let studentsCollection = null,
     personCollection = null
   const $ = db.command.aggregate
@@ -666,5 +666,38 @@ describe.only('字符串操作符', async () => {
       })
       .end()
     assert.deepStrictEqual(result.data, [{ firstCh: '心' }])
+  })
+
+  test('toLower', async () => {
+    const result = await db
+      .collection(studentsName)
+      .aggregate()
+      .project({
+        _id: 0,
+        result: $.toLower('$firstName')
+      })
+      .end()
+
+    assert.deepStrictEqual(result.data, [
+      { result: 'yuanxin' },
+      { result: 'weijia' },
+      { result: 'chengxi' }
+    ])
+  })
+
+  test('toUpper', async () => {
+    const result = await db
+      .collection(studentsName)
+      .aggregate()
+      .project({
+        _id: 0,
+        result: $.toUpper('$lastName')
+      })
+      .end()
+    assert.deepStrictEqual(result.data, [
+      { result: 'DONG' },
+      { result: 'WANG' },
+      { result: 'LI' }
+    ])
   })
 })
