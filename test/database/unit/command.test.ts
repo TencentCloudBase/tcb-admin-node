@@ -504,4 +504,36 @@ describe.only('字符串操作符', async () => {
       { fullName: 'Chengxi Li' },
     ])
   })
+
+  it('indexOfBytes', async () => {
+    const result = await db
+      .collection('students')
+      .aggregate()
+      .project({
+        _id: 0,
+        aStrIndex: $.indexOfBytes(['$firstName', 'a'])
+      })
+      .end()
+    assert.deepStrictEqual(result.data, [
+      { aStrIndex: 2 },
+      { aStrIndex: 5 },
+      { aStrIndex: -1 }
+    ])
+  })
+
+  it('indexOfCP', async () => {
+    const result = await db
+      .collection('students')
+      .aggregate()
+      .project({
+        _id: 0,
+        aStrIndex: $.indexOfCP(['$firstName', 'a'])
+      })
+      .end()
+    assert.deepStrictEqual(result.data, [
+      { aStrIndex: 2 },
+      { aStrIndex: 5 },
+      { aStrIndex: -1 }
+    ])
+  })
 })
