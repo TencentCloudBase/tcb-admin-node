@@ -408,7 +408,7 @@ describe('group操作符', async () => {
   })
 })
 
-describe.only('字面量操作符', async () => {
+describe('字面量操作符', async () => {
   let goodsCollection = null
   const $ = db.command.aggregate
   const collectionName = 'test-goods'
@@ -464,6 +464,44 @@ describe.only('字面量操作符', async () => {
       { amount: 1, price: '$2.50' },
       { amount: 1, price: '$3.60' },
       { amount: 1, price: '$4.60' }
+    ])
+  })
+})
+
+describe.only('字符串操作符', async () => {
+  let studentsCollection = null
+  const $ = db.command.aggregate
+
+  const studentsName = 'test-students'
+  const studentsData = [
+    { birthday: '1999/12/12', firstName: 'Yuanxin', group: 'a', lastName: 'Dong', score: 84 },
+    { birthday: '1998/11/11', firstName: 'Weijia', group: 'a', lastName: 'Wang', score: 96 },
+    { birthday: '1997/10/10', firstName: 'Chengxi', group: 'b', lastName: 'Li', score: 80 }
+  ]
+
+  beforeAll(async () => {
+    studentsCollection = await common.safeCollection(db, studentsName)
+    assert.strictEqual(await studentsCollection.create(studentsData), true)
+  })
+
+  afterAll(async () => {
+    assert.strictEqual(await studentsCollection.remove(), true)
+  })
+
+  it('concat', async () => {
+    const result = await db
+      .collection('students')
+      .aggregate()
+      .project({
+        _id: 0,
+        fullName: $.concat(['$firstName', ' ', '$lastName'])
+      })
+      .end()
+    
+    assert.deepStrictEqual(result.data, [
+      { fullName: 'Yuanxin Dong' },
+      { fullName: 'Weijia Wang' },
+      { fullName: 'Chengxi Li' },
     ])
   })
 })
