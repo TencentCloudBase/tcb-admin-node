@@ -469,23 +469,48 @@ describe('字面量操作符', async () => {
 })
 
 describe.only('字符串操作符', async () => {
-  let studentsCollection = null
+  let studentsCollection = null,
+    personCollection = null
   const $ = db.command.aggregate
 
   const studentsName = 'test-students'
   const studentsData = [
-    { birthday: '1999/12/12', firstName: 'Yuanxin', group: 'a', lastName: 'Dong', score: 84 },
-    { birthday: '1998/11/11', firstName: 'Weijia', group: 'a', lastName: 'Wang', score: 96 },
-    { birthday: '1997/10/10', firstName: 'Chengxi', group: 'b', lastName: 'Li', score: 80 }
+    {
+      birthday: '1999/12/12',
+      firstName: 'Yuanxin',
+      group: 'a',
+      lastName: 'Dong',
+      score: 84
+    },
+    {
+      birthday: '1998/11/11',
+      firstName: 'Weijia',
+      group: 'a',
+      lastName: 'Wang',
+      score: 96
+    },
+    {
+      birthday: '1997/10/10',
+      firstName: 'Chengxi',
+      group: 'b',
+      lastName: 'Li',
+      score: 80
+    }
   ]
+
+  const personName = 'test-person'
+  const personData = [{ name: 'dongyuanxin', nickname: '心谭' }]
 
   beforeAll(async () => {
     studentsCollection = await common.safeCollection(db, studentsName)
+    personCollection = await common.safeCollection(db, personName)
     assert.strictEqual(await studentsCollection.create(studentsData), true)
+    assert.strictEqual(await personCollection.create(personData), true)
   })
 
   afterAll(async () => {
     assert.strictEqual(await studentsCollection.remove(), true)
+    assert.strictEqual(await personCollection.remove(), true)
   })
 
   it('concat', async () => {
@@ -497,11 +522,11 @@ describe.only('字符串操作符', async () => {
         fullName: $.concat(['$firstName', ' ', '$lastName'])
       })
       .end()
-    
+
     assert.deepStrictEqual(result.data, [
       { fullName: 'Yuanxin Dong' },
       { fullName: 'Weijia Wang' },
-      { fullName: 'Chengxi Li' },
+      { fullName: 'Chengxi Li' }
     ])
   })
 
@@ -547,9 +572,9 @@ describe.only('字符串操作符', async () => {
       })
       .end()
     assert.deepStrictEqual(result.data, [
-      { birthday:[ '1999', '12', '12' ] },
-      { birthday:[ '1998', '11', '11' ] },
-      { birthday:[ '1997', '10', '10' ] }
+      { birthday: ['1999', '12', '12'] },
+      { birthday: ['1998', '11', '11'] },
+      { birthday: ['1997', '10', '10'] }
     ])
   })
 
@@ -559,7 +584,7 @@ describe.only('字符串操作符', async () => {
       .aggregate()
       .project({
         _id: 0,
-        result: $.strcasecmp(['$firstName', '$lastName']),
+        result: $.strcasecmp(['$firstName', '$lastName'])
       })
       .end()
     assert.deepStrictEqual(result.data, [
@@ -567,5 +592,18 @@ describe.only('字符串操作符', async () => {
       { result: 1 },
       { result: -1 }
     ])
+  })
+
+  it('strLenBytes', async () => {
+    const result = await db
+      .collection(personName)
+      .aggregate()
+      .project({
+        _id: 0,
+        nameLength: $.strLenBytes('$name'),
+        nicknameLength: $.strLenBytes('$nickname')
+      })
+      .end()
+    assert.deepStrictEqual(result.data, [{ nameLength: 11, nicknameLength: 6 }])
   })
 })
