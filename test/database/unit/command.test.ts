@@ -490,7 +490,7 @@ describe.only('字符串操作符', async () => {
 
   it('concat', async () => {
     const result = await db
-      .collection('students')
+      .collection(studentsName)
       .aggregate()
       .project({
         _id: 0,
@@ -507,7 +507,7 @@ describe.only('字符串操作符', async () => {
 
   it('indexOfBytes', async () => {
     const result = await db
-      .collection('students')
+      .collection(studentsName)
       .aggregate()
       .project({
         _id: 0,
@@ -523,7 +523,7 @@ describe.only('字符串操作符', async () => {
 
   it('indexOfCP', async () => {
     const result = await db
-      .collection('students')
+      .collection(studentsName)
       .aggregate()
       .project({
         _id: 0,
@@ -536,4 +536,22 @@ describe.only('字符串操作符', async () => {
       { aStrIndex: -1 }
     ])
   })
+
+  it('split', async () => {
+    const result = await db
+      .collection(studentsName)
+      .aggregate()
+      .project({
+        _id: 0,
+        birthday: $.split(['$birthday', '/'])
+      })
+      .end()
+    assert.deepStrictEqual(result.data, [
+      { birthday:[ '1999', '12', '12' ] },
+      { birthday:[ '1998', '11', '11' ] },
+      { birthday:[ '1997', '10', '10' ] }
+    ])
+  })
+
+  
 })
