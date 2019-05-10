@@ -619,4 +619,52 @@ describe.only('字符串操作符', async () => {
       .end()
     assert.deepStrictEqual(result.data, [{ nameLength: 11, nicknameLength: 2 }])
   })
+
+  it('substr', async () => {
+    const result = await db
+      .collection(studentsName)
+      .aggregate()
+      .project({
+        _id: 0,
+        year: $.substr(['$birthday', 0, 4]),
+        month: $.substr(['$birthday', 5, 2]),
+        day: $.substr(['$birthday', 8, -1])
+      })
+      .end()
+    assert.deepStrictEqual(result.data, [
+      { day: '12', month: '12', year: '1999' },
+      { day: '11', month: '11', year: '1998' },
+      { day: '10', month: '10', year: '1997' }
+    ])
+  })
+
+  it('substrBytes', async () => {
+    const result = await db
+      .collection(studentsName)
+      .aggregate()
+      .project({
+        _id: 0,
+        year: $.substrBytes(['$birthday', 0, 4]),
+        month: $.substrBytes(['$birthday', 5, 2]),
+        day: $.substrBytes(['$birthday', 8, -1])
+      })
+      .end()
+    assert.deepStrictEqual(result.data, [
+      { day: '12', month: '12', year: '1999' },
+      { day: '11', month: '11', year: '1998' },
+      { day: '10', month: '10', year: '1997' }
+    ])
+  })
+
+  test('substrCP', async () => {
+    const result = await db
+      .collection(personName)
+      .aggregate()
+      .project({
+        _id: 0,
+        firstCh: $.substrCP(['$nickname', 0, 1])
+      })
+      .end()
+    assert.deepStrictEqual(result.data, [{ firstCh: '心' }])
+  })
 })
