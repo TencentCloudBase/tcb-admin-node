@@ -1,6 +1,7 @@
 const database = require('@cloudbase/database').Db
 const storage = require('./src/storage')
 const functions = require('./src/functions')
+const auth = require('./src/auth')
 const wx = require('./src/wx')
 const Request = require('./src/utils/dbRequest')
 
@@ -93,5 +94,6 @@ function extend(target, source) {
 extend(Tcb.prototype, functions)
 extend(Tcb.prototype, storage)
 extend(Tcb.prototype, wx)
+extend(Tcb.prototype, auth)
 
 module.exports = new Tcb()
