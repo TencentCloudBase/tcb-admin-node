@@ -606,4 +606,17 @@ describe.only('字符串操作符', async () => {
       .end()
     assert.deepStrictEqual(result.data, [{ nameLength: 11, nicknameLength: 6 }])
   })
+
+  it('strLenCP', async () => {
+    const result = await db
+      .collection(personName)
+      .aggregate()
+      .project({
+        _id: 0,
+        nameLength: $.strLenCP('$name'),
+        nicknameLength: $.strLenCP('$nickname')
+      })
+      .end()
+    assert.deepStrictEqual(result.data, [{ nameLength: 11, nicknameLength: 2 }])
+  })
 })
