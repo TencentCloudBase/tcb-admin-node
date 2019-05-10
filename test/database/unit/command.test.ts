@@ -553,5 +553,19 @@ describe.only('字符串操作符', async () => {
     ])
   })
 
-  
+  it('strcasecmp', async () => {
+    const result = await db
+      .collection(studentsName)
+      .aggregate()
+      .project({
+        _id: 0,
+        result: $.strcasecmp(['$firstName', '$lastName']),
+      })
+      .end()
+    assert.deepStrictEqual(result.data, [
+      { result: 1 },
+      { result: 1 },
+      { result: -1 }
+    ])
+  })
 })
