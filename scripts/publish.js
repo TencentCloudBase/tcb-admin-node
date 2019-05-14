@@ -51,6 +51,7 @@ async function publish() {
   ])
 
   if (confirm.result) {
+    console.log('发布中...')
     await execCommand(`npm version ${newVersion} && ${publishCommand}`)
     console.log('发布成功！')
   }
@@ -60,6 +61,7 @@ publish()
 async function execCommand(cmd) {
   return new Promise((resolve, reject) => {
     exec(cmd, (error, stdout, stderr) => {
+      console.log(error, stdout, stderr)
       if (error || stderr) {
         reject(error || stderr)
         return
