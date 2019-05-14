@@ -449,3 +449,32 @@ describe('unwind', async () => {
     })
   })
 })
+
+describe('Date', async () => {
+  let coll = null
+
+  const date = new Date()
+  const data = [{ date }]
+
+  beforeAll(async () => {
+    coll = await common.safeCollection(db, 'articles')
+    const success = await coll.create(data)
+    assert.strictEqual(success, true)
+  })
+
+  afterAll(async () => {
+    const success = await coll.remove()
+    assert.strictEqual(success, true)
+  })
+
+  it('Date类型', async () => {
+    const result = await db
+      .collection('articles')
+      .aggregate()
+      .project({
+        _id: 0
+      })
+      .end()
+    assert.deepStrictEqual(result.data[0], { date })
+  })
+})
