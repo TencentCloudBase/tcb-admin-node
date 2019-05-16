@@ -477,6 +477,7 @@ describe('字符串操作符', async () => {
   const studentsData = [
     {
       birthday: '1999/12/12',
+      date: new Date('1999/12/12'),
       firstName: 'Yuanxin',
       group: 'a',
       lastName: 'Dong',
@@ -484,6 +485,7 @@ describe('字符串操作符', async () => {
     },
     {
       birthday: '1998/11/11',
+      date: new Date('1998/11/11'),
       firstName: 'Weijia',
       group: 'a',
       lastName: 'Wang',
@@ -491,6 +493,7 @@ describe('字符串操作符', async () => {
     },
     {
       birthday: '1997/10/10',
+      date: new Date('1997/10/10'),
       firstName: 'Chengxi',
       group: 'b',
       lastName: 'Li',
@@ -528,6 +531,60 @@ describe('字符串操作符', async () => {
       { fullName: 'Weijia Wang' },
       { fullName: 'Chengxi Li' }
     ])
+  })
+
+  describe('dateToString', async () => {
+    it('格式化日期', async () => {
+      const result = await db
+        .collection(studentsName)
+        .aggregate()
+        .project({
+          _id: 0,
+          formatDate: $.dateToString({
+            date: '$date',
+            format: '%Y-%m-%d'
+          })
+        })
+        .end()
+      assert.deepStrictEqual(result.data, [
+        { formatDate: '1999-12-11' },
+        { formatDate: '1998-11-10' },
+        { formatDate: '1997-10-09' }
+      ])
+    })
+
+    it('时区时间', async () => {
+      const result = await db
+        .collection(studentsName)
+        .aggregate()
+        .project({
+          _id: 0,
+          formatDate: $.dateToString({
+            date: '$date',
+            format: '%H:%M:%S',
+            timezone: 'Asia/Shanghai'
+          })
+        })
+        .end()
+      const valid = result.data.every(item => item.formatDate === '00:00:00')
+      assert.ok(valid)
+    })
+
+    it('缺失情况的默认值', async () => {
+      const result = await db
+        .collection(studentsName)
+        .aggregate()
+        .project({
+          _id: 0,
+          formatDate: $.dateToString({
+            date: '$empty',
+            onNull: 'null'
+          })
+        })
+        .end()
+      const valid = result.data.every(item => item.formatDate === 'null')
+      assert.ok(valid)
+    })
   })
 
   it('indexOfBytes', async () => {
