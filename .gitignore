@@ -5,6 +5,8 @@ node_modules
 .DS_Store
 build
 test/config.js
+test/tt.js
+.vscode
 coverage
 package.json
 yarn.lock

@@ -31,14 +31,27 @@ tcb.init({
   env: 'xxx'
 })
 
+//获取执行当前云函数的环境
+tcb.getCurrentEnv()
+
+
+//云函数下指定环境为当前的执行环境
+tcb.init({
+  env: tcb.getCurrentEnv()
+})
+
 //修改请求超时时间
 tcb.init({
   timeout: 5000
 })
 
 //使用多个环境
-//初始化环境'xx-zz'
+//初始化环境'xx'和'zz'
 const app = tcb.init({
-  env: 'xx-zz'
+  env: 'xx'
+})
+
+const app2 = tcb.init({
+  env: 'zz'
 })
 ```
