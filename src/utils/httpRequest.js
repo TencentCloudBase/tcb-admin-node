@@ -49,6 +49,9 @@ module.exports = function(args) {
     throw Error('missing secretId or secretKey of tencent cloud')
   }
 
+  const tcbSource = process.env.TCB_SOURCE || ''
+  const sourceTag = process.env.TENCENTCLOUD_RUNENV === 'SCF' ? 'scf' : 'not_scf'
+
   const authObj = {
     SecretId: config.secretId,
     SecretKey: config.secretKey,
@@ -57,7 +60,8 @@ module.exports = function(args) {
     Query: params,
     Headers: Object.assign(
       {
-        'user-agent': `tcb-admin-sdk/${version}`
+        'user-agent': `tcb-admin-sdk/${version}`,
+        'X-TCB-Source': tcbSource + ',' + sourceTag
       },
       args.headers || {}
     )
