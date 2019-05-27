@@ -49,8 +49,9 @@ module.exports = function(args) {
     throw Error('missing secretId or secretKey of tencent cloud')
   }
 
-  const tcbSource = process.env.TCB_SOURCE || ''
-  const sourceTag = process.env.TENCENTCLOUD_RUNENV === 'SCF' ? 'scf' : 'not_scf'
+  const TCB_SOURCE = process.env.TCB_SOURCE || ''
+  const SOURCE_TAG =
+    process.env.TENCENTCLOUD_RUNENV === 'SCF' ? 'scf' : 'not_scf'
 
   const authObj = {
     SecretId: config.secretId,
@@ -61,7 +62,7 @@ module.exports = function(args) {
     Headers: Object.assign(
       {
         'user-agent': `tcb-admin-sdk/${version}`,
-        'X-TCB-Source': tcbSource + ',' + sourceTag
+        'X-TCB-Source': TCB_SOURCE + ',' + SOURCE_TAG
       },
       args.headers || {}
     )
@@ -123,8 +124,8 @@ module.exports = function(args) {
   if (args.proxy) {
     opts.proxy = args.proxy
   }
-  // opts.proxy = "http://web-proxy.tencent.com:8080";
-  // console.log(JSON.stringify(opts));
+
+  // opts.proxy = "http://web-proxy.tencent.com:8080"
   return new Promise(function(resolve, reject) {
     request(opts, function(err, response, body) {
       args && args.callback && args.callback(response)
