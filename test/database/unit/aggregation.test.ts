@@ -450,10 +450,10 @@ describe('unwind', async () => {
   })
 })
 
-describe('Date', async () => {
+describe.only('Date', async () => {
   let coll = null
 
-  const date = new Date()
+  const date = new Date(1557826731686)
   const data = [{ date }]
 
   beforeAll(async () => {
@@ -476,5 +476,58 @@ describe('Date', async () => {
       })
       .end()
     assert.deepStrictEqual(result.data[0], { date })
+  })
+
+  it('Date的各种操作符', async () => {
+    const $ = db.command.aggregate
+    const result = await db
+      .collection('articles')
+      .aggregate()
+      .project({
+        _id: 0,
+        date: 1,
+        dayOfWeek: $.dayOfWeek('$date'),
+        dayOfYear: $.dayOfYear('$date'),
+        dayOfMonth: $.dayOfMonth('$date'),
+        year: $.year('$date'),
+        month: $.month('$date'),
+        hour: $.hour('$date'),
+        minute: $.minute('$date'),
+        second: $.second('$date'),
+        millisecond: $.millisecond('$date'),
+        week: $.week('$date'),
+        dateFromParts: $.dateFromParts({
+          year: 2017,
+          month: 2,
+          day: 8,
+          hour: 12,
+          timezone: 'America/New_York'
+        }),
+        dateFromString: $.dateFromString({
+          dateString: date.toISOString()
+        }),
+        isoDayOfWeek: $.isoDayOfWeek('$date'),
+        isoWeek: $.isoWeek('$date'),
+        isoWeekYear: $.isoWeekYear('$date')
+      })
+      .end()
+    assert.deepStrictEqual(result.data[0], {
+      date,
+      year: date.getFullYear(),
+      month: date.getMonth() + 1,
+      dayOfMonth: date.getDate(),
+      hour: date.getUTCHours(),
+      minute: date.getMinutes(),
+      second: date.getSeconds(),
+      millisecond: date.getMilliseconds(),
+      dayOfYear: 134,
+      dayOfWeek: 3,
+      week: 19,
+      dateFromParts: new Date('2017-02-08T17:00:00.000Z'),
+      dateFromString: date,
+      isoDayOfWeek: 2,
+      isoWeek: 20,
+      isoWeekYear: 2019
+    })
   })
 })
