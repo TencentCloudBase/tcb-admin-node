@@ -817,3 +817,68 @@ describe('mergeObjects', async () => {
     ])
   })
 })
+
+describe('集合操作', async () => {
+  let goodsCollection = null
+  const $ = db.command.aggregate
+  const collectionName = 'test-goods'
+  const data = [
+    { arr: [true] },
+    { arr: [] },
+    { arr: [true, false] },
+    { arr: [1] },
+    { arr: [1, 0] },
+    { arr: ['stark'] }
+  ]
+
+  beforeAll(async () => {
+    goodsCollection = await common.safeCollection(db, collectionName)
+    const success = await goodsCollection.create(data)
+    assert.strictEqual(success, true)
+  })
+
+  afterAll(async () => {
+    const success = await goodsCollection.remove()
+    assert.strictEqual(success, true)
+  })
+
+  it('allElementsTrue', async () => {
+    const $ = db.command.aggregate
+    const result = await db
+      .collection(collectionName)
+      .aggregate()
+      .project({
+        _id: 0,
+        allElementsTrue: $.allElementsTrue(['$arr'])
+      })
+      .end()
+    assert.deepStrictEqual(result.data, [
+      { allElementsTrue: true },
+      { allElementsTrue: true },
+      { allElementsTrue: false },
+      { allElementsTrue: true },
+      { allElementsTrue: false },
+      { allElementsTrue: true }
+    ])
+  })
+
+  it('anyElementTrue', async () => {
+    const $ = db.command.aggregate
+    const result = await db
+      .collection(collectionName)
+      .aggregate()
+      .project({
+        _id: 0,
+        anyElementTrue: $.anyElementTrue(['$arr'])
+      })
+      .end()
+    assert.deepStrictEqual(result.data, [
+      { anyElementTrue: true },
+      { anyElementTrue: false },
+      { anyElementTrue: true },
+      { anyElementTrue: true },
+      { anyElementTrue: true },
+      { anyElementTrue: true }
+    ])
+  })
+})
