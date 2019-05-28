@@ -758,3 +758,62 @@ describe('字符串操作符', async () => {
     ])
   })
 })
+
+describe('mergeObjects', async () => {
+  let goodsCollection = null
+  const $ = db.command.aggregate
+  const collectionName = 'test-goods'
+  const data = [
+    { name: 'A', foo: { a: 1 }, bar: { b: 2 } },
+    { name: 'A', foo: { c: 1 }, bar: { d: 2 } },
+    { name: 'A', foo: { e: 1 }, bar: { f: 2 } }
+  ]
+
+  beforeAll(async () => {
+    goodsCollection = await common.safeCollection(db, collectionName)
+    const success = await goodsCollection.create(data)
+    assert.strictEqual(success, true)
+  })
+
+  afterAll(async () => {
+    const success = await goodsCollection.remove()
+    assert.strictEqual(success, true)
+  })
+
+  it('在group中使用', async () => {
+    const $ = db.command.aggregate
+    const result = await db
+      .collection(collectionName)
+      .aggregate()
+      .group({
+        _id: '$name',
+        mergedFoo: $.mergeObjects('$foo'),
+        mergeBar: $.mergeObjects('$bar')
+      })
+      .end()
+    assert.deepStrictEqual(result.data, [
+      {
+        _id: 'A',
+        mergedFoo: { a: 1, c: 1, e: 1 },
+        mergeBar: { b: 2, d: 2, f: 2 }
+      }
+    ])
+  })
+
+  it('在group以外使用', async () => {
+    const $ = db.command.aggregate
+    const result = await db
+      .collection(collectionName)
+      .aggregate()
+      .project({
+        _id: 0,
+        foobar: $.mergeObjects(['$foo', '$bar'])
+      })
+      .end()
+    assert.deepStrictEqual(result.data, [
+      { foobar: { a: 1, b: 2 } },
+      { foobar: { c: 1, d: 2 } },
+      { foobar: { e: 1, f: 2 } }
+    ])
+  })
+})

@@ -450,7 +450,7 @@ describe('unwind', async () => {
   })
 })
 
-describe.only('Date', async () => {
+describe('Date', async () => {
   let coll = null
 
   const date = new Date(1557826731686)
