@@ -76,6 +76,13 @@ Tcb.prototype.database = function(dbConfig) {
   return new database({ ...this, ...dbConfig })
 }
 
+/**
+ * @returns string
+ */
+Tcb.prototype.getCurrentEnv = function() {
+  return process.env.TCB_ENV || process.env.SCF_NAMESPACE
+}
+
 function each(obj, fn) {
   for (var i in obj) {
     if (obj.hasOwnProperty(i)) {
