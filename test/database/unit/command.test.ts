@@ -882,3 +882,135 @@ describe('集合操作', async () => {
     ])
   })
 })
+
+describe('集合操作2', async () => {
+  let goodsCollection = null
+  const $ = db.command.aggregate
+  const collectionName = 'test-goods'
+  const data = [
+    { A: [1, 2], B: [1, 2] },
+    { A: [1, 2], B: [2, 1, 2] },
+    { A: [1, 2], B: [1, 2, 3] },
+    { A: [1, 2], B: [3, 1] },
+    { A: [1, 2], B: [] },
+    { A: [1, 2], B: [{}, []] },
+    { A: [], B: [] },
+    { A: [], B: [1] }
+  ]
+
+  beforeAll(async () => {
+    goodsCollection = await common.safeCollection(db, collectionName)
+    const success = await goodsCollection.create(data)
+    assert.strictEqual(success, true)
+  })
+
+  afterAll(async () => {
+    const success = await goodsCollection.remove()
+    assert.strictEqual(success, true)
+  })
+
+  it('setDifference', async () => {
+    const result = await db
+      .collection(collectionName)
+      .aggregate()
+      .project({
+        _id: 0,
+        isBOnly: $.setDifference(['$B', '$A'])
+      })
+      .end()
+    assert.deepStrictEqual(result.data, [
+      { isBOnly: [] },
+      { isBOnly: [] },
+      { isBOnly: [3] },
+      { isBOnly: [3] },
+      { isBOnly: [] },
+      { isBOnly: [{}, []] },
+      { isBOnly: [] },
+      { isBOnly: [1] }
+    ])
+  })
+
+  it('setEquals', async () => {
+    const result = await db
+      .collection(collectionName)
+      .aggregate()
+      .project({
+        _id: 0,
+        sameElements: $.setEquals(['$A', '$B'])
+      })
+      .end()
+    assert.deepStrictEqual(result.data, [
+      { sameElements: true },
+      { sameElements: true },
+      { sameElements: false },
+      { sameElements: false },
+      { sameElements: false },
+      { sameElements: false },
+      { sameElements: true },
+      { sameElements: false }
+    ])
+  })
+
+  it('setIntersection', async () => {
+    const result = await db
+      .collection(collectionName)
+      .aggregate()
+      .project({
+        _id: 0,
+        setIntersection: $.setIntersection(['$A', '$B'])
+      })
+      .end()
+    assert.deepStrictEqual(result.data, [
+      { setIntersection: [1, 2] },
+      { setIntersection: [1, 2] },
+      { setIntersection: [1, 2] },
+      { setIntersection: [1] },
+      { setIntersection: [] },
+      { setIntersection: [] },
+      { setIntersection: [] },
+      { setIntersection: [] }
+    ])
+  })
+
+  it('setIsSubset', async () => {
+    const result = await db
+      .collection(collectionName)
+      .aggregate()
+      .project({
+        _id: 0,
+        setIsSubset: $.setIsSubset(['$A', '$B'])
+      })
+      .end()
+    assert.deepStrictEqual(result.data, [
+      { setIsSubset: true },
+      { setIsSubset: true },
+      { setIsSubset: true },
+      { setIsSubset: false },
+      { setIsSubset: false },
+      { setIsSubset: false },
+      { setIsSubset: true },
+      { setIsSubset: true }
+    ])
+  })
+
+  it('setUnion', async () => {
+    const result = await db
+      .collection(collectionName)
+      .aggregate()
+      .project({
+        _id: 0,
+        setUnion: $.setUnion(['$A', '$B'])
+      })
+      .end()
+    assert.deepStrictEqual(result.data, [
+      { setUnion: [1, 2] },
+      { setUnion: [1, 2] },
+      { setUnion: [1, 2, 3] },
+      { setUnion: [1, 2, 3] },
+      { setUnion: [1, 2] },
+      { setUnion: [1, 2, {}, []] },
+      { setUnion: [] },
+      { setUnion: [1] }
+    ])
+  })
+})
