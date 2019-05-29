@@ -38,7 +38,7 @@ describe('sortByCount', async () => {
   ]
 
   beforeAll(async () => {
-    passagesCollection = await common.safeCollection(db, 'test-passages')
+    passagesCollection = await common.safeCollection(db, 'test-sortByCount')
     const success = await passagesCollection.create(data)
     assert.strictEqual(success, true)
   })
@@ -50,7 +50,7 @@ describe('sortByCount', async () => {
 
   it('统计基础类型', async () => {
     const result = await db
-      .collection('test-passages')
+      .collection('test-sortByCount')
       .aggregate()
       .sortByCount('$category')
       .end()
@@ -59,7 +59,7 @@ describe('sortByCount', async () => {
 
   it('解构数组类型', async () => {
     const result = await db
-      .collection('test-passages')
+      .collection('test-sortByCount')
       .aggregate()
       .unwind('$tags')
       .sortByCount('$tags')
