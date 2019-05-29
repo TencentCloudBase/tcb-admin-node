@@ -1,3 +1,6 @@
+# v1.8.0
+- [add] 新增getCurrentEnv方法
+
 # v1.6.0
 - [add] 新增auth api
 - [add] 文件上传直传
