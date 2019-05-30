@@ -531,3 +531,49 @@ describe('Date', async () => {
     })
   })
 })
+
+describe('lookup', async () => {
+  let coll1 = null
+  let coll2 = null
+
+  const data1 = [
+    { name: 'stark', age: 24 },
+    { name: 'justan', age: 24 },
+    { name: 'jimmy', age: 24 }
+  ]
+  const data2 = [
+    { name: 'stark', gender: 'male' },
+    { name: 'justan', gender: 'male' },
+    { name: 'jimmy', gender: 'male' }
+  ]
+
+  beforeAll(async () => {
+    coll1 = await common.safeCollection(db, 'join1')
+    coll2 = await common.safeCollection(db, 'join2')
+    const success1 = await coll1.create(data1)
+    const success2 = await coll2.create(data2)
+    assert.strictEqual(success1, true)
+    assert.strictEqual(success2, true)
+  })
+
+  afterAll(async () => {
+    const success1 = await coll1.remove()
+    assert.strictEqual(success1, true)
+    const success2 = await coll2.remove()
+    assert.strictEqual(success2, true)
+  })
+
+  it('...', async () => {
+    const result = await db
+      .collection('join1')
+      .aggregate()
+      .lookup({
+        from: 'join2',
+        localField: 'name',
+        foreignField: 'name',
+        as: 'join'
+      })
+      .end()
+    console.log(result.data)
+  })
+})
