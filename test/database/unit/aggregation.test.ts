@@ -563,7 +563,7 @@ describe('lookup', async () => {
     assert.strictEqual(success2, true)
   })
 
-  it('...', async () => {
+  it('lookup', async () => {
     const result = await db
       .collection('join1')
       .aggregate()
@@ -574,6 +574,8 @@ describe('lookup', async () => {
         as: 'join'
       })
       .end()
-    console.log(result.data)
+    assert(result.data[0].name === 'stark')
+    assert(result.data[0].age === 24)
+    assert(result.data[0].join[0].gender === 'male')
   })
 })
