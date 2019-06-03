@@ -1,3 +1,6 @@
+# v1.9.0
+- [add] 新增聚合搜索接口
+
 # v1.8.0
 - [add] 新增getCurrentEnv方法
 
