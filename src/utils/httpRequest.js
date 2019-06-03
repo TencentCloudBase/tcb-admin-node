@@ -120,7 +120,6 @@ module.exports = function(args) {
     opts.proxy = args.proxy
   }
   // opts.proxy = "http://web-proxy.tencent.com:8080";
-  // console.log(JSON.stringify(opts));
   return new Promise(function(resolve, reject) {
     request(opts, function(err, response, body) {
       args && args.callback && args.callback(response)
