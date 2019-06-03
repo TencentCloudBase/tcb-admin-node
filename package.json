@@ -10,8 +10,7 @@
     "tsc:w": "tsc -p tsconfig.json -w",
     "tstest": "mocha --timeout 5000 --require espower-typescript/guess test/**/*.test.ts",
     "test": "jest --verbose false -i",
-    "coverage": "jest --verbose false --coverage",
-    "publish": "node ./scripts/publish.js"
+    "coverage": "jest --verbose false --coverage"
   },
   "repository": {
     "type": "git",
