@@ -49,6 +49,15 @@ var getAuth = function(opt) {
         if (obj[key] === undefined) {
           continue
         }
+        // 跳过特定的Key，避免验签失败
+        // TODO Refactor
+        const lowerCaseKey = key.toLowerCase()
+        if (
+          lowerCaseKey === 'x-tcb-source' ||
+          lowerCaseKey === 'content-type'
+        ) {
+          continue
+        }
         list.push(key)
       }
     }
