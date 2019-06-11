@@ -20,7 +20,7 @@ TCB提供开发应用所需服务和基础设施。tcb admin Node.js SDK 让你�
 
 ## 安装
 tcb admin Node.js SDK 可以通过`tcb-admin-node`来访问：
-```js
+```base
 npm install --save tcb-admin-node@latest
 ```
 
