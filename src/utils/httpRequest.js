@@ -49,6 +49,13 @@ module.exports = function(args) {
     throw Error('missing secretId or secretKey of tencent cloud')
   }
 
+  // Note: 云函数被调用时可能调用端未传递SOURCE，TCB_SOURCE 可能为空
+  const TCB_SOURCE = process.env.TCB_SOURCE || ''
+  const SOURCE =
+    process.env.TENCENTCLOUD_RUNENV === 'SCF'
+      ? `${TCB_SOURCE},scf`
+      : `${TCB_SOURCE},not_scf`
+
   const authObj = {
     SecretId: config.secretId,
     SecretKey: config.secretKey,
@@ -57,7 +64,8 @@ module.exports = function(args) {
     Query: params,
     Headers: Object.assign(
       {
-        'user-agent': `tcb-admin-sdk/${version}`
+        'user-agent': `tcb-admin-sdk/${version}`,
+        'x-tcb-source': SOURCE
       },
       args.headers || {}
     )
@@ -73,16 +81,13 @@ module.exports = function(args) {
   params.sdk_version = version
 
   let url = protocol + '://tcb-admin.tencentcloudapi.com/admin'
-  // url = "http://localhost:8002/admin";
 
   if (process.env.TENCENTCLOUD_RUNENV === 'SCF') {
-    protocol = 'http'
-    url = protocol + '://tcb-admin.tencentyun.com/admin'
+    url = 'http://tcb-admin.tencentyun.com/admin'
   }
 
   if (params.action === 'wx.api' || params.action === 'wx.openApi') {
     url = protocol + '://tcb-open.tencentcloudapi.com/admin'
-    // url = "http://localhost:8002/admin";
   }
 
   var opts = {
@@ -119,7 +124,6 @@ module.exports = function(args) {
   if (args.proxy) {
     opts.proxy = args.proxy
   }
-  // opts.proxy = "http://web-proxy.tencent.com:8080";
   return new Promise(function(resolve, reject) {
     request(opts, function(err, response, body) {
       args && args.callback && args.callback(response)
