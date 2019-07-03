@@ -1,29 +1,29 @@
-import * as assert from "power-assert";
-import * as tcb from '../../../';
+import * as assert from 'power-assert'
+import * as tcb from '../../../'
 import * as Config from '../../config.local'
 
-describe("test/unit/db.test.ts", () => {
+describe('test/unit/db.test.ts', () => {
   const app = tcb.init(Config)
   const db = app.database()
-  // const defaultDbName = "default";
+  // const defaultDbName = 'default'
 
-  // it("use default db", () => {
-  //   assert(db.config.dbname === defaultDbName);
-  // });
+  // it('use default db', () => {
+  //   assert(db.config.dbname === defaultDbName)
+  // })
 
-  it("get collection reference", () => {
-    const collName = "coll-1";
-    const collection = db.collection(collName);
-    assert(collection.name === collName);
-  });
+  it('get collection reference', () => {
+    const collName = 'coll-1'
+    const collection = db.collection(collName)
+    assert(collection.name === collName)
+  })
 
   it('API - getCollections', async () => {
-    const data2 = new db.Geo.Point(23, -67);
-    console.log(data2);
-  });
+    const data2 = new db.Geo.Point(23, -67)
+    console.log(data2)
+  })
 
-  // it('API - getCollections',  async () => {
+  // it('API - getCollections', async () => {
   //   const data = await db.getCollections()
-  //   assert(Array.isArray(data.collections));
-  // });
-});
+  //   assert(Array.isArray(data.collections))
+  // })
+})
