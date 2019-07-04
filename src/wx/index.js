@@ -7,16 +7,10 @@ exports.callWxOpenApi = function({ apiName, requestData } = {}) {
     throw Error(e)
   }
 
-  const wxCloudApiToken = process.env.WX_API_TOKEN || ''
-
-  const tcb_sessionToken = process.env.TCB_SESSIONTOKEN || ''
-
-  let params = {
+  const params = {
     action: 'wx.api',
     apiName,
-    requestData,
-    wxCloudApiToken,
-    tcb_sessionToken
+    requestData
   }
 
   return httpRequest({

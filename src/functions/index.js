@@ -20,13 +20,10 @@ function callFunction({ name, data }) {
     )
   }
 
-  const wxCloudApiToken = process.env.WX_API_TOKEN || ''
-
-  let params = {
+  const params = {
     action: 'functions.invokeFunction',
     function_name: name,
-    request_data: data,
-    wxCloudApiToken
+    request_data: data
   }
 
   return httpRequest({
@@ -37,7 +34,6 @@ function callFunction({ name, data }) {
       'content-type': 'application/json'
     }
   }).then(res => {
-    // console.log(res);
     if (res.code) {
       return res
     } else {
