@@ -21,7 +21,10 @@ module.exports = function(args) {
   params = Object.assign({}, params, {
     envName: config.envName,
     timestamp: new Date().valueOf(),
-    eventId
+    eventId,
+    wxCloudApiToken: process.env.WX_API_TOKEN || '',
+    // 对应服务端 wxCloudSessionToken
+    tcb_sessionToken: process.env.TCB_SESSIONTOKEN || ''
   })
 
   for (let key in params) {
