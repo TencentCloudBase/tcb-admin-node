@@ -21,6 +21,7 @@ function callAI({ param }) {
   })
 
   return httpRequest({
+    config: this.config,
     secretId: this.config.secretId,
     secretKey: this.config.secretKey,
     params,

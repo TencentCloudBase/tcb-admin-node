@@ -1,22 +1,18 @@
 import * as assert from 'power-assert'
 import * as Mock from './unit/mock'
 import * as app from '../../index'
-import * as Config from '../config.local'
+import * as config from '../config.local'
 import * as common from '../common/index'
 // import { process } from 'ts-jest/dist/preprocessor'
 // import { __exportStar } from 'tslib'
 
 describe('test/index.test.ts', async () => {
-  const config = {
-    secretId: Config.secretId,
-    secretKey: Config.secretKey,
+  app.init({
+    ...config,
     env: Mock.env,
     mpAppId: Mock.appId,
-    proxy: Config.proxy,
     sessionToken: undefined
-  }
-
-  app.init(config)
+  })
   const db = app.database()
   const _ = db.command
 
