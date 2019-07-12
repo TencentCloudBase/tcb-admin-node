@@ -1,4 +1,4 @@
-const database = require('@cloudbase/database').Db
+const Db = require('@cloudbase/database').Db
 const storage = require('./src/storage')
 const functions = require('./src/functions')
 const auth = require('./src/auth')
@@ -17,7 +17,9 @@ Tcb.prototype.init = function({
   proxy,
   timeout,
   serviceUrl,
-  isHttp
+  isHttp,
+  version,
+  headers = {}
 } = {}) {
   if ((secretId && !secretKey) || (!secretId && secretKey)) {
     throw Error('secretId and secretKey must be a pair')
@@ -55,7 +57,8 @@ Tcb.prototype.init = function({
     },
     envName: env,
     proxy: proxy,
-    isHttp
+    isHttp: isHttp,
+    headers: headers
   }
 
   this.config.secretId = secretId
@@ -68,12 +71,16 @@ Tcb.prototype.init = function({
     ? false
     : undefined
 
+  if (version) {
+    this.config.headers['x-sdk-version'] = version
+  }
+
   return new Tcb(this.config)
 }
 
 Tcb.prototype.database = function(dbConfig) {
-  database.reqClass = Request
-  return new database({ ...this, ...dbConfig })
+  Db.reqClass = Request
+  return new Db({ ...this, ...dbConfig })
 }
 
 /**

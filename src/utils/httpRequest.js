@@ -1,9 +1,9 @@
-var request = require('request')
-var auth = require('./auth.js')
+const request = require('request')
+const auth = require('./auth.js')
 const version = require('../../package.json').version
 
 module.exports = function(args) {
-  var config = args.config,
+  let config = args.config,
     params = args.params,
     method = args.method || 'get',
     protocol = config.isHttp === true ? 'http' : 'https'
@@ -17,7 +17,7 @@ module.exports = function(args) {
       .toString()
       .substr(2, 5)
 
-  seqId = seqId ? `${seqId}${new Date().getTime()}` : eventId
+  seqId = seqId ? `${seqId}-${new Date().getTime()}` : eventId
   params = Object.assign({}, params, {
     envName: config.envName,
     timestamp: new Date().valueOf(),
@@ -45,8 +45,10 @@ module.exports = function(args) {
     delete params['requestData']
   }
 
+  const isInSCF = process.env.TENCENTCLOUD_RUNENV === 'SCF'
+
   if (!config.secretId || !config.secretKey) {
-    if (process.env.TENCENTCLOUD_RUNENV === 'SCF') {
+    if (isInSCF) {
       throw Error('missing authoration key, redeploy the function')
     }
     throw Error('missing secretId or secretKey of tencent cloud')
@@ -54,10 +56,7 @@ module.exports = function(args) {
 
   // Note: 云函数被调用时可能调用端未传递SOURCE，TCB_SOURCE 可能为空
   const TCB_SOURCE = process.env.TCB_SOURCE || ''
-  const SOURCE =
-    process.env.TENCENTCLOUD_RUNENV === 'SCF'
-      ? `${TCB_SOURCE},scf`
-      : `${TCB_SOURCE},not_scf`
+  const SOURCE = isInSCF ? `${TCB_SOURCE},scf` : ',not_scf'
 
   const authObj = {
     SecretId: config.secretId,
@@ -66,6 +65,7 @@ module.exports = function(args) {
     pathname: '/admin',
     Query: params,
     Headers: Object.assign(
+      config.headers || {},
       {
         'user-agent': `tcb-admin-sdk/${version}`,
         'x-tcb-source': SOURCE
@@ -74,9 +74,7 @@ module.exports = function(args) {
     )
   }
 
-  var authorization = auth.getAuth(authObj)
-
-  params.authorization = authorization
+  params.authorization = auth.getAuth(authObj)
 
   file && (params.file = file)
   requestData && (params.requestData = requestData)
@@ -93,7 +91,7 @@ module.exports = function(args) {
     url = protocol + '://tcb-open.tencentcloudapi.com/admin'
   }
 
-  var opts = {
+  const opts = {
     url: config.serviceUrl || url,
     method: args.method || 'get',
     // 先取模块的timeout，没有则取sdk的timeout，还没有就使用默认值
@@ -102,7 +100,11 @@ module.exports = function(args) {
     proxy: config.proxy
   }
 
-  opts.url = `${opts.url}?eventId=${eventId}&seqId=${seqId}`
+  if (opts.url.includes('?')) {
+    opts.url = `${opts.url}&eventId=${eventId}&seqId=${seqId}`
+  } else {
+    opts.url = `${opts.url}?&eventId=${eventId}&seqId=${seqId}`
+  }
 
   if (params.action === 'storage.uploadFile') {
     opts.formData = params
