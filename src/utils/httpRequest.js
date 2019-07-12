@@ -55,8 +55,6 @@ module.exports = function(args) {
   const TCB_SOURCE = process.env.TCB_SOURCE || ''
   const SOURCE = isInSCF ? `${TCB_SOURCE},scf` : ',not_scf'
 
-  const TCB_ENV = config.envName || process.env.TCB_ENV || ''
-
   const authObj = {
     SecretId: config.secretId,
     SecretKey: config.secretKey,
@@ -67,8 +65,7 @@ module.exports = function(args) {
       config.headers || {},
       {
         'user-agent': `tcb-admin-sdk/${version}`,
-        'x-tcb-source': SOURCE,
-        'x-tcb-env': TCB_ENV
+        'x-tcb-source': SOURCE
       },
       args.headers || {}
     )
