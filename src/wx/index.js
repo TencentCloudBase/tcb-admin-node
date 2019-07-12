@@ -45,15 +45,10 @@ exports.callWxOpenApi = function({ apiName, requestData } = {}) {
  * @return {Promise} 正常内容为buffer，报错为json {code:'', message:'', resquestId:''}
  */
 exports.callCompatibleWxOpenApi = function({ apiName, requestData } = {}) {
-  const wxCloudApiToken = process.env.WX_API_TOKEN || ''
-  const tcb_sessionToken = process.env.TCB_SESSIONTOKEN || ''
-
-  let params = {
+  const params = {
     action: 'wx.openApi',
     apiName,
-    requestData,
-    wxCloudApiToken,
-    tcb_sessionToken
+    requestData
   }
 
   return httpRequest({
