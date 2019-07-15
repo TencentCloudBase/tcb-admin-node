@@ -145,6 +145,18 @@ describe('test/index.test.ts', async () => {
     assert(deleteRes.deleted, 2)
   })
 
+  it('复合and', async () => {
+    const result = await collection
+      .where({
+        date: _.gt(20190401).and(_.lte(20190430)),
+        hour: _.gt(8).and(_.lte(12))
+      })
+      .get()
+
+    console.log(result)
+    assert(!result.code)
+  })
+
   it('Document - doc().update()', async () => {
     // console.log(
     //   await collection
