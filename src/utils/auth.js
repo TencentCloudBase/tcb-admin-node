@@ -28,7 +28,6 @@ function clone(obj) {
 }
 //测试用的key后面可以去掉
 var getAuth = function(opt) {
-  //   console.log(opt);
   opt = opt || {}
 
   var SecretId = opt.SecretId
@@ -39,8 +38,13 @@ var getAuth = function(opt) {
   var headers = clone(opt.Headers || opt.headers || {})
   pathname.indexOf('/') !== 0 && (pathname = '/' + pathname)
 
-  if (!SecretId) return console.error('missing param SecretId')
-  if (!SecretKey) return console.error('missing param SecretKey')
+  if (!SecretId) {
+    throw Error('missing param SecretId')
+  }
+
+  if (!SecretKey) {
+    throw Error('missing param SecretKey')
+  }
 
   var getObjectKeys = function(obj) {
     var list = []
