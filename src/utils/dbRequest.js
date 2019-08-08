@@ -1,4 +1,4 @@
-const requestHandler = require('./httpRequest')
+const httpRequest = require('./httpRequest')
 
 /**
  * 数据库模块的通用请求方法
@@ -35,7 +35,7 @@ class Request {
     }, 3000)
 
     try {
-      return await requestHandler({
+      return await httpRequest({
         timeout: this.config.timeout,
         config: this.config.config,
         params,

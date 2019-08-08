@@ -58,7 +58,7 @@ Tcb.prototype.init = function({
     envName: env,
     proxy: proxy,
     isHttp: isHttp,
-    headers: headers
+    headers: Object.assign({}, headers)
   }
 
   this.config.secretId = secretId
