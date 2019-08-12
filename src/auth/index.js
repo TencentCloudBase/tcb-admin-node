@@ -27,7 +27,10 @@ exports.auth = function() {
       validateUid(uid)
       const timestamp = new Date().getTime()
       const { credentials, envName } = this.config
-      const { refresh = 3600, expire = timestamp + 7 * 24 * 60 * 60 } = options
+      const {
+        refresh = 3600 * 1000,
+        expire = timestamp + 7 * 24 * 60 * 60 * 1000
+      } = options
       var token = jwt.sign(
         {
           alg: 'RS256',
