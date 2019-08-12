@@ -14,3 +14,13 @@ const {
   uid
 } = auth.getUserInfo()
 ```
+
+#### 获取自定义登录的登录凭据ticket
+
+```js
+const uid = '123456' // 开发者自定义的用户唯一id
+
+const ticket = auth.createTicket(uid, {
+  refresh: 3600 * 1000, // access_token的刷新时间
+})
+```

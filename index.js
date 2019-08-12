@@ -17,9 +17,10 @@ Tcb.prototype.init = function({
   proxy,
   timeout,
   serviceUrl,
-  isHttp,
   version,
-  headers = {}
+  headers = {},
+  credentials,
+  isHttp
 } = {}) {
   if ((secretId && !secretKey) || (!secretId && secretKey)) {
     throw Error('secretId and secretKey must be a pair')
@@ -65,6 +66,7 @@ Tcb.prototype.init = function({
   this.config.secretKey = secretKey
   this.config.timeout = timeout || 15000
   this.config.serviceUrl = serviceUrl
+  this.config.credentials = credentials
   this.config.sessionToken = sessionToken
     ? sessionToken
     : secretId && secretKey
