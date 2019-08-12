@@ -15,7 +15,7 @@ function validateUid(uid) {
   if (typeof uid !== 'string') {
     throw new TypeError('uid must be a string')
   }
-  if (uid.length < 4 || uid.length > 32) {
+  if (!/^[a-zA-Z0-9]{4,32}$/.test(uid)) {
     throw new Error(`Invalid uid: "${uid}"`)
   }
 }
