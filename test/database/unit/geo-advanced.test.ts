@@ -1,19 +1,10 @@
 import * as assert from 'power-assert'
 import * as Mock from './mock'
 import * as app from '../../../index'
-import * as Config from '../../config.local'
+import * as config from '../../config.local'
 import * as common from '../../common/index'
 
 describe('GEO高级功能', async () => {
-  const config = {
-    secretId: Config.secretId,
-    secretKey: Config.secretKey,
-    env: Mock.env,
-    mpAppId: Mock.appId,
-    proxy: Config.proxy,
-    sessionToken: undefined
-  }
-
   app.init(config)
   const db = app.database()
   const {
