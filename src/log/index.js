@@ -60,13 +60,15 @@ class Log {
   transformMsg(logMsg, logLevel) {
     // 目前logMsg只支持字符串value且不支持多级, 加一层转换处理
     let realMsg = {
-      msg: logMsg,
+      // msg: logMsg,
       level: logLevel,
       timestamp: this.getMicroTime(),
       function: this.function,
       requestId: this.requestId,
       src: this.src
     }
+
+    realMsg = Object.assign({}, realMsg, logMsg)
 
     for (let key in realMsg) {
       try{
@@ -90,7 +92,7 @@ class Log {
       // }) + '\n\t\n'
 
       JSON.stringify({
-        time: new Date().getTime(),
+        time: this.getMicroTime(),
         contents: realMsg
         // topicId
       }) + '\n\t\n'
@@ -124,6 +126,9 @@ class Log {
 
     const fd = parseInt(process.env._SCF_TCB_SOCK)
     this.fileWrite(fd, msgContent)
+
+    // 双写一份到标准输出
+    process.stdout.write(msgContent)
   }
 
 
