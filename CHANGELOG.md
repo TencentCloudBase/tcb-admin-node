@@ -1,3 +1,7 @@
+# v1.11.0
+- [add] 新增获取客户端IP的接口
+- [add] `auth().getUserInfo()` 返回字段中加入 `customUserId`
+
 # v1.10.0
 - [add] 新增获取登录凭据Ticket的接口
 
