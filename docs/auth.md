@@ -11,8 +11,14 @@ const auth = app.auth();
 const {
   openId,
   appId,
-  uid
+  uid,
+  customUserId
 } = auth.getUserInfo()
+```
+
+#### 获取客户端IP
+```js
+const ip = auth.getClientIP()
 ```
 
 #### 获取自定义登录的登录凭据ticket
