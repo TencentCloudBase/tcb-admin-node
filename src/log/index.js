@@ -1,8 +1,7 @@
-const fs = require('fs')
-const util = require('util')
-const microtime = require('microtime')
-const LOG_SIZE_LIMIT = 512 * 1024
-
+// const fs = require('fs')
+// const util = require('util')
+// const microtime = require('microtime')
+// const LOG_SIZE_LIMIT = 512 * 1024
 
 /**
  *
@@ -10,10 +9,10 @@ const LOG_SIZE_LIMIT = 512 * 1024
  * @class Log
  */
 class Log {
-  constructor(context) {
+  constructor() {
     this.src = 'app'
-    this.function = context.function_name || ''
-    this.requestId = context.request_id || ''
+    // this.function = context.function_name || ''
+    // this.requestId = context.request_id || ''
   }
 
   /**
@@ -22,9 +21,9 @@ class Log {
    * @returns
    * @memberof Log
    */
-  getMicroTime() {
-    return microtime.now()
-  }
+  // getMicroTime() {
+  //   return microtime.now()
+  // }
 
   /**
    *
@@ -33,21 +32,21 @@ class Log {
    * @param {*} string
    * @memberof Log
    */
-  fileWrite(fd, string) {
-    let writeStream = fs.createWriteStream('', {
-      flags: 'r+',
-      fd,
-      autoClose: false
-    })
+  // fileWrite(fd, string) {
+  //   let writeStream = fs.createWriteStream('', {
+  //     flags: 'r+',
+  //     fd,
+  //     autoClose: false
+  //   })
 
-    writeStream.on('error', err => {
-      throw err
-    })
+  //   writeStream.on('error', err => {
+  //     throw err
+  //   })
 
-    writeStream.write(string)
-    // close the stream
-    writeStream.end()
-  }
+  //   writeStream.write(string)
+  //   // close the stream
+  //   writeStream.end()
+  // }
 
   /**
    *
@@ -62,41 +61,41 @@ class Log {
     let realMsg = {
       // msg: logMsg,
       level: logLevel,
-      timestamp: this.getMicroTime(),
-      function: this.function,
-      requestId: this.requestId,
+      // timestamp: this.getMicroTime(),
+      // function: this.function,
+      // requestId: this.requestId,
       src: this.src
     }
 
     realMsg = Object.assign({}, realMsg, logMsg)
 
-    for (let key in realMsg) {
-      try{
-        realMsg[key] = JSON.stringify(realMsg[key])
-      }catch(err) {
-        realMsg[key] = util.inspect(realMsg[key])
-      }
-    }
+    // for (let key in realMsg) {
+    //   try{
+    //     realMsg[key] = JSON.stringify(realMsg[key])
+    //   }catch(err) {
+    //     realMsg[key] = util.inspect(realMsg[key])
+    //   }
+    // }
+    return realMsg
 
+    // return (
+    //   // JSON.stringify({
+    //   //   level: logLevel,
+    //   //   // time: new Date().getTime(),
+    //   //   timestamp: this.getMicroTime(),
+    //   //   function: this.function,
+    //   //   requestId: this.requestId,
+    //   //   src: this.src,
+    //   //   contents: logMsg
+    //   //   // topicId
+    //   // }) + '\n\t\n'
 
-    return (
-      // JSON.stringify({
-      //   level: logLevel,
-      //   // time: new Date().getTime(),
-      //   timestamp: this.getMicroTime(),
-      //   function: this.function,
-      //   requestId: this.requestId,
-      //   src: this.src,
-      //   contents: logMsg
-      //   // topicId
-      // }) + '\n\t\n'
-
-      JSON.stringify({
-        time: this.getMicroTime(),
-        contents: realMsg
-        // topicId
-      }) + '\n\t\n'
-    )
+    //   JSON.stringify({
+    //     time: this.getMicroTime(),
+    //     contents: realMsg
+    //     // topicId
+    //   }) + '\n\t\n'
+    // )
   }
 
   /**
@@ -114,23 +113,25 @@ class Log {
     const msgContent = this.transformMsg(logMsg, logLevel)
 
     console.log('msg*****', msgContent)
-    // 检查日志数据量是否超限, 单行512KB
-    if (Buffer.byteLength(msgContent) > LOG_SIZE_LIMIT) {
-      throw Error('single log size beyond 512KB')
-    }
 
-    // 环境变量里取不到fd
-    if (!process.env._SCF_TCB_SOCK) {
-      throw Error('fd value is not exist')
-    }
+    // // 检查日志数据量是否超限, 单行512KB
+    // if (Buffer.byteLength(msgContent) > LOG_SIZE_LIMIT) {
+    //   throw Error('single log size beyond 512KB')
+    // }
 
-    const fd = parseInt(process.env._SCF_TCB_SOCK)
-    this.fileWrite(fd, msgContent)
+    // // 环境变量里取不到fd
+    // if (!process.env._SCF_TCB_SOCK) {
+    //   throw Error('fd value is not exist')
+    // }
 
-    // 双写一份到标准输出
-    process.stdout.write(msgContent)
+    // const fd = parseInt(process.env._SCF_TCB_SOCK)
+    // this.fileWrite(fd, msgContent)
+
+    // // 双写一份到标准输出
+    // process.stdout.write(msgContent)
+
+    console.__baseLog__(msgContent)
   }
-
 
   /**
    *
@@ -173,11 +174,13 @@ class Log {
   }
 }
 
-let logger = null
+// let logger = null
 
-exports.logger = (context) => {
-  if(!logger) {
-    return new Log(context)
-  }
-  return logger
-}
+// exports.logger = (context) => {
+//   if(!logger) {
+//     return new Log(context)
+//   }
+//   return logger
+// }
+
+exports.logger = new Log()
