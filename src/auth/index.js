@@ -1,15 +1,4 @@
 const jwt = require('jsonwebtoken')
-function getUserInfo() {
-  const openId = process.env.WX_OPENID || ''
-  const appId = process.env.WX_APPID || ''
-  const uid = process.env.TCB_UUID || ''
-
-  return {
-    openId,
-    appId,
-    uid
-  }
-}
 
 function validateUid(uid) {
   if (typeof uid !== 'string') {
@@ -22,7 +11,22 @@ function validateUid(uid) {
 
 exports.auth = function() {
   return {
-    getUserInfo,
+    getUserInfo() {
+      const openId = process.env.WX_OPENID || ''
+      const appId = process.env.WX_APPID || ''
+      const uid = process.env.TCB_UUID || ''
+      const customUserId = process.env.TCB_CUSTOM_USER_ID || ''
+
+      return {
+        openId,
+        appId,
+        uid,
+        customUserId
+      }
+    },
+    getClientIP() {
+      return process.env.TCB_SOURCE_IP || ''
+    },
     createTicket: (uid, options = {}) => {
       validateUid(uid)
       const timestamp = new Date().getTime()
