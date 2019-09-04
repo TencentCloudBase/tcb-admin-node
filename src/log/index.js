@@ -1,8 +1,3 @@
-// const fs = require('fs')
-// const util = require('util')
-// const microtime = require('microtime')
-// const LOG_SIZE_LIMIT = 512 * 1024
-
 /**
  *
  *
@@ -11,42 +6,7 @@
 class Log {
   constructor() {
     this.src = 'app'
-    // this.function = context.function_name || ''
-    // this.requestId = context.request_id || ''
   }
-
-  /**
-   *
-   *
-   * @returns
-   * @memberof Log
-   */
-  // getMicroTime() {
-  //   return microtime.now()
-  // }
-
-  /**
-   *
-   *
-   * @param {*} fd
-   * @param {*} string
-   * @memberof Log
-   */
-  // fileWrite(fd, string) {
-  //   let writeStream = fs.createWriteStream('', {
-  //     flags: 'r+',
-  //     fd,
-  //     autoClose: false
-  //   })
-
-  //   writeStream.on('error', err => {
-  //     throw err
-  //   })
-
-  //   writeStream.write(string)
-  //   // close the stream
-  //   writeStream.end()
-  // }
 
   /**
    *
@@ -56,46 +16,17 @@ class Log {
    * @returns
    * @memberof Log
    */
-  transformMsg(logMsg, logLevel) {
+  // transformMsg(logMsg, logLevel) {
+  transformMsg(logMsg) {
     // 目前logMsg只支持字符串value且不支持多级, 加一层转换处理
     let realMsg = {
-      // msg: logMsg,
-      level: logLevel,
-      // timestamp: this.getMicroTime(),
-      // function: this.function,
-      // requestId: this.requestId,
-      src: this.src
+      // level: logLevel,
+      // src: this.src
+      // timestamp: null
     }
 
     realMsg = Object.assign({}, realMsg, logMsg)
-
-    // for (let key in realMsg) {
-    //   try{
-    //     realMsg[key] = JSON.stringify(realMsg[key])
-    //   }catch(err) {
-    //     realMsg[key] = util.inspect(realMsg[key])
-    //   }
-    // }
     return realMsg
-
-    // return (
-    //   // JSON.stringify({
-    //   //   level: logLevel,
-    //   //   // time: new Date().getTime(),
-    //   //   timestamp: this.getMicroTime(),
-    //   //   function: this.function,
-    //   //   requestId: this.requestId,
-    //   //   src: this.src,
-    //   //   contents: logMsg
-    //   //   // topicId
-    //   // }) + '\n\t\n'
-
-    //   JSON.stringify({
-    //     time: this.getMicroTime(),
-    //     contents: realMsg
-    //     // topicId
-    //   }) + '\n\t\n'
-    // )
   }
 
   /**
@@ -106,31 +37,16 @@ class Log {
    * @memberof Log
    */
   baseLog(logMsg, logLevel) {
+    // 判断当前是否属于tcb scf环境
+
     if (Object.prototype.toString.call(logMsg).slice(8, -1) !== 'Object') {
       throw Error('please input correct log msg')
     }
 
-    const msgContent = this.transformMsg(logMsg, logLevel)
+    // const msgContent = this.transformMsg(logMsg, logLevel)
+    const msgContent = this.transformMsg(logMsg)
 
-    console.log('msg*****', msgContent)
-
-    // // 检查日志数据量是否超限, 单行512KB
-    // if (Buffer.byteLength(msgContent) > LOG_SIZE_LIMIT) {
-    //   throw Error('single log size beyond 512KB')
-    // }
-
-    // // 环境变量里取不到fd
-    // if (!process.env._SCF_TCB_SOCK) {
-    //   throw Error('fd value is not exist')
-    // }
-
-    // const fd = parseInt(process.env._SCF_TCB_SOCK)
-    // this.fileWrite(fd, msgContent)
-
-    // // 双写一份到标准输出
-    // process.stdout.write(msgContent)
-
-    console.__baseLog__(msgContent)
+    console.__baseLog__(msgContent, logLevel)
   }
 
   /**
@@ -173,14 +89,5 @@ class Log {
     this.baseLog(logMsg, 'warn')
   }
 }
-
-// let logger = null
-
-// exports.logger = (context) => {
-//   if(!logger) {
-//     return new Log(context)
-//   }
-//   return logger
-// }
 
 exports.logger = new Log()
