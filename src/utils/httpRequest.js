@@ -86,7 +86,7 @@ function doRequest(args) {
     url: config.serviceUrl || url,
     method: args.method || 'get',
     // 先取模块的timeout，没有则取sdk的timeout，还没有就使用默认值
-    timeout: args.timeout || config.timeout || 15000,
+    timeout: args.timeout || config.timeout || 5000,
     headers: Object.assign({}, config.headers, args.headers, headers),
     proxy: config.proxy
   }
