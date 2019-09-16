@@ -41,6 +41,15 @@ describe('transaction', async () => {
     assert.strictEqual(typeof res.requestId, 'string')
   })
 
+  it('runTransaction', async () => {
+    await db.runTransaction(async function(transaction) {
+      const docRef = db.collection(collectionName).doc('1')
+      const doc = await transaction.get(docRef)
+      console.log(doc)
+      assert.deepStrictEqual(doc.data(), data[0])
+    })
+  })
+
   it('get', async () => {
     const docRef = db.collection(collectionName).doc('1')
     const transaction = await db.startTransaction()
