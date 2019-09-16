@@ -36,4 +36,14 @@ describe('projection', async () => {
       .get()
     console.log(result.data)
   })
+
+  it('projection', async () => {
+    const result = await db
+      .collection(collName)
+      .field({
+        category: true
+      })
+      .get()
+    assert.strictEqual(result.data.length, 3)
+  })
 })
