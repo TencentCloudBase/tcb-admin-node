@@ -10,6 +10,28 @@ describe('test/unit/document.test.ts', () => {
   const app = tcb.init(Config)
   const db = app.database()
 
+  const data = [
+    { category: 'Web', tags: ['JavaScript', 'C#'] },
+    { category: 'Web', tags: ['Go', 'C#'] },
+    { category: 'Life', tags: ['Go', 'Python', 'JavaScript'] }
+  ]
+
+  beforeAll(async () => {
+    await db.createCollection(collName)
+    for (let item of data) {
+      await db.collection(collName).add(item)
+    }
+  })
+
+  afterAll(async () => {
+    await db
+      .collection(collName)
+      .where({
+        _id: /.*/
+      })
+      .remove()
+  })
+
   it('API - createCollection', async () => {
     const result = await db.createCollection(collName)
     assert(result)
@@ -24,7 +46,7 @@ describe('test/unit/document.test.ts', () => {
     const _ = db.command
     const document = await db
       .collection(collName)
-      .doc()
+      .doc('123123123')
       .set({
         name: 'jude'
       })
