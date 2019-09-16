@@ -2,24 +2,24 @@
 
 <!-- TOC -->
 
-- [数据库](#%E6%95%B0%E6%8D%AE%E5%BA%93)
-  - [获取数据库的引用](#%E8%8E%B7%E5%8F%96%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%BC%95%E7%94%A8)
-  - [获取集合的引用](#%E8%8E%B7%E5%8F%96%E9%9B%86%E5%90%88%E7%9A%84%E5%BC%95%E7%94%A8)
-    - [集合 Collection](#%E9%9B%86%E5%90%88-collection)
-    - [记录 Record / Document](#%E8%AE%B0%E5%BD%95-record--document)
-    - [查询筛选指令 Query Command](#%E6%9F%A5%E8%AF%A2%E7%AD%9B%E9%80%89%E6%8C%87%E4%BB%A4-query-command)
-    - [字段更新指令 Update Command](#%E5%AD%97%E6%AE%B5%E6%9B%B4%E6%96%B0%E6%8C%87%E4%BB%A4-update-command)
-  - [支持的数据类型](#%E6%94%AF%E6%8C%81%E7%9A%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B)
-  - [新增集合](#%E6%96%B0%E5%A2%9E%E9%9B%86%E5%90%88)
-  - [新增文档](#%E6%96%B0%E5%A2%9E%E6%96%87%E6%A1%A3)
-  - [查询文档](#%E6%9F%A5%E8%AF%A2%E6%96%87%E6%A1%A3)
-    - [添加查询条件](#%E6%B7%BB%E5%8A%A0%E6%9F%A5%E8%AF%A2%E6%9D%A1%E4%BB%B6)
-    - [获取查询数量](#%E8%8E%B7%E5%8F%96%E6%9F%A5%E8%AF%A2%E6%95%B0%E9%87%8F)
-    - [设置记录数量](#%E8%AE%BE%E7%BD%AE%E8%AE%B0%E5%BD%95%E6%95%B0%E9%87%8F)
-    - [设置起始位置](#%E8%AE%BE%E7%BD%AE%E8%B5%B7%E5%A7%8B%E4%BD%8D%E7%BD%AE)
-    - [对结果排序](#%E5%AF%B9%E7%BB%93%E6%9E%9C%E6%8E%92%E5%BA%8F)
-    - [指定返回字段](#%E6%8C%87%E5%AE%9A%E8%BF%94%E5%9B%9E%E5%AD%97%E6%AE%B5)
-    - [查询指令](#%E6%9F%A5%E8%AF%A2%E6%8C%87%E4%BB%A4)
+- [数据库](#%e6%95%b0%e6%8d%ae%e5%ba%93)
+  - [获取数据库的引用](#%e8%8e%b7%e5%8f%96%e6%95%b0%e6%8d%ae%e5%ba%93%e7%9a%84%e5%bc%95%e7%94%a8)
+  - [获取集合的引用](#%e8%8e%b7%e5%8f%96%e9%9b%86%e5%90%88%e7%9a%84%e5%bc%95%e7%94%a8)
+    - [集合 Collection](#%e9%9b%86%e5%90%88-collection)
+    - [记录 Record / Document](#%e8%ae%b0%e5%bd%95-record--document)
+    - [查询筛选指令 Query Command](#%e6%9f%a5%e8%af%a2%e7%ad%9b%e9%80%89%e6%8c%87%e4%bb%a4-query-command)
+    - [字段更新指令 Update Command](#%e5%ad%97%e6%ae%b5%e6%9b%b4%e6%96%b0%e6%8c%87%e4%bb%a4-update-command)
+  - [支持的数据类型](#%e6%94%af%e6%8c%81%e7%9a%84%e6%95%b0%e6%8d%ae%e7%b1%bb%e5%9e%8b)
+  - [新增集合](#%e6%96%b0%e5%a2%9e%e9%9b%86%e5%90%88)
+  - [新增文档](#%e6%96%b0%e5%a2%9e%e6%96%87%e6%a1%a3)
+  - [查询文档](#%e6%9f%a5%e8%af%a2%e6%96%87%e6%a1%a3)
+    - [添加查询条件](#%e6%b7%bb%e5%8a%a0%e6%9f%a5%e8%af%a2%e6%9d%a1%e4%bb%b6)
+    - [获取查询数量](#%e8%8e%b7%e5%8f%96%e6%9f%a5%e8%af%a2%e6%95%b0%e9%87%8f)
+    - [设置记录数量](#%e8%ae%be%e7%bd%ae%e8%ae%b0%e5%bd%95%e6%95%b0%e9%87%8f)
+    - [设置起始位置](#%e8%ae%be%e7%bd%ae%e8%b5%b7%e5%a7%8b%e4%bd%8d%e7%bd%ae)
+    - [对结果排序](#%e5%af%b9%e7%bb%93%e6%9e%9c%e6%8e%92%e5%ba%8f)
+    - [指定返回字段](#%e6%8c%87%e5%ae%9a%e8%bf%94%e5%9b%9e%e5%ad%97%e6%ae%b5)
+    - [查询指令](#%e6%9f%a5%e8%af%a2%e6%8c%87%e4%bb%a4)
       - [eq](#eq)
       - [neq](#neq)
       - [gt](#gt)
@@ -30,14 +30,15 @@
       - [nin](#nin)
       - [and](#and)
       - [or](#or)
-    - [正则表达式查询](#%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%9F%A5%E8%AF%A2)
+      - [nor](#nor)
+    - [正则表达式查询](#%e6%ad%a3%e5%88%99%e8%a1%a8%e8%be%be%e5%bc%8f%e6%9f%a5%e8%af%a2)
       - [db.RegExp](#dbregexp)
-  - [删除文档](#%E5%88%A0%E9%99%A4%E6%96%87%E6%A1%A3)
-  - [更新文档](#%E6%9B%B4%E6%96%B0%E6%96%87%E6%A1%A3)
-    - [更新指定文档](#%E6%9B%B4%E6%96%B0%E6%8C%87%E5%AE%9A%E6%96%87%E6%A1%A3)
-    - [更新文档，如果不存在则创建](#%E6%9B%B4%E6%96%B0%E6%96%87%E6%A1%A3%E5%A6%82%E6%9E%9C%E4%B8%8D%E5%AD%98%E5%9C%A8%E5%88%99%E5%88%9B%E5%BB%BA)
-    - [批量更新文档](#%E6%89%B9%E9%87%8F%E6%9B%B4%E6%96%B0%E6%96%87%E6%A1%A3)
-    - [更新指令](#%E6%9B%B4%E6%96%B0%E6%8C%87%E4%BB%A4)
+  - [删除文档](#%e5%88%a0%e9%99%a4%e6%96%87%e6%a1%a3)
+  - [更新文档](#%e6%9b%b4%e6%96%b0%e6%96%87%e6%a1%a3)
+    - [更新指定文档](#%e6%9b%b4%e6%96%b0%e6%8c%87%e5%ae%9a%e6%96%87%e6%a1%a3)
+    - [更新文档，如果不存在则创建](#%e6%9b%b4%e6%96%b0%e6%96%87%e6%a1%a3%e5%a6%82%e6%9e%9c%e4%b8%8d%e5%ad%98%e5%9c%a8%e5%88%99%e5%88%9b%e5%bb%ba)
+    - [批量更新文档](#%e6%89%b9%e9%87%8f%e6%9b%b4%e6%96%b0%e6%96%87%e6%a1%a3)
+    - [更新指令](#%e6%9b%b4%e6%96%b0%e6%8c%87%e4%bb%a4)
       - [set](#set)
       - [inc](#inc)
       - [mul](#mul)
@@ -46,15 +47,15 @@
       - [pop](#pop)
       - [unshift](#unshift)
       - [shift](#shift)
-  - [GEO地理位置](#geo%E5%9C%B0%E7%90%86%E4%BD%8D%E7%BD%AE)
-    - [GEO数据类型](#geo%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B)
+  - [GEO地理位置](#geo%e5%9c%b0%e7%90%86%e4%bd%8d%e7%bd%ae)
+    - [GEO数据类型](#geo%e6%95%b0%e6%8d%ae%e7%b1%bb%e5%9e%8b)
       - [Point](#point)
       - [LineString](#linestring)
       - [Polygon](#polygon)
       - [MultiPoint](#multipoint)
       - [MultiLineString](#multilinestring)
       - [MultiPolygon](#multipolygon)
-    - [GEO操作符](#geo%E6%93%8D%E4%BD%9C%E7%AC%A6)
+    - [GEO操作符](#geo%e6%93%8d%e4%bd%9c%e7%ac%a6)
       - [geoNear](#geonear)
       - [geoWithin](#geowithin)
       - [geoIntersects](#geointersects)
@@ -527,6 +528,17 @@ db.collection('goods').where(_.or(
     }
   }
 ))
+```
+
+##### nor
+
+表示需所有条件均不满足，比如查询出 `foo` 字段既不等于 1 也不等于 2 的文档：
+
+```js
+const _ = db.command
+db.collection('goods').where({
+  foo: _.nor(_.eq(1), _.eq(2))
+})
 ```
 
 #### 正则表达式查询
