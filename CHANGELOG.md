@@ -1,3 +1,7 @@
+# v1.12.0
+- [add] 加入db.command.project，支持投影操作符
+- [add] 加入db.command.nor
+
 # v1.11.0
 - [add] 新增获取客户端IP的接口
 - [add] `auth().getUserInfo()` 返回字段中加入 `customUserId`
