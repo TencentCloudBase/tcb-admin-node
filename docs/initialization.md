@@ -8,7 +8,7 @@ secretId   | string | 否   | 腾讯云 API 固定密钥对，在云函数内执
 secretKey  | string | 否   | 同上
 env        | string | 否   | TCB 环境 ID，不填使用默认环境
 proxy      | string | 否   | 调用接口时使用的 http 代理 url
-timeout    | number | 否   | 调用接口的超时时间（ms），默认为 15000，即 15 秒
+timeout    | number | 否   | 调用接口的超时时间（ms），默认为 5000，即 5 秒
 credentials| object | 否   | Cloudbase 私钥，包含 `private_key` 和 `private_key_id` 两个字符串，可以通过[云开发控制台](https://console.cloud.tencent.com/tcb)获取
 version    | string | 否   | 版本号，依赖项目的版本号
 
