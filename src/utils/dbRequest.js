@@ -1,4 +1,5 @@
 const httpRequest = require('./httpRequest')
+const util = require('util')
 
 /**
  * 数据库模块的通用请求方法
@@ -30,7 +31,7 @@ class Request {
 
     const slowQueryWarning = setTimeout(() => {
       console.warn(
-        'Database operation is longer than 3s. Please check query performance and your network environment.'
+        `Database operation ${api} is longer than 3s. Please check query performance and your network environment.`
       )
     }, 3000)
 

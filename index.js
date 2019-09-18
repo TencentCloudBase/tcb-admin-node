@@ -64,7 +64,7 @@ Tcb.prototype.init = function({
 
   this.config.secretId = secretId
   this.config.secretKey = secretKey
-  this.config.timeout = timeout || 15000
+  this.config.timeout = timeout || 5000
   this.config.serviceUrl = serviceUrl
   this.config.credentials = credentials
   this.config.sessionToken = sessionToken
