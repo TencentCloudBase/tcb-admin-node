@@ -31,8 +31,16 @@
       - [and](#and)
       - [or](#or)
       - [nor](#nor)
+      - [all](#all)
+      - [elemMatch](#elemmatch)
+      - [exists](#exists)
+      - [size](#size)
+      - [mod](#mod)
     - [正则表达式查询](#%e6%ad%a3%e5%88%99%e8%a1%a8%e8%be%be%e5%bc%8f%e6%9f%a5%e8%af%a2)
       - [db.RegExp](#dbregexp)
+    - [投影指令（projection）](#%e6%8a%95%e5%bd%b1%e6%8c%87%e4%bb%a4projection)
+      - [slice](#slice)
+      - [elemMatch](#elemmatch-1)
   - [删除文档](#%e5%88%a0%e9%99%a4%e6%96%87%e6%a1%a3)
   - [更新文档](#%e6%9b%b4%e6%96%b0%e6%96%87%e6%a1%a3)
     - [更新指定文档](#%e6%9b%b4%e6%96%b0%e6%8c%87%e5%ae%9a%e6%96%87%e6%a1%a3)
@@ -44,9 +52,16 @@
       - [mul](#mul)
       - [remove](#remove)
       - [push](#push)
+      - [pull](#pull)
+      - [pullAll](#pullall)
       - [pop](#pop)
       - [unshift](#unshift)
       - [shift](#shift)
+      - [addToSet](#addtoset)
+      - [rename](#rename)
+      - [bit](#bit)
+      - [max](#max)
+      - [min](#min)
   - [GEO地理位置](#geo%e5%9c%b0%e7%90%86%e4%bd%8d%e7%bd%ae)
     - [GEO数据类型](#geo%e6%95%b0%e6%8d%ae%e7%b1%bb%e5%9e%8b)
       - [Point](#point)
@@ -541,6 +556,55 @@ db.collection('goods').where({
 })
 ```
 
+##### all
+
+传入一个数组，查询出字段值包含此数组所有元素的文档
+
+```js
+db.collection('goods').where({
+  foo: _.all(['a', 'b', 'c'])  // 查询出foo字段包含'a', 'b', 'c'的文档
+})
+```
+##### elemMatch
+
+传入一个 query，查询出数组字段内所有元素均符合此 query 的文档
+
+```js
+db.collection('goods').where({
+  foo: _.elemMatch(_.gt(0))  // 查询出foo字段所有元素都大于0的文档
+})
+```
+
+##### exists
+
+查询出给定字段存在或不存在的文档
+
+```js
+db.collection('goods').where({
+  foo: _.exists(true)  // 查询出存在foo字段的文档
+})
+```
+
+##### size
+
+传入一个数字，查询出给定数组字段长度等于此数字的文档
+
+```js
+db.collection('goods').where({
+  foo: _.size(10)  // 查询出foo字段数组长度为10的文档
+})
+```
+
+##### mod
+
+查询出给定字段取余之后相符的文档
+
+```js
+db.collection('goods').where({
+  foo: _.mod([4, 0])  // 查询出foo字段除以4余0的文档
+})
+```
+
 #### 正则表达式查询
 
 ##### db.RegExp
@@ -560,6 +624,31 @@ db.collection('articles').where({
     regex: '^\\ds'   // 正则表达式为 /^\ds/，转义后变成 '^\\ds'
     options: 'i'    // i表示忽略大小写
   }) 
+})
+```
+
+#### 投影指令（projection）
+
+##### slice
+控制查询返回的元素数量
+
+```js
+db.collection('goods').where({
+  // ...
+}).field({
+  tags: _.project.slice(10)  // 在查询出的文档中，tags只保留前10个元素
+  names: _.project.slice([10, 30])  // 在查询出的文档中，names只保留第10个到第30个元素
+})
+```
+
+##### elemMatch
+投影字段中第一个符合传入条件的元素
+
+```js
+db.collection('goods').where({
+  // ...
+}).field({
+  students: _.project.elemMatch({ age: _.gte(18) })  // 在查询出的文档中，students数组中的元素，只保留age大于等于18的元素
 })
 ```
 
@@ -690,6 +779,27 @@ db.collection('comments').doc('comment-id').update({
 })
 ```
 
+##### pull
+根据传入的值或者条件，删除数组中的元素
+
+```js
+const _ = db.command
+db.collection('comments').doc('comment-id').update({
+  users: _.pull('aaa')  // 删除users数组中的 'aaa' 元素
+  id: _.pull(_.gt(3))  // 删除id数组中所有大于3的元素
+})
+```
+
+##### pullAll
+传入一个数组，所有在此数组中的元素，都会在对应字段中被删除
+
+```js
+const _ = db.command
+db.collection('comments').doc('comment-id').update({
+  // 删除users数组中的 'aaa', 'bbb', 'ccc' 元素
+  users: _.pullAll(['aaa', 'bbb', 'ccc'])
+```
+
 ##### pop
 删除数组尾部元素
 
@@ -703,6 +813,56 @@ db.collection('comments').doc('comment-id').update({
 向数组头部添加元素，支持传入单个元素或数组。使用同push
 ##### shift
 删除数组头部元素。使用同pop
+
+##### addToSet
+向数组中加入唯一的元素，如果元素已存在，将不会加入。
+
+```js
+const _ = db.command
+db.collection('comments').doc('comment-id').update({
+  users: _.addToSet('stark')  // 将 ‘stark’ 加入数组中，如果已存在则忽略
+})
+```
+
+##### rename
+对字段进行重命名
+
+```js
+const _ = db.command
+db.collection('comments').doc('comment-id').update({
+  a: _.rename('b')  // 将a字段重命名为b字段
+})
+```
+
+##### bit
+对字段进行二进制运算，支持 and、or、xor
+
+```js
+const _ = db.command
+db.collection('comments').doc('comment-id').update({
+  a: _.bit({ xor: 16 })  // 将a字段和数字16进行异或操作
+})
+```
+
+##### max
+更新字段，如果字段值大于传入的值，将字段更新为转入的值
+
+```js
+const _ = db.command
+db.collection('comments').doc('comment-id').update({
+  score: _.max(20)  // 如果大于20，将字段更新为20
+})
+```
+
+##### min
+更新字段，如果字段值小于传入的值，将字段更新为转入的值
+
+```js
+const _ = db.command
+db.collection('comments').doc('comment-id').update({
+  score: _.min(0)  // 如果小于0，将字段更新为0
+})
+```
 
 
 ### GEO地理位置
