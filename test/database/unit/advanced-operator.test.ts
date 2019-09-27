@@ -10,11 +10,26 @@ const _ = db.command
 const collName = 'test-projection'
 let passagesCollection = null
 const data = [
-  { category: 'Web', tags: ['JavaScript', 'C#'], index: 1 },
-  { category: 'Web', tags: ['Go', 'C#'], index: 1 },
-  { category: 'Life', tags: ['Go', 'Python', 'JavaScript'], index: 1 },
-  { category: 'number', tags: [1, 2, 3, 4, 5, 6, 7, 8, 9], index: 1 },
-  { category: 'embedded', tags: [{ value: 1 }, { value: 7 }], index: 1 }
+  { category: 'Web', tags: ['JavaScript', 'C#'], index: 1, tags2: [1, 2, 3] },
+  { category: 'Web', tags: ['Go', 'C#'], index: 1, tags2: [1, 2, 3] },
+  {
+    category: 'Life',
+    tags: ['Go', 'Python', 'JavaScript'],
+    index: 1,
+    tags2: [1, 2, 3]
+  },
+  {
+    category: 'number',
+    tags: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+    index: 1,
+    tags2: [1, 2, 3]
+  },
+  {
+    category: 'embedded',
+    tags: [{ value: 1 }, { value: 7 }],
+    index: 1,
+    tags2: [1, 2, 3]
+  }
 ]
 
 beforeEach(async () => {
@@ -105,6 +120,27 @@ describe('pull', async () => {
       })
       .get()
     assert.deepStrictEqual(result.data[0].tags, ['JavaScript'])
+  })
+
+  it('pull多个字段', async () => {
+    let result = await db
+      .collection(collName)
+      .where({
+        category: 'Life'
+      })
+      .update({
+        tags: _.pull(_.in(['Go', 'Python'])),
+        tags2: _.pull(1)
+      })
+    assert.strictEqual(result.updated, 1)
+    result = await db
+      .collection(collName)
+      .where({
+        category: 'Life'
+      })
+      .get()
+    assert.deepStrictEqual(result.data[0].tags, ['JavaScript'])
+    assert.deepStrictEqual(result.data[0].tags2, [2, 3])
   })
 
   it('pull with _.gte', async () => {
@@ -235,26 +271,26 @@ describe('rename', async () => {
   })
 })
 
-// describe.only('bit', async () => {
-//   it.only('bit', async () => {
-//     let result = await db
-//       .collection(collName)
-//       .where({
-//         category: 'Life'
-//       })
-//       .update({
-//         index: _.bit({ xor: 5 })
-//       })
-//     assert.strictEqual(result.updated, 1)
-//     result = await db
-//       .collection(collName)
-//       .where({
-//         category: 'Life'
-//       })
-//       .get()
-//     console.log(result.data)
-//   })
-// })
+describe.only('bit', async () => {
+  it.only('bit', async () => {
+    let result = await db
+      .collection(collName)
+      .where({
+        category: 'Life'
+      })
+      .update({
+        index: _.bit({ xor: 5 })
+      })
+    assert.strictEqual(result.updated, 1)
+    result = await db
+      .collection(collName)
+      .where({
+        category: 'Life'
+      })
+      .get()
+    console.log(result.data)
+  })
+})
 
 describe('max', async () => {
   it('max', async () => {
