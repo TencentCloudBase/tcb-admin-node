@@ -271,8 +271,8 @@ describe('rename', async () => {
   })
 })
 
-describe.only('bit', async () => {
-  it.only('bit', async () => {
+describe.skip('bit', async () => {
+  it('bit', async () => {
     let result = await db
       .collection(collName)
       .where({
@@ -341,6 +341,34 @@ describe('aggregation $match with query', () => {
         category: _.eq('Web')
       })
       .end()
+    console.log(result)
+  })
+})
+
+describe.skip('projection with elemMatch', () => {
+  it('普通查询', async () => {
+    let result = await db
+      .collection(collName)
+      .where({
+        category: /.*/
+      })
+      .field({
+        category: _.project.elemMatch({ value: 1 })
+      })
+      .get()
+    console.log(result)
+  })
+
+  it('普通查询', async () => {
+    let result = await db
+      .collection(collName)
+      .where({
+        category: /.*/
+      })
+      .field({
+        category: _.project.elemMatch({ value: _.gte(0) })
+      })
+      .get()
     console.log(result)
   })
 })
