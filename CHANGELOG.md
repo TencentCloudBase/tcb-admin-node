@@ -2,6 +2,7 @@
 - [add] 加入查询操作符：all、elemMatch、exists、size、mod
 - [add] 加入更新操作符：push、pull、pullAll、addToSet、rename、max、min
 - [add] 加入 db.command.aggregate.pipeline，用于生产 Aggregate.lookup() 的 pipeline 参数
+- [add] db.command.aggregate.match 支持传入 query
 
 # v1.12.0
 - [add] 加入db.command.project，支持投影操作符
