@@ -30,7 +30,7 @@ class Request {
 
     const slowQueryWarning = setTimeout(() => {
       console.warn(
-        `Database operation ${api} islonger than 3s. Please check query performance and your network environment.`
+        `Database operation ${api} is longer than 3s. Please check query performance and your network environment.`
       )
     }, 3000)
 
