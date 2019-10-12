@@ -90,4 +90,6 @@ class Log {
   }
 }
 
-exports.logger = new Log()
+exports.logger = () => {
+  return new Log()
+}
