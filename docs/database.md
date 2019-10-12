@@ -38,7 +38,6 @@
       - [mod](#mod)
     - [正则表达式查询](#%e6%ad%a3%e5%88%99%e8%a1%a8%e8%be%be%e5%bc%8f%e6%9f%a5%e8%af%a2)
       - [db.RegExp](#dbregexp)
-    - [投影指令（projection）](#%e6%8a%95%e5%bd%b1%e6%8c%87%e4%bb%a4projection)
       - [slice](#slice)
       - [elemMatch](#elemmatch-1)
   - [删除文档](#%e5%88%a0%e9%99%a4%e6%96%87%e6%a1%a3)
@@ -59,7 +58,6 @@
       - [shift](#shift)
       - [addToSet](#addtoset)
       - [rename](#rename)
-      - [bit](#bit)
       - [max](#max)
       - [min](#min)
   - [GEO地理位置](#geo%e5%9c%b0%e7%90%86%e4%bd%8d%e7%bd%ae)
@@ -627,7 +625,7 @@ db.collection('articles').where({
 })
 ```
 
-#### 投影指令（projection）
+<!-- #### 投影指令（projection）
 
 ##### slice
 控制查询返回的元素数量
@@ -650,7 +648,7 @@ db.collection('goods').where({
 }).field({
   students: _.project.elemMatch({ age: _.gte(18) })  // 在查询出的文档中，students数组中的元素，只保留age大于等于18的元素
 })
-```
+``` -->
 
 ### 删除文档
 方式1 通过指定文档ID
@@ -834,7 +832,7 @@ db.collection('comments').doc('comment-id').update({
 })
 ```
 
-##### bit
+<!-- ##### bit
 对字段进行二进制运算，支持 and、or、xor
 
 ```js
@@ -842,7 +840,7 @@ const _ = db.command
 db.collection('comments').doc('comment-id').update({
   a: _.bit({ xor: 16 })  // 将a字段和数字16进行异或操作
 })
-```
+``` -->
 
 ##### max
 更新字段，如果字段值大于传入的值，将字段更新为转入的值
