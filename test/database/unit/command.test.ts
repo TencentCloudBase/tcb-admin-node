@@ -651,7 +651,7 @@ describe('字符串操作符', async () => {
     ])
   })
 
-  it('strLenBytes', async () => {
+  it.skip('strLenBytes', async () => {
     const result = await db
       .collection(personName)
       .aggregate()
@@ -664,7 +664,7 @@ describe('字符串操作符', async () => {
     assert.deepStrictEqual(result.data, [{ nameLength: 11, nicknameLength: 6 }])
   })
 
-  it('strLenCP', async () => {
+  it.skip('strLenCP', async () => {
     const result = await db
       .collection(personName)
       .aggregate()
@@ -713,7 +713,7 @@ describe('字符串操作符', async () => {
     ])
   })
 
-  test('substrCP', async () => {
+  test.skip('substrCP', async () => {
     const result = await db
       .collection(personName)
       .aggregate()
