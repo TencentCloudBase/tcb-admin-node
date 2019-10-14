@@ -372,3 +372,85 @@ describe.skip('projection with elemMatch', () => {
     console.log(result)
   })
 })
+
+describe('push', async () => {
+  it('push array', async () => {
+    let result = await db
+      .collection(collName)
+      .where({
+        category: 'Life'
+      })
+      .update({
+        tags2: _.push([1, 2, 3])
+      })
+    assert.strictEqual(result.updated, 1)
+    result = await db
+      .collection(collName)
+      .where({
+        category: 'Life'
+      })
+      .get()
+    assert.deepStrictEqual(result.data[0].tags2, [1, 2, 3, 1, 2, 3])
+  })
+
+  it('push single item', async () => {
+    let result = await db
+      .collection(collName)
+      .where({
+        category: 'Life'
+      })
+      .update({
+        tags2: _.push(1)
+      })
+    assert.strictEqual(result.updated, 1)
+    result = await db
+      .collection(collName)
+      .where({
+        category: 'Life'
+      })
+      .get()
+    assert.deepStrictEqual(result.data[0].tags2, [1, 2, 3, 1])
+  })
+
+  it('push multiple item', async () => {
+    let result = await db
+      .collection(collName)
+      .where({
+        category: 'Life'
+      })
+      .update({
+        tags2: _.push(1, 2, 3)
+      })
+    assert.strictEqual(result.updated, 1)
+    result = await db
+      .collection(collName)
+      .where({
+        category: 'Life'
+      })
+      .get()
+    assert.deepStrictEqual(result.data[0].tags2, [1, 2, 3, 1, 2, 3])
+  })
+
+  it('push with options', async () => {
+    let result = await db
+      .collection(collName)
+      .where({
+        category: 'Life'
+      })
+      .update({
+        tags2: _.push({
+          each: [4, 5, 6],
+          sort: -1,
+          slice: 3
+        })
+      })
+    assert.strictEqual(result.updated, 1)
+    result = await db
+      .collection(collName)
+      .where({
+        category: 'Life'
+      })
+      .get()
+    assert.deepStrictEqual(result.data[0].tags2, [6, 5, 4])
+  })
+})
