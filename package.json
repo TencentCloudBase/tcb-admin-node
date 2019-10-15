@@ -30,7 +30,6 @@
     "is-regex": "^1.0.4",
     "jsonwebtoken": "^8.5.1",
     "lodash.merge": "^4.6.1",
-    "microtime": "^3.0.0",
     "request": "^2.87.0",
     "xml2js": "^0.4.19"
   },
