@@ -19,11 +19,7 @@ class Log {
   // transformMsg(logMsg, logLevel) {
   transformMsg(logMsg) {
     // 目前logMsg只支持字符串value且不支持多级, 加一层转换处理
-    let realMsg = {
-      // level: logLevel,
-      // src: this.src
-      // timestamp: null
-    }
+    let realMsg = {}
 
     realMsg = Object.assign({}, realMsg, logMsg)
     return realMsg
