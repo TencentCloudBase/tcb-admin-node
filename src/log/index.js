@@ -16,7 +16,6 @@ class Log {
    * @returns
    * @memberof Log
    */
-  // transformMsg(logMsg, logLevel) {
   transformMsg(logMsg) {
     // 目前logMsg只支持字符串value且不支持多级, 加一层转换处理
     let realMsg = {}
@@ -39,7 +38,6 @@ class Log {
       throw Error('please input correct log msg')
     }
 
-    // const msgContent = this.transformMsg(logMsg, logLevel)
     const msgContent = this.transformMsg(logMsg)
 
     console.__baseLog__(msgContent, logLevel)
