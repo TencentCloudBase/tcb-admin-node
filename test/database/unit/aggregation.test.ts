@@ -25,8 +25,7 @@ describe('sample', async () => {
     .end()
   assert.strictEqual(result.data.length, 1)
 
-  const removeSuccess = await usersCollection.remove()
-  assert.strictEqual(removeSuccess, true)
+  usersCollection.remove()
 })
 
 describe('sortByCount', async () => {
@@ -201,8 +200,7 @@ describe('project', async () => {
       name: '小明',
       totalScore: 240
     })
-    const removeSuccess = await usersCollection.remove()
-    assert.strictEqual(removeSuccess, true)
+    await usersCollection.remove()
   })
 
   it('加入新的数组字段', async () => {
@@ -223,8 +221,7 @@ describe('project', async () => {
     assert.deepStrictEqual(result.data[0], {
       coordinate: [1, 1]
     })
-    const removeSuccess = await usersCollection.remove()
-    assert.strictEqual(removeSuccess, true)
+    await usersCollection.remove()
   })
 })
 
@@ -259,8 +256,7 @@ describe('replaceRoot', async () => {
       english: 21,
       other: 123
     })
-    const removeSuccess = await usersCollection.remove()
-    assert.strictEqual(removeSuccess, true)
+    await usersCollection.remove()
   })
   it('使用计算出的新字段作为根节点', async () => {
     const data = [
@@ -286,8 +282,7 @@ describe('replaceRoot', async () => {
     assert.deepStrictEqual(result.data[0], {
       full_name: '黄四郎'
     })
-    const removeSuccess = await usersCollection.remove()
-    assert.strictEqual(removeSuccess, true)
+    await usersCollection.remove()
   })
 })
 
