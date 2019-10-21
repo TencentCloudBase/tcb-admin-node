@@ -44,6 +44,16 @@ afterEach(async () => {
   assert.strictEqual(success, true)
 })
 
+beforeAll(async () => {
+  const result = await db
+    .collection(collName)
+    .where({
+      _id: /.*/
+    })
+    .remove()
+  console.log(`before remove: ${result.deleted}`)
+})
+
 describe('operator', async () => {
   it('addToSet', async () => {
     let result = await db
