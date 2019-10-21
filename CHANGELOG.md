@@ -1,3 +1,10 @@
+# v1.15.0
+- [add] 加入执行操作符：expr、jsonSchema
+- [add] 加入逻辑操作符：not
+
+# v1.14.0
+- [add] 新增cls日志写入
+
 # v1.13.0
 - [add] 加入查询操作符：all、elemMatch、exists、size、mod
 - [add] 加入更新操作符：push、pull、pullAll、addToSet、rename、max、min
