@@ -6,28 +6,29 @@ import * as common from '../../common/index'
 app.init(Config)
 const db = app.database()
 const _ = db.command
+const $ = _.aggregate
 
 const collName = 'test-projection'
 let passagesCollection = null
 const data = [
-  { category: 'Web', tags: ['JavaScript', 'C#'], index: 1, tags2: [1, 2, 3] },
+  { category: 'Web', tags: ['JavaScript', 'C#'], index: 0, tags2: [1, 2, 3] },
   { category: 'Web', tags: ['Go', 'C#'], index: 1, tags2: [1, 2, 3] },
   {
     category: 'Life',
     tags: ['Go', 'Python', 'JavaScript'],
-    index: 1,
+    index: 2,
     tags2: [1, 2, 3]
   },
   {
     category: 'number',
     tags: [1, 2, 3, 4, 5, 6, 7, 8, 9],
-    index: 1,
+    index: 3,
     tags2: [1, 2, 3]
   },
   {
     category: 'embedded',
     tags: [{ value: 1 }, { value: 7 }],
-    index: 1,
+    index: 4,
     tags2: [1, 2, 3]
   }
 ]
@@ -452,5 +453,79 @@ describe('push', async () => {
       })
       .get()
     assert.deepStrictEqual(result.data[0].tags2, [6, 5, 4])
+  })
+})
+
+describe('not', async () => {
+  it('match with gt', async () => {
+    let result = await db
+      .collection(collName)
+      .where({
+        index: _.not(_.gt(1))
+      })
+      .get()
+    console.log(result)
+    assert.strictEqual(result.data.length, 2)
+  })
+
+  // not 目前还不支持正则
+  it.skip('match with regexp', async () => {
+    let result = await db
+      .collection(collName)
+      .where({
+        category: _.not(/www/)
+      })
+      .get()
+    console.log(result)
+  })
+})
+
+describe('expr', async () => {
+  it('with gte', async () => {
+    let result = await db
+      .collection(collName)
+      .where(_.expr($.gte(['$index', 3])))
+      .get()
+    console.log(result)
+    assert.strictEqual(result.data.length, 2)
+  })
+})
+
+// 目前还不支持设置文本索引
+describe.skip('text', async () => {
+  it('use string', async () => {
+    let result = await db
+      .collection(collName)
+      .where(_.text('life'))
+      .get()
+    console.log(result)
+  })
+})
+
+describe('jsonSchema', async () => {
+  it('where', async () => {
+    let result = await db
+      .collection(collName)
+      .where(
+        _.jsonSchema({
+          required: ['category']
+        })
+      )
+      .get()
+    assert.strictEqual(result.data.length, data.length)
+  })
+
+  it('nor', async () => {
+    let result = await db
+      .collection(collName)
+      .where(
+        _.nor([
+          _.jsonSchema({
+            required: ['category']
+          })
+        ])
+      )
+      .get()
+    assert.strictEqual(result.data.length, 0)
   })
 })

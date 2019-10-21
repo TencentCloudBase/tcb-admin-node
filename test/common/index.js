@@ -1,4 +1,3 @@
-const assert = require('assert')
 async function safeCreateCollection(db, name) {
   return await db.createCollection(name)
 }
@@ -27,7 +26,7 @@ async function safeCollection(db, name) {
           _id: /.*/
         })
         .remove()
-      return result.deleted === num
+      return result.deleted > 0
     }
   }
 }
