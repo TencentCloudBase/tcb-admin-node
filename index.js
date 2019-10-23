@@ -4,7 +4,7 @@ const functions = require('./src/functions')
 const auth = require('./src/auth')
 const wx = require('./src/wx')
 const Request = require('./src/utils/dbRequest')
-const logger = require("./src/log")
+const logger = require('./src/log')
 
 function Tcb(config) {
   this.config = config ? config : this.config
@@ -81,9 +81,19 @@ Tcb.prototype.init = function({
   return new Tcb(this.config)
 }
 
-Tcb.prototype.database = function(dbConfig) {
+Tcb.prototype.database = function(dbConfig = {}) {
   Db.reqClass = Request
-  return new Db({ ...this, ...dbConfig })
+  if (Object.prototype.toString.call(dbConfig).slice(8, -1) !== 'Object') {
+    throw Error('dbConfig must be an object')
+  }
+
+  if (dbConfig && dbConfig.env) {
+    // env变量名转换
+    dbConfig.envName = dbConfig.env
+    delete dbConfig.env
+  }
+  this.config = Object.assign({}, this.config, dbConfig)
+  return new Db({ ...this })
 }
 
 /**
@@ -112,7 +122,6 @@ extend(Tcb.prototype, functions)
 extend(Tcb.prototype, storage)
 extend(Tcb.prototype, wx)
 extend(Tcb.prototype, auth)
-extend(Tcb.prototype, logger);
-
+extend(Tcb.prototype, logger)
 
 module.exports = new Tcb()
