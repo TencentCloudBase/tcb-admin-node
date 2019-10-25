@@ -30,6 +30,16 @@ const data = [
     tags: [{ value: 1 }, { value: 7 }],
     index: 4,
     tags2: [1, 2, 3]
+  },
+  {
+    category: 'float',
+    tags: ['Go', 'Python', 'JavaScript'],
+    index: 0.2,
+    arr: [
+      { name: 'A', subObj: {} },
+      { name: 'B', subObj: {} },
+      { name: 'C', subObj: {} }
+    ]
   }
 ]
 
@@ -182,7 +192,7 @@ describe('all', async () => {
         tags: _.all(['Go'])
       })
       .get()
-    assert.strictEqual(result.data.length, 2)
+    assert.strictEqual(result.data.length, 3)
   })
 })
 
@@ -475,7 +485,7 @@ describe('not', async () => {
       })
       .get()
     console.log(result)
-    assert.strictEqual(result.data.length, 2)
+    assert.strictEqual(result.data.length, 3)
   })
 
   // not 目前还不支持正则
@@ -496,7 +506,6 @@ describe('expr', async () => {
       .collection(collName)
       .where(_.expr($.gte(['$index', 3])))
       .get()
-    console.log(result)
     assert.strictEqual(result.data.length, 2)
   })
 })
@@ -537,5 +546,55 @@ describe('jsonSchema', async () => {
       )
       .get()
     assert.strictEqual(result.data.length, 0)
+  })
+})
+
+describe('浮点数inc', async () => {
+  it('浮点数inc', async () => {
+    let result = await db
+      .collection(collName)
+      .where({
+        category: 'float'
+      })
+      .update({
+        index: _.inc(-0.05)
+      })
+    assert.strictEqual(result.updated, 1)
+
+    result = await db
+      .collection(collName)
+      .where({
+        category: 'float'
+      })
+      .get()
+    assert.strictEqual(result.data[0].index, 0.2 - 0.05)
+  })
+})
+
+describe('remove数组内', async () => {
+  it('浮点数inc', async () => {
+    let result = await db
+      .collection(collName)
+      .where({
+        category: 'float'
+      })
+      .update({
+        arr: {
+          [0]: {
+            subObj: _.remove()
+          },
+          [1]: _.remove()
+        }
+      })
+    assert.strictEqual(result.updated, 1)
+
+    result = await db
+      .collection(collName)
+      .where({
+        category: 'float'
+      })
+      .get()
+    assert.strictEqual(result.data[0].arr[1], null)
+    assert.deepStrictEqual(result.data[0].arr[0], { name: 'A' })
   })
 })
