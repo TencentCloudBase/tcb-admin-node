@@ -26,7 +26,7 @@
   "author": "jimmyzhang",
   "license": "MIT",
   "dependencies": {
-    "@cloudbase/database": "0.8.0",
+    "@cloudbase/database": "^0.9.0",
     "is-regex": "^1.0.4",
     "jsonwebtoken": "^8.5.1",
     "lodash.merge": "^4.6.1",

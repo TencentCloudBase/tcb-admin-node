@@ -1,3 +1,8 @@
+# v1.16.0
+- [fix] db 模块 替换lodash为子模块
+- [fix] db 模块 更改query传参，为入参必须为对象，且value不能均为undefined
+- [fix] 修复app.database(env:'xxx') 不生效问题
+
 # v1.15.0
 - [add] 加入执行操作符：expr、jsonSchema
 - [add] 加入逻辑操作符：not
