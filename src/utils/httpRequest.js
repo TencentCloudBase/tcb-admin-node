@@ -4,6 +4,7 @@ const auth = require('./auth.js')
 const tracing = require('./tracing')
 const utils = require('./utils')
 const version = require('../../package.json').version
+const getWxCloudApiToken = require('./getWxCloudApiToken')
 
 module.exports = utils.warpPromise(doRequest)
 
@@ -28,7 +29,7 @@ function doRequest(args) {
     envName: config.envName,
     timestamp: new Date().valueOf(),
     eventId,
-    wxCloudApiToken: process.env.WX_API_TOKEN || '',
+    wxCloudApiToken: getWxCloudApiToken(),
     // 对应服务端 wxCloudSessionToken
     tcb_sessionToken: process.env.TCB_SESSIONTOKEN || ''
   })
