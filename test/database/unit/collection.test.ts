@@ -121,4 +121,27 @@ describe('test/unit/collection.test.ts', async () => {
     console.log(result)
     assert(result.data.length === 0)
   })
+
+  it('API - use where', async () => {
+    // 1. 验证where 必填object 对象参数
+    try{
+      await collection.where().get()
+    }catch(e) {
+      assert(e.message === ErrorCode.QueryParamTypeError)
+    }
+
+    // 2. 验证where 对象value不可均为undefined
+    try {
+      await collection.where({a: undefined}).get()
+    }catch(e) {
+      assert(e.message === ErrorCode.QueryParamValueError)
+    }
+
+    await collection.add({
+      name: 'aaa'
+    })
+
+    const res = await collection.where({name: 'aaa'}).get()
+    assert(res.data.length > 0)
+  })
 })
