@@ -21,13 +21,14 @@ Tcb.prototype.init = function({
   version,
   headers = {},
   credentials,
-  isHttp
+  isHttp,
+  isUpdateSelfConfig = true
 } = {}) {
   if ((secretId && !secretKey) || (!secretId && secretKey)) {
     throw Error('secretId and secretKey must be a pair')
   }
 
-  this.config = {
+  const config = {
     get secretId() {
       return this._secretId ? this._secretId : process.env.TENCENTCLOUD_SECRETID
     },
@@ -63,22 +64,27 @@ Tcb.prototype.init = function({
     headers: Object.assign({}, headers)
   }
 
-  this.config.secretId = secretId
-  this.config.secretKey = secretKey
-  this.config.timeout = timeout || 15000
-  this.config.serviceUrl = serviceUrl
-  this.config.credentials = credentials
-  this.config.sessionToken = sessionToken
+  config.secretId = secretId
+  config.secretKey = secretKey
+  config.timeout = timeout || 15000
+  config.serviceUrl = serviceUrl
+  config.credentials = credentials
+  config.sessionToken = sessionToken
     ? sessionToken
     : secretId && secretKey
     ? false
     : undefined
 
   if (version) {
-    this.config.headers['x-sdk-version'] = version
+    config.headers['x-sdk-version'] = version
   }
 
-  return new Tcb(this.config)
+  // 这里的目的是创建新实例时可以避免更新当前实例
+  if (isUpdateSelfConfig) {
+    this.config = config
+  }
+
+  return new Tcb(config)
 }
 
 Tcb.prototype.database = function(dbConfig = {}) {
