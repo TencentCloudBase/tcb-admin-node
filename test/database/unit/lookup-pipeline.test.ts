@@ -21,9 +21,11 @@ describe('projection', async () => {
 
   beforeAll(async () => {
     collection1 = await common.safeCollection(db, collName1)
+    await collection1.remove()
     await collection1.create(data)
 
     collection2 = await common.safeCollection(db, collName2)
+    await collection2.remove()
     await collection2.create(data)
   })
 
