@@ -122,7 +122,7 @@ describe('test/unit/collection.test.ts', async () => {
     assert(result.data.length === 0)
   })
 
-  it('API - use where', async () => {
+  it.only('API - use where', async () => {
     // 1. 验证where 必填object 对象参数
     try{
       await collection.where().get()
@@ -137,11 +137,16 @@ describe('test/unit/collection.test.ts', async () => {
       assert(e.message === ErrorCode.QueryParamValueError)
     }
 
+
+
     await collection.add({
       name: 'aaa'
     })
 
-    const res = await collection.where({name: 'aaa'}).get()
-    assert(res.data.length > 0)
+    const res1 = await collection.where({name: 'aaa'}).get()
+    assert(res1.data.length > 0)
+
+    const res2 = await collection.where({}).get()
+    assert(res2.data.length > 0)
   })
 })
