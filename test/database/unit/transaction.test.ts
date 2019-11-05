@@ -68,28 +68,6 @@ describe('transaction', async () => {
     assert(res.requestId)
   })
 
-  it('并发读，应该报错', async () => {
-    const docRef = db.collection(collectionName).doc('1')
-    const transaction = await db.startTransaction()
-
-    await assert.rejects(
-      async () => {
-        await Promise.all([
-          transaction.get(docRef),
-          transaction.get(docRef),
-          transaction.get(docRef)
-        ])
-      },
-      {
-        code: 'DATABASE_TRANSACTION_FAIL',
-        message:
-          '[ResourceUnavailable.TransactionBusy] Transaction is busy. Please check your request, but if the problem persists, contact us.'
-      }
-    )
-    const res = await transaction.commit()
-    assert(res.requestId)
-  })
-
   it('事务回滚', async () => {
     const transaction = await db.startTransaction()
     const docRef = db.collection(collectionName).doc('1')
