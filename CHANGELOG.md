@@ -1,3 +1,6 @@
+# v1.16.1
+- [fix] 修复定时触发 API Token 可能失效的问题
+
 # v1.16.0
 - [fix] db 模块 替换lodash为子模块
 - [fix] db 模块 更改query传参，为入参必须为对象，且value不能均为undefined
