@@ -98,7 +98,7 @@ Tcb.prototype.database = function(dbConfig = {}) {
     dbConfig.envName = dbConfig.env
     delete dbConfig.env
   }
-  this.config = Object.assign({}, this.config, dbConfig)
+  this.config = Object.assign(this.config, dbConfig)
   return new Db({ ...this })
 }
 
