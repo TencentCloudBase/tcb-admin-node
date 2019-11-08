@@ -1,3 +1,9 @@
+# v1.16.3
+- [fix] 修复 TRIGGER_SRC 变量取值问题
+
+# v1.16.2
+- [fix] 修复 db 函数在 handler 外初始化问题
+
 # v1.16.1
 - [fix] 修复定时触发 API Token 可能失效的问题
 
