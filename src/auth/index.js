@@ -31,6 +31,9 @@ exports.auth = function() {
       validateUid(uid)
       const timestamp = new Date().getTime()
       const { credentials, envName } = this.config
+      if (!envName) {
+        throw new Error('no env in config')
+      }
       const {
         refresh = 3600 * 1000,
         expire = timestamp + 7 * 24 * 60 * 60 * 1000
