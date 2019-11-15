@@ -1,3 +1,6 @@
+# v1.16.4
+- [fix] database 查询 limit限制由最大100放至1000
+
 # v1.16.3
 - [fix] 修复 TRIGGER_SRC 变量取值问题
 
