@@ -36,12 +36,12 @@ describe('test/unit/query.limit.test.ts', () => {
     assert(queryRes.data.length === 101)
   })
 
-  // 不填 默认20
-  it('query with limit default 20', async () => {
+  // 不填 默认100
+  it('query with limit default 100', async () => {
     const collName = 'coll-1'
     const collection = db.collection(collName)
     const queryRes = await collection.where({}).get()
-    assert(queryRes.data.length === 20)
+    assert(queryRes.data.length === 100)
   })
 
 
