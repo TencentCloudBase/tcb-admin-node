@@ -7,7 +7,7 @@ app.init(Config)
 const db = app.database()
 const _  = db.command
 
-describe('projection', async () => {
+describe('projection', () => {
   const collName = 'test-projection'
   let passagesCollection = null
   const data = [

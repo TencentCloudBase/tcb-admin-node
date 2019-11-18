@@ -4,7 +4,7 @@ import * as app from '../../../index'
 import * as config from '../../config.local'
 import * as common from '../../common/index'
 
-describe('GEO类型', async () => {
+describe('GEO类型', () => {
   app.init(config)
   const db = app.database()
 

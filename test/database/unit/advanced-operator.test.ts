@@ -64,7 +64,7 @@ beforeAll(async () => {
   console.log(`before remove: ${result.deleted}`)
 })
 
-describe('operator', async () => {
+describe('operator', () => {
   it('addToSet', async () => {
     let result = await db
       .collection(collName)
@@ -104,7 +104,7 @@ describe('operator', async () => {
   })
 })
 
-describe('pull', async () => {
+describe('pull', () => {
   it('pull', async () => {
     let result = await db
       .collection(collName)
@@ -184,7 +184,7 @@ describe('pull', async () => {
   })
 })
 
-describe('all', async () => {
+describe('all', () => {
   it('all', async () => {
     let result = await db
       .collection(collName)
@@ -196,7 +196,7 @@ describe('all', async () => {
   })
 })
 
-describe('elemMatch', async () => {
+describe('elemMatch', () => {
   it('Element Match', async () => {
     let result = await db
       .collection(collName)
@@ -220,7 +220,7 @@ describe('elemMatch', async () => {
   })
 })
 
-describe('size', async () => {
+describe('size', () => {
   it('size', async () => {
     let result = await db
       .collection(collName)
@@ -232,7 +232,7 @@ describe('size', async () => {
   })
 })
 
-describe('exists', async () => {
+describe('exists', () => {
   it('exists', async () => {
     let result = await db
       .collection(collName)
@@ -256,7 +256,7 @@ describe('exists', async () => {
   })
 })
 
-describe('mod', async () => {
+describe('mod', () => {
   it('Array of Embedded Documents', async () => {
     let result = await db
       .collection(collName)
@@ -271,7 +271,7 @@ describe('mod', async () => {
   })
 })
 
-describe('rename', async () => {
+describe('rename', () => {
   it('rename', async () => {
     let result = await db
       .collection(collName)
@@ -292,7 +292,7 @@ describe('rename', async () => {
   })
 })
 
-describe.skip('bit', async () => {
+describe.skip('bit', () => {
   it('bit', async () => {
     let result = await db
       .collection(collName)
@@ -313,7 +313,7 @@ describe.skip('bit', async () => {
   })
 })
 
-describe('max', async () => {
+describe('max', () => {
   it('max', async () => {
     let result = await db
       .collection(collName)
@@ -394,7 +394,7 @@ describe.skip('projection with elemMatch', () => {
   })
 })
 
-describe('push', async () => {
+describe('push', () => {
   it('push array', async () => {
     let result = await db
       .collection(collName)
@@ -476,7 +476,7 @@ describe('push', async () => {
   })
 })
 
-describe('not', async () => {
+describe('not', () => {
   it('match with gt', async () => {
     let result = await db
       .collection(collName)
@@ -500,7 +500,7 @@ describe('not', async () => {
   })
 })
 
-describe('expr', async () => {
+describe('expr', () => {
   it('with gte', async () => {
     let result = await db
       .collection(collName)
@@ -511,7 +511,7 @@ describe('expr', async () => {
 })
 
 // 目前还不支持设置文本索引
-describe.skip('text', async () => {
+describe.skip('text', () => {
   it('use string', async () => {
     let result = await db
       .collection(collName)
@@ -521,7 +521,7 @@ describe.skip('text', async () => {
   })
 })
 
-describe('jsonSchema', async () => {
+describe('jsonSchema', () => {
   it('where', async () => {
     let result = await db
       .collection(collName)
@@ -549,7 +549,7 @@ describe('jsonSchema', async () => {
   })
 })
 
-describe('浮点数inc', async () => {
+describe('浮点数inc', () => {
   it('浮点数inc', async () => {
     let result = await db
       .collection(collName)
@@ -571,7 +571,7 @@ describe('浮点数inc', async () => {
   })
 })
 
-describe('remove数组内', async () => {
+describe('remove数组内', () => {
   it('浮点数inc', async () => {
     let result = await db
       .collection(collName)

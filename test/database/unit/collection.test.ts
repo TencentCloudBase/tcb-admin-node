@@ -4,7 +4,7 @@ import { ErrorCode } from '@cloudbase/database/src/constant'
 import * as Config from '../../config.local'
 import * as common from '../../common'
 
-describe('test/unit/collection.test.ts', async () => {
+describe('test/unit/collection.test.ts', () => {
   const collName = 'coll-1'
 
   const app = tcb.init(Config)

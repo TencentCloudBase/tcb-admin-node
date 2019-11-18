@@ -7,7 +7,7 @@ import * as util from 'util'
 // import { process } from "ts-jest/dist/preprocessor";
 // import { __exportStar } from "tslib";
 
-describe('Date类型', async () => {
+describe('Date类型', () => {
   const config = {
     ...Config,
     env: Mock.env,

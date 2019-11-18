@@ -6,7 +6,7 @@ import * as common from '../common/index'
 // import { process } from 'ts-jest/dist/preprocessor'
 // import { __exportStar } from 'tslib'
 
-describe('test/index.test.ts', async () => {
+describe('test/index.test.ts', () => {
   app.init({
     ...config,
     env: Mock.env,

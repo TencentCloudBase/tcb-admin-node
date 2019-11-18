@@ -4,7 +4,7 @@ import * as app from '../../../index'
 import * as config from '../../config.local'
 import * as common from '../../common/index'
 
-describe.skip('GEO高级功能', async () => {
+describe.skip('GEO高级功能', () => {
   app.init(config)
   const db = app.database()
   const {

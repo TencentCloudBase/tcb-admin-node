@@ -19,7 +19,7 @@ describe('test/unit/collection.test.ts', () => {
   })
 })
 
-describe('stdDevPop', async () => {
+describe('stdDevPop', () => {
   let studentsCollection = null
   const collectionName = 'test-students'
   const data = [
@@ -61,7 +61,7 @@ describe('stdDevPop', async () => {
   })
 })
 
-describe('stdDevSamp', async () => {
+describe('stdDevSamp', () => {
   let studentsCollection = null
   const collectionName = 'test-students'
   const data = [{ score: 80 }, { score: 100 }]
@@ -92,7 +92,7 @@ describe('stdDevSamp', async () => {
   })
 })
 
-describe('sum', async () => {
+describe('sum', () => {
   let goodsCollection = null
   const $ = db.command.aggregate
   const collectionName = 'test-goods'
@@ -138,7 +138,7 @@ describe('sum', async () => {
   })
 })
 
-describe('let', async () => {
+describe('let', () => {
   let goodsCollection = null
   const $ = db.command.aggregate
   const collectionName = 'test-goods'
@@ -176,7 +176,7 @@ describe('let', async () => {
   })
 })
 
-describe('条件操作符', async () => {
+describe('条件操作符', () => {
   let goodsCollection = null
   const $ = db.command.aggregate
   const collectionName = 'test-goods'
@@ -262,7 +262,7 @@ describe('条件操作符', async () => {
   })
 })
 
-describe('group操作符', async () => {
+describe('group操作符', () => {
   let studentsCollection = null,
     passagesCollection = null
   const $ = db.command.aggregate
@@ -379,7 +379,7 @@ describe('group操作符', async () => {
     assert(result.data[0].average, 90)
   })
 
-  describe('addToSet', async () => {
+  describe('addToSet', () => {
     it('非数组字段', async () => {
       const result = await db
         .collection(passagesName)
@@ -408,7 +408,7 @@ describe('group操作符', async () => {
   })
 })
 
-describe('字面量操作符', async () => {
+describe('字面量操作符', () => {
   let goodsCollection = null
   const $ = db.command.aggregate
   const collectionName = 'test-goods'
@@ -468,7 +468,7 @@ describe('字面量操作符', async () => {
   })
 })
 
-describe('字符串操作符', async () => {
+describe('字符串操作符', () => {
   let studentsCollection = null,
     personCollection = null
   const $ = db.command.aggregate
@@ -533,7 +533,7 @@ describe('字符串操作符', async () => {
     ])
   })
 
-  describe('dateToString', async () => {
+  describe('dateToString', () => {
     it('格式化日期', async () => {
       const result = await db
         .collection(studentsName)
@@ -759,7 +759,7 @@ describe('字符串操作符', async () => {
   })
 })
 
-describe('mergeObjects', async () => {
+describe('mergeObjects', () => {
   let goodsCollection = null
   const $ = db.command.aggregate
   const collectionName = 'test-goods'
@@ -818,7 +818,7 @@ describe('mergeObjects', async () => {
   })
 })
 
-describe('集合操作', async () => {
+describe('集合操作', () => {
   let goodsCollection = null
   const $ = db.command.aggregate
   const collectionName = 'test-goods'
@@ -883,7 +883,7 @@ describe('集合操作', async () => {
   })
 })
 
-describe('集合操作2', async () => {
+describe('集合操作2', () => {
   let goodsCollection = null
   const $ = db.command.aggregate
   const collectionName = 'test-goods'

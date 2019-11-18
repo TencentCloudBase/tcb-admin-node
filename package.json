@@ -9,7 +9,7 @@
     "tsc": "tsc -p tsconfig.json",
     "tsc:w": "tsc -p tsconfig.json -w",
     "tstest": "mocha --timeout 5000 --require espower-typescript/guess test/**/*.test.ts",
-    "test": "jest --verbose false -i",
+    "test": "jest --verbose false -i ",
     "coverage": "jest --verbose false --coverage"
   },
   "repository": {
@@ -27,6 +27,7 @@
   "license": "MIT",
   "dependencies": {
     "@cloudbase/database": "^0.9.3-beta",
+    "bluebird": "^3.7.1",
     "is-regex": "^1.0.4",
     "jsonwebtoken": "^8.5.1",
     "lodash.merge": "^4.6.1",
