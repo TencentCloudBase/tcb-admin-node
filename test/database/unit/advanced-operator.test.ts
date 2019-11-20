@@ -353,7 +353,7 @@ describe('max', async () => {
   })
 })
 
-describe('aggregation $match with query', async () => {
+describe('aggregation $match with query', () => {
   it('max', async () => {
     let result = await db
       .collection(collName)
@@ -366,7 +366,7 @@ describe('aggregation $match with query', async () => {
   })
 })
 
-describe.skip('projection with elemMatch', async () => {
+describe.skip('projection with elemMatch', () => {
   it('普通查询', async () => {
     let result = await db
       .collection(collName)
