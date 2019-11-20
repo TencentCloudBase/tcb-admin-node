@@ -8,7 +8,7 @@ const db = app.database()
 const _ = db.command
 const $ = db.command.aggregate
 
-describe('projection', () => {
+describe('projection', async () => {
   const collName1 = 'test-lookup-pipeline1'
   const collName2 = 'test-lookup-pipeline2'
   let collection1 = null

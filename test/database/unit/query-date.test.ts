@@ -27,7 +27,7 @@ afterEach(async () => {
   assert.strictEqual(success, true)
 })
 
-describe('query date', () => {
+describe('query date', async () => {
   it('直接匹配', async () => {
     let result = await db
       .collection(collName)

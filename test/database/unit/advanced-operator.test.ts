@@ -64,7 +64,7 @@ beforeAll(async () => {
   console.log(`before remove: ${result.deleted}`)
 })
 
-describe('operator', () => {
+describe('operator', async () => {
   it('addToSet', async () => {
     let result = await db
       .collection(collName)
@@ -104,7 +104,7 @@ describe('operator', () => {
   })
 })
 
-describe('pull', () => {
+describe('pull', async () => {
   it('pull', async () => {
     let result = await db
       .collection(collName)
@@ -184,7 +184,7 @@ describe('pull', () => {
   })
 })
 
-describe('all', () => {
+describe('all', async () => {
   it('all', async () => {
     let result = await db
       .collection(collName)
@@ -196,7 +196,7 @@ describe('all', () => {
   })
 })
 
-describe('elemMatch', () => {
+describe('elemMatch', async () => {
   it('Element Match', async () => {
     let result = await db
       .collection(collName)
@@ -220,7 +220,7 @@ describe('elemMatch', () => {
   })
 })
 
-describe('size', () => {
+describe('size', async () => {
   it('size', async () => {
     let result = await db
       .collection(collName)
@@ -232,7 +232,7 @@ describe('size', () => {
   })
 })
 
-describe('exists', () => {
+describe('exists', async () => {
   it('exists', async () => {
     let result = await db
       .collection(collName)
@@ -256,7 +256,7 @@ describe('exists', () => {
   })
 })
 
-describe('mod', () => {
+describe('mod', async () => {
   it('Array of Embedded Documents', async () => {
     let result = await db
       .collection(collName)
@@ -271,7 +271,7 @@ describe('mod', () => {
   })
 })
 
-describe('rename', () => {
+describe('rename', async () => {
   it('rename', async () => {
     let result = await db
       .collection(collName)
@@ -292,7 +292,7 @@ describe('rename', () => {
   })
 })
 
-describe.skip('bit', () => {
+describe.skip('bit', async () => {
   it('bit', async () => {
     let result = await db
       .collection(collName)
@@ -313,7 +313,7 @@ describe.skip('bit', () => {
   })
 })
 
-describe('max', () => {
+describe('max', async () => {
   it('max', async () => {
     let result = await db
       .collection(collName)
@@ -353,7 +353,7 @@ describe('max', () => {
   })
 })
 
-describe('aggregation $match with query', () => {
+describe('aggregation $match with query', async () => {
   it('max', async () => {
     let result = await db
       .collection(collName)
@@ -366,7 +366,7 @@ describe('aggregation $match with query', () => {
   })
 })
 
-describe.skip('projection with elemMatch', () => {
+describe.skip('projection with elemMatch', async () => {
   it('普通查询', async () => {
     let result = await db
       .collection(collName)
@@ -394,7 +394,7 @@ describe.skip('projection with elemMatch', () => {
   })
 })
 
-describe('push', () => {
+describe('push', async () => {
   it('push array', async () => {
     let result = await db
       .collection(collName)
@@ -476,7 +476,7 @@ describe('push', () => {
   })
 })
 
-describe('not', () => {
+describe('not', async () => {
   it('match with gt', async () => {
     let result = await db
       .collection(collName)
@@ -500,7 +500,7 @@ describe('not', () => {
   })
 })
 
-describe('expr', () => {
+describe('expr', async () => {
   it('with gte', async () => {
     let result = await db
       .collection(collName)
@@ -511,7 +511,7 @@ describe('expr', () => {
 })
 
 // 目前还不支持设置文本索引
-describe.skip('text', () => {
+describe.skip('text', async () => {
   it('use string', async () => {
     let result = await db
       .collection(collName)
@@ -521,7 +521,7 @@ describe.skip('text', () => {
   })
 })
 
-describe('jsonSchema', () => {
+describe('jsonSchema', async () => {
   it('where', async () => {
     let result = await db
       .collection(collName)
@@ -549,7 +549,7 @@ describe('jsonSchema', () => {
   })
 })
 
-describe('浮点数inc', () => {
+describe('浮点数inc', async () => {
   it('浮点数inc', async () => {
     let result = await db
       .collection(collName)
@@ -571,7 +571,7 @@ describe('浮点数inc', () => {
   })
 })
 
-describe('remove数组内', () => {
+describe('remove数组内', async () => {
   it('浮点数inc', async () => {
     let result = await db
       .collection(collName)

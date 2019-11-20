@@ -4,7 +4,7 @@ import * as app from '../../../index'
 import * as Config from '../../config.local'
 import * as common from '../../common/index'
 
-describe('正则表达式查询', () => {
+describe('正则表达式查询', async () => {
   const config = {
     secretId: Config.secretId,
     secretKey: Config.secretKey,

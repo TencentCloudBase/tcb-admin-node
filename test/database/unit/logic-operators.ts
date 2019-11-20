@@ -7,7 +7,7 @@ app.init(Config)
 const db = app.database()
 const _ = db.command
 
-describe('逻辑操作符', () => {
+describe('逻辑操作符', async () => {
   const collName = 'test-projection'
   let passagesCollection = null
   const data = [

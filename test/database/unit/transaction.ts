@@ -6,7 +6,7 @@ import * as common from '../../common/index'
 app.init(Config)
 const db = app.database()
 
-describe('transaction', () => {
+describe('transaction', async () => {
   let collection = null
   const collectionName = 'test-passages'
 

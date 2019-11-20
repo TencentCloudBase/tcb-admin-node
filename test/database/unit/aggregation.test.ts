@@ -28,7 +28,7 @@ describe('sample', async () => {
   usersCollection.remove()
 })
 
-describe('sortByCount', () => {
+describe('sortByCount', async () => {
   let passagesCollection = null
   const data = [
     { category: 'Web', tags: ['JavaScript', 'C#'] },
@@ -67,7 +67,7 @@ describe('sortByCount', () => {
   })
 })
 
-describe('match', () => {
+describe('match', async () => {
   let coll = null
   const data = [
     { author: 'stark', score: 80 },
@@ -118,7 +118,7 @@ describe('match', () => {
   })
 })
 
-describe('project', () => {
+describe('project', async () => {
   let coll = null
   const data = [
     {
@@ -225,7 +225,7 @@ describe('project', () => {
   })
 })
 
-describe('replaceRoot', () => {
+describe('replaceRoot', async () => {
   it('使用已有字段作为根节点', async () => {
     const data = [
       {
@@ -286,7 +286,7 @@ describe('replaceRoot', () => {
   })
 })
 
-describe('skip', () => {
+describe('skip', async () => {
   let coll = null
   const data = [
     { author: 'stark', score: 80 },
@@ -322,7 +322,7 @@ describe('skip', () => {
   })
 })
 
-describe('sort', () => {
+describe('sort', async () => {
   let coll = null
   const data = [
     { author: 'stark', score: 80, age: 18 },
@@ -368,7 +368,7 @@ describe('sort', () => {
   })
 })
 
-describe('unwind', () => {
+describe('unwind', async () => {
   let coll = null
   const data = [
     { product: 'tshirt', size: ['S', 'M', 'L'] },
@@ -445,7 +445,7 @@ describe('unwind', () => {
   })
 })
 
-describe('Date', () => {
+describe('Date', async () => {
   let coll = null
 
   const date = new Date(1557826731686)
@@ -527,7 +527,7 @@ describe('Date', () => {
   })
 })
 
-describe('lookup', () => {
+describe('lookup', async () => {
   let coll1 = null
   let coll2 = null
 
