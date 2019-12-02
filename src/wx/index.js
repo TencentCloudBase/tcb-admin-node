@@ -58,3 +58,24 @@ exports.callCompatibleWxOpenApi = function({ apiName, requestData } = {}) {
     headers: {}
   }).then(res => res)
 }
+
+/**
+ * wx.wxPayApi 微信支付用
+ * @param {String} apiName  接口名
+ * @param {Buffer} requestData
+ * @return {Promise} 正常内容为buffer，报错为json {code:'', message:'', resquestId:''}
+ */
+exports.callWxPayApi = function({ apiName, requestData } = {}) {
+  const params = {
+    action: 'wx.wxPayApi',
+    apiName,
+    requestData
+  }
+
+  return httpRequest({
+    config: this.config,
+    params,
+    method: 'post',
+    headers: {}
+  }).then(res => res)
+}
