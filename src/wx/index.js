@@ -56,7 +56,7 @@ exports.callCompatibleWxOpenApi = function({ apiName, requestData } = {}) {
     params,
     method: 'post',
     headers: {}
-  }).then(res => res)
+  })
 }
 
 /**
@@ -77,5 +77,5 @@ exports.callWxPayApi = function({ apiName, requestData } = {}) {
     params,
     method: 'post',
     headers: {}
-  }).then(res => res)
+  })
 }
