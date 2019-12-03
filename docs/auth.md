@@ -24,15 +24,9 @@ const ip = auth.getClientIP()
 #### 获取自定义登录的登录凭据ticket
 
 ```js
-<<<<<<< HEAD
-const uid = '123456' // 开发者自定义的用户唯一id
-
-const ticket = auth.createTicket(uid, {
-=======
 const customUserId = '123456' // 开发者自定义的用户唯一id
 
 const ticket = auth.createTicket(customUserId, {
->>>>>>> 94b460b4b0633d4e3abc1d6b864829f2f25bd2c3
   refresh: 3600 * 1000, // access_token的刷新时间
 })
 ```
