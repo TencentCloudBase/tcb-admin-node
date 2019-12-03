@@ -35,7 +35,7 @@ function doRequest(args) {
   })
   utils.filterUndefined(params)
 
-  // file 和 wx.openApi带的requestData 需避开签名
+  // file 和 wx.openApi 以及 wx.wxPayApi 带的requestData 需避开签名
   let file = null
   if (params.action === 'storage.uploadFile') {
     file = params['file']
@@ -43,7 +43,7 @@ function doRequest(args) {
   }
 
   let requestData = null
-  if (params.action === 'wx.openApi') {
+  if (params.action === 'wx.openApi' || params.action === 'wx.wxPayApi') {
     requestData = params['requestData']
     delete params['requestData']
   }
@@ -79,7 +79,11 @@ function doRequest(args) {
     url = 'http://tcb-admin.tencentyun.com/admin'
   }
 
-  if (params.action === 'wx.api' || params.action === 'wx.openApi') {
+  if (
+    params.action === 'wx.api' ||
+    params.action === 'wx.openApi' ||
+    params.action === 'wx.wxPayApi'
+  ) {
     url = protocol + '://tcb-open.tencentcloudapi.com/admin'
   }
 
@@ -107,7 +111,7 @@ function doRequest(args) {
       }
     }
   } else if (args.method == 'post') {
-    if (params.action === 'wx.openApi') {
+    if (params.action === 'wx.openApi' || params.action === 'wx.wxPayApi') {
       opts.formData = params
       opts.encoding = null
     } else {
@@ -133,8 +137,11 @@ function doRequest(args) {
         let res
         try {
           res = typeof body === 'string' ? JSON.parse(body) : body
-          // wx.openApi 调用时，需用content-type区分buffer or JSON
-          if (params.action === 'wx.openApi') {
+          // wx.openApi 和 wx.wxPayApi 调用时，需用content-type区分buffer or JSON
+          if (
+            params.action === 'wx.openApi' ||
+            params.action === 'wx.wxPayApi'
+          ) {
             const { headers } = response
             if (headers['content-type'] === 'application/json; charset=utf-8') {
               res = JSON.parse(res.toString()) // JSON错误时buffer转JSON
