@@ -5,10 +5,16 @@ async function safeCreateCollection(db, name) {
 async function safeCollection(db, name) {
   const collection = db.collection(name)
   let num = -1
+  // 检查collection是否存在
+  const existRes = await collection.where({}).get()
+  if (existRes.code === 'DATABASE_COLLECTION_NOT_EXIST') {
+    // 不存在
+    await db.createCollection(name)
+  }
 
   return {
     async create(data) {
-      await db.createCollection(name)
+      // await db.createCollection(name)
       const datas = Array.isArray(data) ? data : [data]
       num = datas.length
 
