@@ -72,6 +72,7 @@
       - [geoNear](#geonear)
       - [geoWithin](#geowithin)
       - [geoIntersects](#geointersects)
+  - [数据库事务](#数据库事务)
 
 <!-- /TOC -->
 
@@ -621,7 +622,7 @@ db.collection('articles').where({
   version: new db.RegExp({
     regex: '^\\ds'   // 正则表达式为 /^\ds/，转义后变成 '^\\ds'
     options: 'i'    // i表示忽略大小写
-  }) 
+  })
 })
 ```
 
@@ -1057,4 +1058,159 @@ db.collection('user').where({
     geometry: line
   })
 })
+```
+
+### 数据库事务
+
+#### 发起事务 startTransaction
+请求参数
+
+无
+
+响应参数
+
+| 字段 | 类型 | 必填 | 说明
+| --- | --- | --- | ---
+| _id | string | 否 | 事务id
+
+示例:
+```javascript
+const transaction = await db.startTransaction()
+```
+
+#### 提交事务 commit
+请求参数
+
+无
+
+响应参数
+
+| 字段 | 类型 | 必填 | 说明
+| --- | --- | --- | ---
+| requestId | string | 否 | 请求id
+
+示例:
+```javascript
+const transaction = await db.startTransaction()
+await transaction.commit()
+```
+
+#### 事务 查询文档 get
+响应参数
+
+| 字段 | 类型 | 必填 | 说明
+| --- | --- | --- | ---
+| data | array | 否 | 文档数据
+
+
+示例:
+```javascript
+/**
+ * 事务操作支持两种写法，写法一如下，1. 调用startTransaction发起事务 2. 事务操作 3.调用commitTransactio提交事务
+ *
+ *
+ */
+const transaction = await db.startTransaction()
+const doc = await transaction.collection(collectionName).doc('docId').get()
+console.log(doc.data)
+await transaction.commit()
+
+/**
+ * 写法二，runTransaction(callback(transaction)), 支持用户传入回调，回调参数为transaction
+ *
+ *
+ */
+await db.runTransaction(async function(transaction) {
+  const doc = await transaction.collection(collectionName).doc('docId').get()
+  console.log(doc.data)
+})
+```
+
+#### 事务 插入文档 add
+响应参数
+
+| 字段 | 类型 | 必填 | 说明
+| --- | --- | --- | ---
+| id | string | 否 | 插入数据的docId
+| inserted | number | 否 | 插入成功的条数
+| ok | number | 否 | 插入状态 1 表示成功
+| requestId | string | 否 | 请求id
+
+
+示例如下:
+```javascript
+const transaction = await db.startTransaction()
+const res = await transaction.collection(collectionName).add({ category: 'Web', tags: ['JavaScript', 'C#'], date})
+await transaction.commit()
+```
+
+#### 事务 更新文档 update
+响应参数
+
+| 字段 | 类型 | 必填 | 说明
+| --- | --- | --- | ---
+| updated | number | 否 | 更新成功的条数
+| requestId | string | 否 | 请求id
+
+示例如下:
+```javascript
+// 更新文档
+const transaction = await db.startTransaction()
+const updateResult = await transaction.collection(collectionName).doc('docId').update({
+  category: 'Node.js',
+  date
+})
+await transaction.commit()
+```
+
+#### 事务 set
+
+> set的行为: 如果当前doc不存在 set会插入这条文档，如果存在，则更新当前文档
+
+响应参数
+
+| 字段 | 类型 | 必填 | 说明
+| --- | --- | --- | ---
+| updated | number | 否 | 更新成功的条数
+| upserted | number | 否 | 插入成功的条数
+| requestId | string | 否 | 请求id
+
+示例如下:
+```javascript
+// 更新文档
+const transaction = await db.startTransaction()
+const updateResult = await transaction.collection(collectionName).doc('docId').set({
+  category: 'Node.js',
+  date
+})
+await transaction.commit()
+```
+
+#### 事务 删除文档 delete
+响应参数
+
+| 字段 | 类型 | 必填 | 说明
+| --- | --- | --- | ---
+| deleted | number | 否 | 删除成功的条数
+| requestId | string | 否 | 请求id
+
+```javascript
+// deletaDocument
+const transaction = await db.startTransaction()
+const deleteResult = await transaction.collection(collectionName).doc('docId').delete()
+await transaction.commit()
+```
+
+#### 事务回滚 rollback
+响应参数
+
+| 字段 | 类型 | 必填 | 说明
+| --- | --- | --- | ---
+| requestId | string | 否 | 请求id
+
+```javascript
+const transaction = await db.startTransaction()
+const doc = await transaction.collection(collectionName).doc('docId').get()
+await transaction.rollback()
+await transaction.commit()
 ```
