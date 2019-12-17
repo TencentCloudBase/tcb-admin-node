@@ -1214,3 +1214,64 @@ const doc = await transaction.collection(collectionName).doc('docId').get()
 await transaction.rollback()
 await transaction.commit()
 ```
+
+###### runTransaction 使用说明
+
+1. 支持自定义返回 (正常return 或 throw error)
+```javascript
+  const result = await db.runTransaction(async function(transaction) {
+    const doc = await transaction.collection(collectionName).doc('1').get()
+    assert.deepStrictEqual(doc.data, data[0])
+    // assert(doc.data)
+    return 'luke'
+  })
+
+  // result === 'luke'
+
+```
+
+```javascript
+  try{
+    await db.runTransaction(async (transaction) => {
+    const doc = await transaction.collection(collectionName).doc('1').get()
+    assert.deepStrictEqual(doc.data, data[0])
+    // mock 事务冲突
+    throw {
+      "code": "DATABASE_TRANSACTION_CONFLICT",
+      "message": "[ResourceUnavailable.TransactionConflict] Transaction is conflict, maybe resource operated by others. Please check your request, but if the problem persists, contact us."
+    }
+    })
+  }catch(e) {
+    // e.code === 'DATABASE_TRANSACTION_CONFLICT'
+  }
+
+```
+
+2. rollback使用
+```javascript
+  try{
+    await db.runTransaction(async function(transaction) {
+
+      const doc = await transaction.collection(collectionName).doc('1').get()
+      assert.deepStrictEqual(doc.data, data[0])
+      await transaction.rollback('luke')
+    })
+  }catch(err){
+    // err === 'luke'
+  }
+
+  try{
+    await db.runTransaction(async function(transaction) {
+
+      const doc = await transaction.collection(collectionName).doc('1').get()
+      assert.deepStrictEqual(doc.data, data[0])
+      await transaction.rollback()
+    })
+  }catch(err){
+    // assert(err.requestId)
+    console.log(err.requestId) // 默认rollback返回回滚的requestId
+  }
+```
+
+
+

@@ -1,3 +1,6 @@
+# v1.19.1
+- [fix] database 事务 修复runTransaction api中rollback报错 & 改造runTransaction 支持自定义返回
+
 # v1.19.0
 - [add] database 新增事务
 
