@@ -5,6 +5,8 @@ import * as common from '../../common/index'
 
 app.init(Config)
 const db = app.database()
+const _ = db.command
+const offset = 60 * 1000
 
 describe('transaction', async () => {
   let collection = null
@@ -12,9 +14,10 @@ describe('transaction', async () => {
 
   const date = new Date()
   const data = [
-    { _id: '1', category: 'Web', tags: ['JavaScript', 'C#'], date },
+    { _id: '1', category: 'Web', tags: ['JavaScript', 'C#'], date, geo: new db.Geo.Point(90, 23), num: 2 },
     { _id: '2', category: 'Web', tags: ['Go', 'C#'] },
-    { _id: '3', category: 'Life', tags: ['Go', 'Python', 'JavaScript'] }
+    { _id: '3', category: 'Life', tags: ['Go', 'Python', 'JavaScript'] },
+    { _id: '4', serverDate1: db.serverDate(), serverDate2: db.serverDate({ offset })}
   ]
 
   beforeEach(async () => {
@@ -43,28 +46,49 @@ describe('transaction', async () => {
 
   it('runTransaction', async () => {
     await db.runTransaction(async function(transaction) {
-      // const docRef = db.collection(collectionName).doc('1')
-      // const doc = await transaction.get(docRef)
-      const doc = await transaction.collection(collectionName).doc('1').get()
-      // console.log(doc)
-      assert.deepStrictEqual(doc.data, data[0])
+      // 事务内插入 含date geo类型文档
+      const insertDoc = {_id: 'lluke', date: date, geo: new db.Geo.Point(90, 23)}
+      const insertRes = await transaction.collection(collectionName).add(insertDoc)
+      assert(insertRes.inserted === 1)
+      const doc = await transaction.collection(collectionName).doc('lluke').get()
+      assert(doc.data, insertDoc)
+
+      // 事务外插入含date geo serverDate 类型文档
+      const doc1 = await transaction.collection(collectionName).doc('1').get()
+      const doc4 = await transaction.collection(collectionName).doc('4').get()
+      assert.deepStrictEqual(doc1.data, data[0])
+      assert.deepStrictEqual(doc4.data.serverDate1.getTime() + offset === doc4.data.serverDate2.getTime(), true )
+
+      // 事务内插入 含 serverDate 类型文档 报错不支持
+      // const insertRes = await transaction.collection(collectionName).add({_id: 'lluke', serverDate1: db.serverDate(), serverDate2: db.serverDate({ offset })})
+      // console.log('insertRes:', insertRes)
+
+      // const lukeData = await transaction.collection(collectionName).doc('lluke').get()
+      // assert(lukeData.data.serverDate1.getTime() + offset === lukeData.data.serverDate2.getTime(), true)
     })
   })
 
-  // it('test', async () => {
-  //   //查询数据
+  it('事务内更新含特殊类型 字段文档', async () => {
+    await db.runTransaction(async function(transaction) {
+      const newDate = new Date()
+      const newGeo = new db.Geo.Point(90, 23)
+      const updateRes = await transaction.collection(collectionName).doc('1').update({
+        num: _.inc(1),
+        date: newDate,
+        geo: newGeo
+      })
+      assert(updateRes.updated === 1)
+      const res = await transaction.collection(collectionName).doc('1').get()
+      assert(res.data.num === 3, true)
+      assert(res.data.date, newDate)
+      assert(res.data.geo, newGeo)
+    })
+  })
 
-
-  //   const result = await db.collection(collectionName).add({_id:'llllluke', category: 'Web111', tags: ['JavaScript', 'C#'], date})
-  //   console.log(result)
-  //   const result1 = await db.collection(collectionName).where({}).get()
-  //   console.log(JSON.stringify(result1))
-  // })
 
   it('insert', async () => {
     const transaction = await db.startTransaction()
     const res = await transaction.collection(collectionName).add({ category: 'Web', tags: ['JavaScript', 'C#'], date})
-    console.log(res)
     assert(res.id !== undefined && res.inserted === 1)
     const result = await transaction.commit()
     assert.strictEqual(typeof result.requestId, 'string')
@@ -74,7 +98,6 @@ describe('transaction', async () => {
     const docId = +new Date()
     const transaction = await db.startTransaction()
     const res = await transaction.collection(collectionName).add({_id: docId, category: 'Web', tags: ['JavaScript', 'C#'], date})
-    console.log(res)
     assert(res.id == docId && res.inserted === 1)
     const result = await transaction.commit()
     assert.strictEqual(typeof result.requestId, 'string')
@@ -222,6 +245,80 @@ describe('transaction', async () => {
 
     await transaction.commit()
   })
+
+  it('runTransaction with customResult' , async () => {
+    // 验证自定义成功返回
+    const result = await db.runTransaction(async function(transaction) {
+
+        const doc = await transaction.collection(collectionName).doc('1').get()
+        assert.deepStrictEqual(doc.data, data[0])
+        // assert(doc.data)
+        return 'luke'
+      })
+
+    assert(result === 'luke')
+  })
+
+  // runTransaction rollback
+  it('rollback within runTransaction', async () => {
+
+    try{
+      await db.runTransaction(async function(transaction) {
+
+        const doc = await transaction.collection(collectionName).doc('1').get()
+        assert.deepStrictEqual(doc.data, data[0])
+        await transaction.rollback('luke')
+      })
+    }catch(err){
+      assert(err === 'luke')
+    }
+
+    try{
+      await db.runTransaction(async function(transaction) {
+
+        const doc = await transaction.collection(collectionName).doc('1').get()
+        assert.deepStrictEqual(doc.data, data[0])
+        await transaction.rollback()
+      })
+    }catch(err){
+      assert(err === undefined)
+    }
+
+    try{
+      await db.runTransaction(async (transaction) => {
+      const doc = await transaction.collection(collectionName).doc('1').get()
+      assert.deepStrictEqual(doc.data, data[0])
+        // mock 事务冲突
+        throw {
+          "code": "DATABASE_TRANSACTION_CONFLICT",
+          "message": "[ResourceUnavailable.TransactionConflict] Transaction is conflict, maybe resource operated by others. Please check your request, but if the problem persists, contact us."
+        }
+      })
+
+    }catch(e) {
+      assert(e.code === 'DATABASE_TRANSACTION_CONFLICT')
+    }
+
+    try{
+      const docRef1 = db.collection(collectionName).doc('1')
+      await db.runTransaction(async (transaction) => {
+        const doc = await transaction.collection(collectionName).doc('1').get()
+        await docRef1.set({
+          category: 'wwwwwwwwwwwwwwwww'
+        })
+        const res = await transaction.collection(collectionName).doc('1').update({
+          category: 'transactiontransactiontransaction'
+        })
+
+      })
+    }catch(e) {
+
+      // 因为mongo write conflict时会自动rollback,兜底的rollback会报错  非conflict错误
+      assert(e.code)
+      // assert(e.code === 'DATABASE_TRANSACTION_CONFLICT')
+    }
+  })
+
 
   it('delete doc and abort', async () => {
     // 前面测试用例删除了 _id = 2 的数据

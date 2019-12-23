@@ -1,6 +1,6 @@
 {
   "name": "tcb-admin-node",
-  "version": "1.19.0",
+  "version": "1.19.1-beta",
   "description": "tencent cloud base admin sdk for node.js",
   "main": "index.js",
   "scripts": {
@@ -26,7 +26,7 @@
   "author": "jimmyzhang",
   "license": "MIT",
   "dependencies": {
-    "@cloudbase/database": "^0.9.7",
+    "@cloudbase/database": "^0.9.10-beta",
     "is-regex": "^1.0.4",
     "jsonwebtoken": "^8.5.1",
     "lodash.merge": "^4.6.1",
