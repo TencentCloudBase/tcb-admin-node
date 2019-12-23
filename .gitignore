@@ -11,3 +11,4 @@ coverage
 package.json
 yarn.lock
 cloudbase-credential.json
+test/storage/downloadFile.test.js
