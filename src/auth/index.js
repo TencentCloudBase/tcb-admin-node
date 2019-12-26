@@ -16,12 +16,15 @@ exports.auth = function() {
       const appId = process.env.WX_APPID || ''
       const uid = process.env.TCB_UUID || ''
       const customUserId = process.env.TCB_CUSTOM_USER_ID || ''
+      const isAnonymous =
+        process.env.TCB_ISANONYMOUS_USER === 'true' ? true : false
 
       return {
         openId,
         appId,
         uid,
-        customUserId
+        customUserId,
+        isAnonymous
       }
     },
     getClientIP() {
