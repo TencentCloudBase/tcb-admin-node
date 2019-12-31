@@ -8,6 +8,7 @@ process.env.WX_APPID = 'WX_APPID'
 process.env.TCB_UUID = 'TCB_UUID'
 process.env.TCB_CUSTOM_USER_ID = 'TCB_CUSTOM_USER_ID'
 process.env.TCB_SOURCE_IP = 'TCB_SOURCE_IP'
+process.env.TCB_ISANONYMOUS_USER = false
 
 describe('auth', () => {
   const app = Tcb.init({
@@ -32,7 +33,8 @@ describe('auth', () => {
       openId: 'WX_OPENID',
       appId: 'WX_APPID',
       uid: 'TCB_UUID',
-      customUserId: 'TCB_CUSTOM_USER_ID'
+      customUserId: 'TCB_CUSTOM_USER_ID',
+      isAnonymous: false
     })
   })
 
