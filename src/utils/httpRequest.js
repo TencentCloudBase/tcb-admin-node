@@ -5,6 +5,8 @@ const tracing = require('./tracing')
 const utils = require('./utils')
 const version = require('../../package.json').version
 const getWxCloudApiToken = require('./getWxCloudApiToken')
+const RequestTimgingsMeasurer = require('./request-timings-measurer')
+  .RequestTimgingsMeasurer
 
 module.exports = utils.warpPromise(doRequest)
 
@@ -140,8 +142,42 @@ async function doRequest(args) {
   }
 
   try {
-    return await new Promise(function(resolve, reject) {
-      request(opts, function(err, response, body) {
+    return new Promise(function(resolve, reject) {
+      const timingsMeasurerOptions = config.timingsMeasurer || {}
+      const {
+        waitingTime = 1000,
+        interval = 200,
+        enable = !!config.debug
+      } = timingsMeasurerOptions
+      const timingsMeasurer = RequestTimgingsMeasurer.new({
+        waitingTime,
+        interval,
+        enable
+      })
+
+      let targetName = ''
+      if (params.action.startsWith('functions')) {
+        targetName = params.function_name
+      } else if (params.action.startsWith('database')) {
+        targetName = params.collectionName
+      } else if (params.action.startsWith('wx')) {
+        targetName = params.apiName
+      }
+
+      timingsMeasurer.on('progress', timings => {
+        const timingsLine = `s:${timings.socket || '-'}|l:${timings.lookup ||
+          '-'}|c:${timings.connect || '-'}|r:${timings.ready ||
+          '-'}|w:${timings.waiting || '-'}|d:${timings.download ||
+          '-'}|e:${timings.end || '-'}`
+        console.warn(
+          `[RequestTimgings] Operation [${
+            params.action
+          }:${targetName}] spent ${Date.now() -
+            timings.start}ms(${timingsLine}) [${seqId}]`
+        )
+      })
+
+      const clientRequest = request(opts, function(err, response, body) {
         args && args.callback && args.callback(response)
         if (err) {
           return reject(err)
@@ -168,7 +204,7 @@ async function doRequest(args) {
           }
           return resolve(res)
         } else {
-          // 避免非 200 错误导致一直不返回
+          // 避免非 200 错误导致返回空内容
           const e = new Error(`
             ${response.statusCode} ${http.STATUS_CODES[response.statusCode]}
           `)
@@ -176,6 +212,7 @@ async function doRequest(args) {
           reject(e)
         }
       })
+      timingsMeasurer.measure(clientRequest)
     })
   } finally {
     if (slowQueryWarning) {

@@ -14,6 +14,7 @@ Tcb.prototype.init = function({
   secretId,
   secretKey,
   sessionToken,
+  debug,
   env,
   proxy,
   timeout,
@@ -21,6 +22,7 @@ Tcb.prototype.init = function({
   version,
   headers = {},
   credentials,
+  timingsMeasurer,
   isHttp,
   isUpdateSelfConfig = true
 } = {}) {
@@ -64,6 +66,8 @@ Tcb.prototype.init = function({
     headers: Object.assign({}, headers)
   }
 
+  config.debug = debug
+  config.timingsMeasurer = timingsMeasurer
   config.secretId = secretId
   config.secretKey = secretKey
   config.timeout = timeout || 15000
