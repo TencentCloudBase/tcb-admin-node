@@ -28,25 +28,15 @@ class Request {
       action: api
     })
 
-    const slowQueryWarning = setTimeout(() => {
-      console.warn(
-        `Database operation ${api} is longer than 3s. Please check query performance and your network environment.`
-      )
-    }, 3000)
-
-    try {
-      return await httpRequest({
-        timeout: this.config.timeout,
-        config: this.config.config,
-        params,
-        method: 'post',
-        headers: {
-          'content-type': 'application/json'
-        }
-      })
-    } finally {
-      clearTimeout(slowQueryWarning)
-    }
+    return await httpRequest({
+      timeout: this.config.timeout,
+      config: this.config.config,
+      params,
+      method: 'post',
+      headers: {
+        'content-type': 'application/json'
+      }
+    })
   }
 }
 

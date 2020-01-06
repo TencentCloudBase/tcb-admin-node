@@ -8,7 +8,7 @@ const getWxCloudApiToken = require('./getWxCloudApiToken')
 
 module.exports = utils.warpPromise(doRequest)
 
-function doRequest(args) {
+async function doRequest(args) {
   const config = args.config
   const method = args.method || 'get'
   const protocol = config.isHttp === true ? 'http' : 'https'
@@ -126,39 +126,57 @@ function doRequest(args) {
     opts.proxy = args.proxy
   }
 
-  return new Promise(function(resolve, reject) {
-    request(opts, function(err, response, body) {
-      args && args.callback && args.callback(response)
-      if (err) {
-        return reject(err)
-      }
+  // 针对数据库请求设置慢查询提示
+  let slowQueryWarning = null
+  if (params.action.indexOf('database') >= 0) {
+    slowQueryWarning = setTimeout(() => {
+      console.warn(
+        `Database operation ${params.action} is longer than 3s. Please check query performance and your network environment. | [${seqId}]`
+      )
+    }, 3000)
+  }
 
-      if (response.statusCode === 200) {
-        let res
-        try {
-          res = typeof body === 'string' ? JSON.parse(body) : body
-          // wx.openApi 和 wx.wxPayApi 调用时，需用content-type区分buffer or JSON
-          if (
-            params.action === 'wx.openApi' ||
-            params.action === 'wx.wxPayApi'
-          ) {
-            const { headers } = response
-            if (headers['content-type'] === 'application/json; charset=utf-8') {
-              res = JSON.parse(res.toString()) // JSON错误时buffer转JSON
-            }
-          }
-        } catch (e) {
-          res = body
+  try {
+    return await new Promise(function(resolve, reject) {
+      request(opts, function(err, response, body) {
+        args && args.callback && args.callback(response)
+        if (err) {
+          return reject(err)
         }
-        return resolve(res)
-      } else {
-        // 避免非 200 错误导致一直不返回
-        const e = new Error(`
-          ${response.statusCode} ${http.STATUS_CODES[response.statusCode]}
-        `)
-        e.statusCode = response.statusCode
-        reject(e)
-      }
+
+        if (response.statusCode === 200) {
+          let res
+          try {
+            res = typeof body === 'string' ? JSON.parse(body) : body
+            // wx.openApi 和 wx.wxPayApi 调用时，需用content-type区分buffer or JSON
+            if (
+              params.action === 'wx.openApi' ||
+              params.action === 'wx.wxPayApi'
+            ) {
+              const { headers } = response
+              if (
+                headers['content-type'] === 'application/json; charset=utf-8'
+              ) {
+                res = JSON.parse(res.toString()) // JSON错误时buffer转JSON
+              }
+            }
+          } catch (e) {
+            res = body
+          }
+          return resolve(res)
+        } else {
+          // 避免非 200 错误导致一直不返回
+          const e = new Error(`
+            ${response.statusCode} ${http.STATUS_CODES[response.statusCode]}
+          `)
+          e.statusCode = response.statusCode
+          reject(e)
+        }
+      })
     })
-  })
+  } finally {
+    if (slowQueryWarning) {
+      clearTimeout(slowQueryWarning)
+    }
+  }
 }

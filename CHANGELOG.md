@@ -1,3 +1,6 @@
+# v1.20.0
+- [add] 新增TCB 入口静态方法parseContext（解析云函数context参数）
+
 # v1.19.1
 - [fix] database 事务 修复runTransaction api中rollback报错 & 改造runTransaction 支持自定义返回
 

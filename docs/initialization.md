@@ -57,3 +57,11 @@ const app2 = tcb.init({
   env: 'zz'
 })
 ```
+
+## 解析云函数环境下的环境变量 context 取自云函数入口参数
+
+```javascript
+const envObj = tcb.parseContext(context) // context 参数 取自云函数入口函数handler的context对象
+console.log(envObj)
+```
+

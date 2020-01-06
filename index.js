@@ -109,6 +109,63 @@ Tcb.prototype.getCurrentEnv = function() {
   return process.env.TCB_ENV || process.env.SCF_NAMESPACE
 }
 
+Tcb.prototype.parseContext = function(context) {
+  if (typeof context !== 'object') {
+    throw Error('context 必须为对象类型')
+  }
+  let {
+    memory_limit_in_mb,
+    time_limit_in_ms,
+    request_id,
+    environ = '',
+    function_version,
+    namespace,
+    function_name,
+    environment
+  } = context
+  let parseResult = {}
+
+  try {
+    parseResult.memoryLimitInMb = memory_limit_in_mb
+    parseResult.timeLimitIns = time_limit_in_ms
+    parseResult.requestId = request_id
+    parseResult.functionVersion = function_version
+    parseResult.namespace = namespace
+    parseResult.functionName = function_name
+
+    // 存在environment 为新架构 上新字段 JSON序列化字符串
+    if (environment) {
+      parseResult.environment = JSON.parse(environment)
+      return parseResult
+    }
+
+    // 不存在environment 则为老字段，老架构上存在bug，无法识别value含特殊字符(若允许特殊字符，影响解析，这里特殊处理)
+
+    const parseEnviron = environ.split(';')
+    let parseEnvironObj = {}
+    for (let i in parseEnviron) {
+      const equalIndex = parseEnviron[i].indexOf('=')
+      if (equalIndex < 0) {
+        // value含分号影响切割，未找到= 均忽略
+        continue
+      }
+      const key = parseEnviron[i].slice(0, equalIndex)
+      let value = parseEnviron[i].slice(equalIndex + 1)
+
+      // value 含, 为数组
+      if (value.indexOf(',') >= 0) {
+        value = value.split(',')
+      }
+      parseEnvironObj[key] = value
+    }
+
+    parseResult.environ = parseEnvironObj
+  } catch (err) {
+    throw Error('无效的context对象')
+  }
+  return parseResult
+}
+
 function each(obj, fn) {
   for (var i in obj) {
     if (obj.hasOwnProperty(i)) {
