@@ -85,6 +85,9 @@ async function doRequest(args) {
     params.action === 'wx.wxPayApi'
   ) {
     url = protocol + '://tcb-open.tencentcloudapi.com/admin'
+    if (isInSCF) {
+      url = 'http://tcb-open.tencentyun.com/admin'
+    }
   }
 
   const opts = {
