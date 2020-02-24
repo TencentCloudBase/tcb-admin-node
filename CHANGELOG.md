@@ -1,3 +1,8 @@
+# v1.21.0
+- [add] request支持更多细节耗时
+- [add] 支持getAuthContext
+
+
 # v1.20.0
 - [add] 新增TCB 入口静态方法parseContext（解析云函数context参数）
 
