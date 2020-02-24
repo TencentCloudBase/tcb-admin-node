@@ -16,6 +16,18 @@ const {
 } = auth.getUserInfo()
 ```
 
+
+#### 获取authContext信息
+
+```js
+const {
+  uid, // tcb唯一Id
+  loginType, // web端调用时才返回
+  openId, // QQ小程序时，返回用户QQ小程序对应的openId
+  appId // QQ小程序时，返回用户QQ小程序对应的小程序appId
+} = await auth.getAuthContext()
+```
+
 #### 获取客户端IP
 ```js
 const ip = auth.getClientIP()

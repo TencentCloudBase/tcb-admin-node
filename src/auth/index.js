@@ -10,6 +10,7 @@ function validateUid(uid) {
 }
 
 exports.auth = function() {
+  let self = this
   return {
     getUserInfo() {
       const openId = process.env.WX_OPENID || ''
@@ -28,7 +29,7 @@ exports.auth = function() {
       }
     },
     async getAuthContext(context) {
-      const { environment, environ } = this.parseContext(context)
+      const { environment, environ } = self.parseContext(context)
       const env = environment || environ || {}
       const { TCB_UUID, LOGINTYPE } = env
       const res = {
@@ -37,8 +38,8 @@ exports.auth = function() {
       }
       if (LOGINTYPE === 'QQ-MINI') {
         const { QQ_OPENID, QQ_APPID } = env
-        res.appid = QQ_APPID
-        res.openid = QQ_OPENID
+        res.appId = QQ_APPID
+        res.openId = QQ_OPENID
       }
       return res
     },
