@@ -27,6 +27,21 @@ exports.auth = function() {
         isAnonymous
       }
     },
+    async getAuthContext(context) {
+      const { environment, environ } = this.parseContext(context)
+      const env = environment || environ || {}
+      const { TCB_UUID, LOGINTYPE } = env
+      const res = {
+        uid: TCB_UUID,
+        loginType: LOGINTYPE
+      }
+      if (LOGINTYPE === 'QQ-MINI') {
+        const { QQ_OPENID, QQ_APPID } = env
+        res.QQ_APPID = QQ_APPID
+        res.QQ_OPENID = QQ_OPENID
+      }
+      return res
+    },
     getClientIP() {
       return process.env.TCB_SOURCE_IP || ''
     },
