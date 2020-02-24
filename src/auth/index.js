@@ -37,8 +37,8 @@ exports.auth = function() {
       }
       if (LOGINTYPE === 'QQ-MINI') {
         const { QQ_OPENID, QQ_APPID } = env
-        res.QQ_APPID = QQ_APPID
-        res.QQ_OPENID = QQ_OPENID
+        res.appid = QQ_APPID
+        res.openid = QQ_OPENID
       }
       return res
     },
