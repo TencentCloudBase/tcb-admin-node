@@ -122,7 +122,7 @@ describe('test/unit/collection.test.ts', async () => {
     assert(result.data.length === 0)
   })
 
-  it.only('API - use where', async () => {
+  it('API - use where', async () => {
     // 1. 验证where 必填object 对象参数
     try{
       await collection.where().get()

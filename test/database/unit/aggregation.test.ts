@@ -70,13 +70,13 @@ describe('sortByCount', async () => {
 describe('match', async () => {
   let coll = null
   const data = [
-    { author: 'stark', score: 80 },
-    { author: 'stark', score: 85 },
-    { author: 'bob', score: 60 },
-    { author: 'li', score: 55 },
-    { author: 'jimmy', score: 60 },
-    { author: 'li', score: 94 },
-    { author: 'justan', score: 95 }
+    { author: 'stark', score: 80, date: new Date() },
+    { author: 'stark', score: 85, date: new Date() },
+    { author: 'bob', score: 60, date: new Date() },
+    { author: 'li', score: 55, date: new Date() },
+    { author: 'jimmy', score: 60, date: new Date() },
+    { author: 'li', score: 94, date: new Date() },
+    { author: 'justan', score: 95, date: new Date() }
   ]
 
   beforeAll(async () => {
@@ -99,6 +99,15 @@ describe('match', async () => {
       })
       .end()
     assert.strictEqual(result.data[0].author, 'stark')
+  })
+
+  it('匹配 操作符', async () => {
+    const { lte } = db.command.aggregate
+
+    const result = await db.collection('articles').aggregate().match({
+      date: lte(new Date())
+    }).end()
+    assert.strictEqual(result.data.length > 0, true)
   })
 
   it('计数', async () => {

@@ -45,7 +45,7 @@ describe('test/index.test.ts', async () => {
       }
     }
   }
-  it.only('Document - CRUD', async () => {
+  it('Document - CRUD', async () => {
     // Create
     const res = await collection.add(initialData)
     assert(res.id)

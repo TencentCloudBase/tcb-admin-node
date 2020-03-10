@@ -1,3 +1,6 @@
+# v1.21.2
+- [fix] database aggregate match操作传参EJSON序列化
+
 # v1.21.1
 - [add] request支持更多细节耗时
 - [add] 支持getAuthContext
