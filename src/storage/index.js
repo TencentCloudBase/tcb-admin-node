@@ -206,6 +206,7 @@ async function getFileAuthority({ fileList }) {
     action: 'storage.getFileAuthority',
     openId,
     uid,
+    loginType: process.env.LOGINTYPE,
     fileList
   }
   const res = await httpRequest({

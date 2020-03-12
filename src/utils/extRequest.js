@@ -70,7 +70,7 @@ class ExtRequest {
           resolve({
             data: body,
             statusCode: res.statusCode,
-            headers: res.headers
+            header: res.headers
           })
         }
       })
