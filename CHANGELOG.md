@@ -1,9 +1,8 @@
-## [1.4.0] 2020-03-16
+# v1.22.0
 
-### Added
-
-- 新增 `tcb.registerExtension()`，注册扩展
-- 新增 `tcb.invokeExtension()`，使用扩展
+- [add] `tcb.registerExtension()`，注册扩展
+- [add] `tcb.invokeExtension()`，使用扩展
+- [add] 签名方式支持v3选项
 
 # v1.21.2
 - [fix] database aggregate match操作传参EJSON序列化

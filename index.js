@@ -27,6 +27,7 @@ Tcb.prototype.init = function({
   credentials,
   timingsMeasurer,
   isHttp,
+  signMethod = 'v2',
   isUpdateSelfConfig = true
 } = {}) {
   if ((secretId && !secretKey) || (!secretId && secretKey)) {
@@ -70,6 +71,7 @@ Tcb.prototype.init = function({
   }
 
   config.debug = debug
+  config.signMethod = signMethod
   config.timingsMeasurer = timingsMeasurer
   config.secretId = secretId
   config.secretKey = secretKey

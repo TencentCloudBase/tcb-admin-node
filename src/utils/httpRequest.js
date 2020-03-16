@@ -7,12 +7,15 @@ const version = require('../../package.json').version
 const getWxCloudApiToken = require('./getWxCloudApiToken')
 const RequestTimgingsMeasurer = require('./request-timings-measurer')
   .RequestTimgingsMeasurer
+const URL = require('url')
+const { sign } = require('@cloudbase/signature-nodejs')
 
 module.exports = utils.warpPromise(doRequest)
 
 async function doRequest(args) {
   const config = args.config
-  const method = args.method || 'get'
+  const method = args.method || 'post'
+  const signMethod = config.signMethod || 'v2'
   const protocol = config.isHttp === true ? 'http' : 'https'
   const isInSCF = process.env.TENCENTCLOUD_RUNENV === 'SCF'
 
@@ -37,12 +40,7 @@ async function doRequest(args) {
   })
   utils.filterUndefined(params)
 
-  // file 和 wx.openApi 以及 wx.wxPayApi 带的requestData 需避开签名
-  let file = null
-  if (params.action === 'storage.uploadFile') {
-    file = params['file']
-    delete params['file']
-  }
+  // wx.openApi 以及 wx.wxPayApi 带的requestData 需避开签名
 
   let requestData = null
   if (params.action === 'wx.openApi' || params.action === 'wx.wxPayApi') {
@@ -54,68 +52,98 @@ async function doRequest(args) {
   const TCB_SOURCE = process.env.TCB_SOURCE || ''
   const SOURCE = isInSCF ? `${TCB_SOURCE},scf` : ',not_scf'
 
-  const headers = {
-    'user-agent': `tcb-admin-sdk/${version}`,
-    'x-tcb-source': SOURCE
+  // url
+  let url = ''
+  if (config.serviceUrl) {
+    url = config.serviceUrl
+  } else {
+    url = protocol + '://tcb-admin.tencentcloudapi.com/admin'
+
+    if (isInSCF) {
+      url = 'http://tcb-admin.tencentyun.com/admin'
+    }
+
+    if (
+      params.action === 'wx.api' ||
+      params.action === 'wx.openApi' ||
+      params.action === 'wx.wxPayApi'
+    ) {
+      url = protocol + '://tcb-open.tencentcloudapi.com/admin'
+      if (isInSCF) {
+        url = 'http://tcb-open.tencentyun.com/admin'
+      }
+    }
   }
 
-  const authObj = {
-    SecretId: config.secretId,
-    SecretKey: config.secretKey,
-    Method: method,
-    pathname: '/admin',
-    Query: params,
-    Headers: Object.assign({}, headers)
+  if (url.includes('?')) {
+    url = `${url}&eventId=${eventId}&seqId=${seqId}`
+  } else {
+    url = `${url}?&eventId=${eventId}&seqId=${seqId}`
   }
 
-  params.authorization = auth.getAuth(authObj)
+  let headers = {}
 
-  file && (params.file = file)
+  if (signMethod === 'v3') {
+    headers = {
+      'x-tcb-source': SOURCE,
+      'User-Agent': `tcb-admin-sdk/${version}`,
+      'X-SDK-Version': `tcb-admin-sdk/${version}`,
+      Host: URL.parse(url).host
+    }
+
+    if (params.action === 'wx.openApi' || params.action === 'wx.wxPayApi') {
+      headers['content-type'] = 'multipart/form-data'
+    }
+
+    headers = Object.assign({}, config.headers, args.headers, headers)
+
+    const signInfo = sign({
+      secretId: config.secretId,
+      secretKey: config.secretKey,
+      method: method,
+      url: url,
+      params: params,
+      headers,
+      withSignedParams: true
+    })
+
+    headers['Authorization'] = signInfo.authorization
+    headers['X-Signature-Expires'] = 600
+    headers['X-Timestamp'] = signInfo.timestamp
+  } else {
+    headers = {
+      'user-agent': `tcb-admin-sdk/${version}`,
+      'x-tcb-source': SOURCE
+    }
+
+    const authObj = {
+      SecretId: config.secretId,
+      SecretKey: config.secretKey,
+      Method: method,
+      pathname: '/admin',
+      Query: params,
+      Headers: Object.assign({}, headers)
+    }
+
+    params.authorization = auth.getAuth(authObj)
+
+    headers = Object.assign({}, config.headers, args.headers, headers)
+  }
+
   requestData && (params.requestData = requestData)
   config.sessionToken && (params.sessionToken = config.sessionToken)
   params.sdk_version = version
 
-  let url = protocol + '://tcb-admin.tencentcloudapi.com/admin'
-
-  if (isInSCF) {
-    url = 'http://tcb-admin.tencentyun.com/admin'
-  }
-
-  if (
-    params.action === 'wx.api' ||
-    params.action === 'wx.openApi' ||
-    params.action === 'wx.wxPayApi'
-  ) {
-    url = protocol + '://tcb-open.tencentcloudapi.com/admin'
-    if (isInSCF) {
-      url = 'http://tcb-open.tencentyun.com/admin'
-    }
-  }
-
   const opts = {
-    url: config.serviceUrl || url,
-    method: args.method || 'get',
+    url,
+    method: args.method || 'post',
     // 先取模块的timeout，没有则取sdk的timeout，还没有就使用默认值
     timeout: args.timeout || config.timeout || 15000,
-    headers: Object.assign({}, config.headers, args.headers, headers),
+    headers,
     proxy: config.proxy
   }
 
-  if (opts.url.includes('?')) {
-    opts.url = `${opts.url}&eventId=${eventId}&seqId=${seqId}`
-  } else {
-    opts.url = `${opts.url}?&eventId=${eventId}&seqId=${seqId}`
-  }
-
-  if (params.action === 'storage.uploadFile') {
-    opts.formData = params
-    opts.formData.file = {
-      value: params.file,
-      options: {
-        filename: params.path
-      }
-    }
-  } else if (args.method == 'post') {
+  if (args.method == 'post') {
     if (params.action === 'wx.openApi' || params.action === 'wx.wxPayApi') {
       opts.formData = params
       opts.encoding = null
