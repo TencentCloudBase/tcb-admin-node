@@ -178,7 +178,7 @@ async function getTempFileURL({ fileList }) {
 async function getFileAuthority({ fileList }) {
   if (!Array.isArray(fileList)) {
     throw new Error(
-      '[tcb-admin-node getCosFileAuthority fileList must be a array'
+      '[tcb-admin-node] getCosFileAuthority fileList must be a array'
     )
   }
 
