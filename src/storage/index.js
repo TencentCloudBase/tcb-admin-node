@@ -175,6 +175,56 @@ async function getTempFileURL({ fileList }) {
   })
 }
 
+async function getFileAuthority({ fileList }) {
+  if (!Array.isArray(fileList)) {
+    throw new Error(
+      '[tcb-admin-node] getCosFileAuthority fileList must be a array'
+    )
+  }
+
+  if (
+    fileList.some(file => {
+      if (!file || !file.path) {
+        return true
+      }
+      if (['READ', 'WRITE', 'READWRITE'].indexOf(file.type) === -1) {
+        return true
+      }
+    })
+  ) {
+    throw new Error('[tcb-admin-node] getCosFileAuthority fileList param error')
+  }
+
+  const userInfo = this.auth().getUserInfo()
+  const { openId, uid } = userInfo
+
+  if (!openId && !uid) {
+    throw new Error('[tcb-admin-node] admin do not need getCosFileAuthority.')
+  }
+
+  let params = {
+    action: 'storage.getFileAuthority',
+    openId,
+    uid,
+    loginType: process.env.LOGINTYPE,
+    fileList
+  }
+  const res = await httpRequest({
+    config: this.config,
+    params,
+    method: 'post',
+    headers: {
+      'content-type': 'application/json'
+    }
+  })
+
+  if (res.code) {
+    throw new Error('[tcb-admin-node] getCosFileAuthority failed: ' + res.code)
+  } else {
+    return res
+  }
+}
+
 async function downloadFile({ fileID, tempFilePath }) {
   let tmpUrl,
     self = this
@@ -257,3 +307,4 @@ exports.deleteFile = deleteFile
 exports.getTempFileURL = getTempFileURL
 exports.downloadFile = downloadFile
 exports.getUploadMetadata = getUploadMetadata
+exports.getFileAuthority = getFileAuthority

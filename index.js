@@ -6,8 +6,11 @@ const wx = require('./src/wx')
 const Request = require('./src/utils/dbRequest')
 const logger = require('./src/log')
 
+const ExtRequest = require('./src/utils/extRequest')
+
 function Tcb(config) {
   this.config = config ? config : this.config
+  this.requestClient = new ExtRequest()
 }
 
 Tcb.prototype.init = function({
@@ -111,6 +114,23 @@ Tcb.prototype.database = function(dbConfig = {}) {
  */
 Tcb.prototype.getCurrentEnv = function() {
   return process.env.TCB_ENV || process.env.SCF_NAMESPACE
+}
+
+const extensionMap = {}
+/**
+ * 注册扩展
+ */
+Tcb.prototype.registerExtension = function(ext) {
+  extensionMap[ext.name] = ext
+}
+
+Tcb.prototype.invokeExtension = async function(name, opts) {
+  const ext = extensionMap[name]
+  if (!ext) {
+    throw Error(`扩展${name} 必须先注册`)
+  }
+
+  return await ext.invoke(opts, this)
 }
 
 Tcb.prototype.parseContext = function(context) {
