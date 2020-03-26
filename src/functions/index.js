@@ -23,7 +23,8 @@ function callFunction({ name, data }) {
   const params = {
     action: 'functions.invokeFunction',
     function_name: name,
-    request_data: data
+    request_data: data,
+    routeKey: process.env.TCB_ROUTE_KEY || ''
   }
 
   return httpRequest({
