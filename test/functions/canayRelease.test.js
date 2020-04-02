@@ -13,7 +13,7 @@ describe('函数支持灰度发布功能', () => {
   let Tcb = require('../../index')
   const app = Tcb.init(config)
 
-  it('无 TCB_ROUTE_KEY 等灰度发布相关变量时调用云函数不传routeKey参数', async function() {
+  it('无 TCB_ROUTE_KEY 等灰度发布环境变量时调用云函数不透传 X-Tcb-Route-Key header参数', async function() {
     process.env.TCB_ROUTE_KEY = ''
 
     const mockedRequest = require('request')
@@ -25,11 +25,15 @@ describe('函数支持灰度发布功能', () => {
     })
 
     expect(mockedRequest).toBeCalled()
-    expect(mockedRequest.mock.calls[0][0].body).not.toHaveProperty('routeKey')
-    expect(mockedRequest.mock.calls[0][0].body.routeKey).toBe(undefined)
+    expect(mockedRequest.mock.calls[0][0].headers).not.toHaveProperty(
+      'X-Tcb-Route-Key'
+    )
+    expect(mockedRequest.mock.calls[0][0].headers['X-Tcb-Route-Key']).toBe(
+      undefined
+    )
   })
 
-  it('存在 TCB_ROUTE_KEY 等灰度发布相关变量时透传', async function() {
+  it('存在 TCB_ROUTE_KEY 等灰度发布相关变量时透传 X-Tcb-Route-Key header参数', async function() {
     const randomRouteKey = String(Math.floor(Math.random() * 100) + 1)
     process.env.TCB_ROUTE_KEY = randomRouteKey
 
@@ -42,6 +46,8 @@ describe('函数支持灰度发布功能', () => {
     })
 
     expect(mockedRequest).toBeCalled()
-    expect(mockedRequest.mock.calls[0][0].body.routeKey).toBe(randomRouteKey)
+    expect(mockedRequest.mock.calls[0][0].headers['X-Tcb-Route-Key']).toBe(
+      randomRouteKey
+    )
   })
 })

@@ -23,10 +23,7 @@ function callFunction({ name, data }) {
   const params = {
     action: 'functions.invokeFunction',
     function_name: name,
-    request_data: data,
-    ...(process.env.TCB_ROUTE_KEY
-      ? { routeKey: process.env.TCB_ROUTE_KEY }
-      : {})
+    request_data: data
   }
 
   return httpRequest({
@@ -34,7 +31,10 @@ function callFunction({ name, data }) {
     params,
     method: 'post',
     headers: {
-      'content-type': 'application/json'
+      'content-type': 'application/json',
+      ...(process.env.TCB_ROUTE_KEY
+        ? { 'X-Tcb-Route-Key': process.env.TCB_ROUTE_KEY }
+        : {})
     }
   }).then(res => {
     if (res.code) {
