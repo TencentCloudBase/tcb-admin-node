@@ -24,7 +24,9 @@ function callFunction({ name, data }) {
     action: 'functions.invokeFunction',
     function_name: name,
     request_data: data,
-    routeKey: process.env.TCB_ROUTE_KEY || ''
+    ...(process.env.TCB_ROUTE_KEY
+      ? { routeKey: process.env.TCB_ROUTE_KEY }
+      : {})
   }
 
   return httpRequest({
