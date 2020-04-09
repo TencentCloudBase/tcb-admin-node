@@ -1,10 +1,12 @@
 const jwt = require('jsonwebtoken')
 
+const checkCustomUserIdRegex = /^[a-zA-Z0-9_\-#@~=*(){}[\]:.,<>+]{4,32}$/
+
 function validateUid(uid) {
   if (typeof uid !== 'string') {
     throw new TypeError('uid must be a string')
   }
-  if (!/^[a-zA-Z0-9]{4,32}$/.test(uid)) {
+  if (!checkCustomUserIdRegex.test(uid)) {
     throw new Error(`Invalid uid: "${uid}"`)
   }
 }
