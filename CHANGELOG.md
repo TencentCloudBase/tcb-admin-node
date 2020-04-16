@@ -1,3 +1,8 @@
+# v1.22.1
+
+- [add] 支持云函数灰度发布
+- [add] customUserId放开更多字符
+
 # v1.22.0
 
 - [add] `tcb.registerExtension()`，注册扩展
