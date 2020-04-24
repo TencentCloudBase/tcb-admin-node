@@ -28,7 +28,8 @@ Tcb.prototype.init = function({
   timingsMeasurer,
   isHttp,
   signMethod = 'v2',
-  isUpdateSelfConfig = true
+  isUpdateSelfConfig = true,
+  forever = false
 } = {}) {
   if ((secretId && !secretKey) || (!secretId && secretKey)) {
     throw Error('secretId and secretKey must be a pair')
@@ -71,6 +72,7 @@ Tcb.prototype.init = function({
   }
 
   config.debug = debug
+  config.forever = forever
   config.signMethod = signMethod
   config.timingsMeasurer = timingsMeasurer
   config.secretId = secretId

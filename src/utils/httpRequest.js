@@ -164,7 +164,9 @@ async function doRequest(args) {
   if (params.action.indexOf('database') >= 0) {
     slowQueryWarning = setTimeout(() => {
       console.warn(
-        `Database operation ${params.action} is longer than 3s. Please check query performance and your network environment. | [${seqId}]`
+        `Database operation ${
+          params.action
+        } is longer than 3s. Please check query performance and your network environment. | [${seqId}]`
       )
     }, 3000)
   }
@@ -204,6 +206,10 @@ async function doRequest(args) {
             timings.start}ms(${timingsLine}) [${seqId}]`
         )
       })
+
+      if (config.forever) {
+        opts.forever = true
+      }
 
       const clientRequest = request(opts, function(err, response, body) {
         args && args.callback && args.callback(response)
