@@ -5,12 +5,15 @@ const auth = require('./src/auth')
 const wx = require('./src/wx')
 const Request = require('./src/utils/dbRequest')
 const logger = require('./src/log')
+const { SYMBOL_CURRENT_ENV } = require('./src/const/symbol')
+const { getCurrentEnv } = require('./src/utils/utils')
 
 const ExtRequest = require('./src/utils/extRequest')
 
 function Tcb(config) {
   this.config = config ? config : this.config
   this.requestClient = new ExtRequest()
+  this.SYMBOL_CURRENT_ENV = SYMBOL_CURRENT_ENV
 }
 
 Tcb.prototype.init = function({
@@ -117,7 +120,7 @@ Tcb.prototype.database = function(dbConfig = {}) {
  * @returns string
  */
 Tcb.prototype.getCurrentEnv = function() {
-  return process.env.TCB_ENV || process.env.SCF_NAMESPACE
+  return getCurrentEnv()
 }
 
 const extensionMap = {}

@@ -53,3 +53,7 @@ exports.warpPromise = function warp(fn) {
     })
   }
 }
+
+exports.getCurrentEnv = function() {
+  return process.env.TCB_ENV || process.env.SCF_NAMESPACE
+}

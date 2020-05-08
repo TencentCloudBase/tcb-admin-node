@@ -1,4 +1,6 @@
 const jwt = require('jsonwebtoken')
+const { SYMBOL_CURRENT_ENV } = require('../const/symbol')
+const { getCurrentEnv } = require('../utils/utils')
 
 const checkCustomUserIdRegex = /^[a-zA-Z0-9_\-#@~=*(){}[\]:.,<>+]{4,32}$/
 
@@ -51,10 +53,16 @@ exports.auth = function() {
     createTicket: (uid, options = {}) => {
       validateUid(uid)
       const timestamp = new Date().getTime()
-      const { credentials, envName } = this.config
+      let { credentials, envName } = this.config
       if (!envName) {
         throw new Error('no env in config')
       }
+
+      // 使用symbol时替换为环境变量内的env
+      if (envName === SYMBOL_CURRENT_ENV) {
+        envName = getCurrentEnv()
+      }
+
       const {
         refresh = 3600 * 1000,
         expire = timestamp + 7 * 24 * 60 * 60 * 1000

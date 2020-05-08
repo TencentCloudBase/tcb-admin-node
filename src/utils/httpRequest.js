@@ -9,6 +9,7 @@ const RequestTimgingsMeasurer = require('./request-timings-measurer')
   .RequestTimgingsMeasurer
 const URL = require('url')
 const { sign } = require('@cloudbase/signature-nodejs')
+const { SYMBOL_CURRENT_ENV } = require('../const/symbol')
 
 module.exports = utils.warpPromise(doRequest)
 
@@ -29,6 +30,11 @@ async function doRequest(args) {
   const tracingInfo = tracing.generateTracingInfo()
   const seqId = tracingInfo.seqId
   const eventId = tracingInfo.eventId
+
+  // 检查envName 是否为symbol
+  if (config.envName === SYMBOL_CURRENT_ENV) {
+    config.envName = utils.getCurrentEnv()
+  }
 
   const params = Object.assign({}, args.params, {
     envName: config.envName,
@@ -164,9 +170,7 @@ async function doRequest(args) {
   if (params.action.indexOf('database') >= 0) {
     slowQueryWarning = setTimeout(() => {
       console.warn(
-        `Database operation ${
-          params.action
-        } is longer than 3s. Please check query performance and your network environment. | [${seqId}]`
+        `Database operation ${params.action} is longer than 3s. Please check query performance and your network environment. | [${seqId}]`
       )
     }, 3000)
   }
