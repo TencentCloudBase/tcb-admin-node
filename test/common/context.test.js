@@ -1,9 +1,10 @@
 let Tcb = require('../../index')
 const assert = require('assert')
+const config = require('../config.local')
 
 //
 describe('解析云函数环境变量', async () => {
-  it.only('mock parseContext', async () => {
+  it('mock parseContext', async () => {
     const mockContext = {
       memory_limit_in_mb: 256,
 
@@ -64,5 +65,23 @@ describe('解析云函数环境变量', async () => {
 
     const contextObj2 = Tcb.parseContext(mockContext2)
     assert(contextObj2.environment.a === 'b;c;fs;d')
+  })
+
+  it('解析 symbol', async () => {
+    let newConfig = {
+      ...config,
+      env: Tcb.SYMBOL_CURRENT_ENV
+    }
+
+    const app = Tcb.init(newConfig)
+    const testEnv = 'luketest-0nmm1'
+    // const testEnv = ''
+    process.env.TCB_ENV = testEnv
+    const res = await await app.callFunction({
+      name: 'testTCBENV',
+      data: { a: 1 }
+    })
+    // console.log(res)
+    assert(res.result === testEnv)
   })
 })
