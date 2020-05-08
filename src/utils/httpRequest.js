@@ -165,7 +165,6 @@ async function doRequest(args) {
     opts.proxy = args.proxy
   }
 
-  console.log('opts:', JSON.stringify(opts))
   // 针对数据库请求设置慢查询提示
   let slowQueryWarning = null
   if (params.action.indexOf('database') >= 0) {
